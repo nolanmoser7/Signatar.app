@@ -105,32 +105,30 @@ function ModernTemplate({
 
             {/* Social Media Icons */}
             <div className={`flex space-x-4 ${getAnimationClass("social")}`}>
-              {socialMedia.twitter ? (
+              {socialMedia.twitter && (
                 <a href={socialMedia.twitter} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiX className="w-5 h-5" />
                 </a>
-              ) : (
-                <div className="text-cyan-400/30">
-                  <SiX className="w-5 h-5" />
-                </div>
               )}
-              {socialMedia.linkedin ? (
+              {socialMedia.linkedin && (
                 <a href={socialMedia.linkedin} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiLinkedin className="w-5 h-5" />
                 </a>
-              ) : (
-                <div className="text-cyan-400/30">
-                  <SiLinkedin className="w-5 h-5" />
-                </div>
               )}
-              {socialMedia.instagram ? (
+              {socialMedia.instagram && (
                 <a href={socialMedia.instagram} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiInstagram className="w-5 h-5" />
                 </a>
-              ) : (
-                <div className="text-cyan-400/30">
-                  <SiInstagram className="w-5 h-5" />
-                </div>
+              )}
+              {socialMedia.youtube && (
+                <a href={socialMedia.youtube} className="text-cyan-400 hover:text-cyan-300 transition-colors">
+                  <SiYoutube className="w-5 h-5" />
+                </a>
+              )}
+              {socialMedia.tiktok && (
+                <a href={socialMedia.tiktok} className="text-cyan-400 hover:text-cyan-300 transition-colors">
+                  <SiTiktok className="w-5 h-5" />
+                </a>
               )}
             </div>
           </div>
@@ -229,32 +227,30 @@ function ModernTemplate({
 
             {/* Social Media Icons */}
             <div className={`flex space-x-6 ${getAnimationClass("social")}`}>
-              {socialMedia.twitter ? (
+              {socialMedia.twitter && (
                 <a href={socialMedia.twitter} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiX className="w-6 h-6" />
                 </a>
-              ) : (
-                <div className="text-cyan-400/30">
-                  <SiX className="w-6 h-6" />
-                </div>
               )}
-              {socialMedia.linkedin ? (
+              {socialMedia.linkedin && (
                 <a href={socialMedia.linkedin} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiLinkedin className="w-6 h-6" />
                 </a>
-              ) : (
-                <div className="text-cyan-400/30">
-                  <SiLinkedin className="w-6 h-6" />
-                </div>
               )}
-              {socialMedia.instagram ? (
+              {socialMedia.instagram && (
                 <a href={socialMedia.instagram} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiInstagram className="w-6 h-6" />
                 </a>
-              ) : (
-                <div className="text-cyan-400/30">
-                  <SiInstagram className="w-6 h-6" />
-                </div>
+              )}
+              {socialMedia.youtube && (
+                <a href={socialMedia.youtube} className="text-cyan-400 hover:text-cyan-300 transition-colors">
+                  <SiYoutube className="w-6 h-6" />
+                </a>
+              )}
+              {socialMedia.tiktok && (
+                <a href={socialMedia.tiktok} className="text-cyan-400 hover:text-cyan-300 transition-colors">
+                  <SiTiktok className="w-6 h-6" />
+                </a>
               )}
             </div>
           </div>

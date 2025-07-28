@@ -274,12 +274,7 @@ export function MinimalTemplate({
                 <SiTiktok className="w-5 h-5 text-white" />
               </a>
             )}
-            {/* Default circular icon when no socials are present */}
-            {!socialMedia.linkedin && !socialMedia.twitter && !socialMedia.instagram && !socialMedia.youtube && !socialMedia.tiktok && (
-              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                <div className="w-5 h-5 bg-white rounded-full"></div>
-              </div>
-            )}
+
           </div>
         </div>
       </div>

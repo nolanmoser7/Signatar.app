@@ -172,10 +172,6 @@ export default function SalesProfessionalTemplate({
             </a>
           )}
           <div className="flex-1"></div>
-          {/* Default YouTube icon when no YouTube link is provided */}
-          {!socialMedia.youtube && (
-            <Youtube className="w-5 h-5 text-white opacity-60" />
-          )}
         </div>
 
         {/* Main Content Area */}
