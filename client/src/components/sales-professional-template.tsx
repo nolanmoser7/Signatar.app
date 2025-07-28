@@ -210,7 +210,6 @@ export default function SalesProfessionalTemplate({
               <h2 className="text-2xl font-bold tracking-wider text-gray-900">
                 {personalInfo.company?.toUpperCase() || "COMPANY"}
               </h2>
-              <div className="text-xs text-gray-500 tracking-widest">GRAPHICS</div>
             </div>
           </div>
 
