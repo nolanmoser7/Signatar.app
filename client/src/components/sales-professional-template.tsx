@@ -187,10 +187,10 @@ export default function SalesProfessionalTemplate({
             width: `calc(100% - 80px - ${(images.headshotSize || 100) * 2.56}px)`
           }}
         >
-          {/* Company Logo/Branding */}
-          <div className="flex items-center mb-6">
+          {/* Company Logo */}
+          <div className="mb-4">
             <div 
-              className={`bg-teal-500 rounded-lg flex items-center justify-center mr-3 ${animationClass}`}
+              className={`bg-teal-500 rounded-lg flex items-center justify-center ${animationClass}`}
               style={{
                 width: `${(images.logoSize || 100) * 0.48}px`,
                 height: `${(images.logoSize || 100) * 0.48}px`
@@ -206,11 +206,13 @@ export default function SalesProfessionalTemplate({
                 <span className="text-white font-bold text-lg">J</span>
               )}
             </div>
-            <div>
-              <h2 className="text-2xl font-bold tracking-wider text-gray-900">
-                {personalInfo.company?.toUpperCase() || "COMPANY"}
-              </h2>
-            </div>
+          </div>
+
+          {/* Company Name */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold tracking-wider text-gray-900">
+              {personalInfo.company?.toUpperCase() || "COMPANY"}
+            </h2>
           </div>
 
           {/* Name and Title */}
