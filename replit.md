@@ -39,6 +39,11 @@ The application follows a full-stack monorepo architecture with clear separation
 6. **Export Options**: HTML and animated GIF generation capabilities
 
 ### Recent Changes (July 28, 2025)
+- **PostgreSQL Database Integration**: Successfully migrated from in-memory storage to PostgreSQL using Neon Database
+  - Implemented DatabaseStorage class to replace MemStorage while maintaining the same IStorage interface
+  - All signatures and templates are now persisted in the database with proper CRUD operations
+  - Automatic template initialization ensures default templates are available on first application startup
+  - Database schema created and synchronized using Drizzle ORM with `npm run db:push` command
 - **Sales Professional Template**: Redesigned to match modern visual mockup with left sidebar for social media icons, geometric portrait clipping, and professional branding layout
 - **Template Components**: Created dedicated SalesProfessionalTemplate component with responsive design and modern styling
 - **Minimal Template**: Added new minimal template component matching user's visual mockup with APEX Solutions branding, circular gradient portrait, and clean layout
