@@ -126,6 +126,96 @@ export default function SignatureBuilder() {
 </table>`;
     }
 
+    if (selectedTemplate === "modern") {
+      return `
+<table cellpadding="0" cellspacing="0" style="width:650px; background:linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); border-radius:12px; font-family:Helvetica, Arial, sans-serif; color:#ffffff; overflow:hidden; min-height:300px; position:relative;">
+  <!-- Background decorative elements -->
+  <tr>
+    <td colspan="2" style="position:relative; height:0; overflow:visible;">
+      <div style="position:absolute; top:40px; left:40px; width:80px; height:80px; border:1px solid #00bcd4; border-radius:50%; opacity:0.1;"></div>
+      <div style="position:absolute; bottom:40px; right:40px; width:60px; height:60px; border:1px solid #00bcd4; border-radius:50%; opacity:0.1;"></div>
+      <div style="position:absolute; top:50%; left:35%; width:30px; height:30px; border:1px solid #00bcd4; border-radius:50%; opacity:0.1;"></div>
+    </td>
+  </tr>
+  
+  <tr>
+    <!-- Left side - Company and contact info -->
+    <td style="padding:32px; vertical-align:top; width:60%; position:relative; z-index:1;">
+      <!-- Company Logo -->
+      <div style="display:flex; align-items:center; margin-bottom:32px;">
+        <div style="width:40px; height:40px; margin-right:16px;">
+          <svg width="40" height="40" viewBox="0 0 40 40">
+            <rect x="6" y="8" width="28" height="5" fill="#00bcd4" rx="2.5"/>
+            <rect x="6" y="17.5" width="28" height="5" fill="#00bcd4" rx="2.5"/>
+            <rect x="6" y="27" width="28" height="5" fill="#00bcd4" rx="2.5"/>
+          </svg>
+        </div>
+        <h1 style="margin:0; color:#ffffff; font-size:28px; font-weight:300; letter-spacing:0.3em;">
+          ${(personalInfo.company || 'TECHSPACE').toUpperCase()}
+        </h1>
+      </div>
+
+      <!-- Name and Title -->
+      <div style="margin-bottom:32px;">
+        <h2 style="margin:0 0 12px 0; color:#ffffff; font-size:36px; font-weight:300;">
+          ${personalInfo.name || 'David Harrison'}
+        </h2>
+        <p style="margin:0; color:#00bcd4; font-size:20px; font-weight:300;">
+          ${personalInfo.title || 'CEO'}
+        </p>
+      </div>
+
+      <!-- Contact Information -->
+      <div style="margin-bottom:32px;">
+        ${personalInfo.phone ? `
+          <div style="display:flex; align-items:center; margin-bottom:16px;">
+            <span style="color:#00bcd4; margin-right:16px; font-size:18px;">📞</span>
+            <a href="tel:${personalInfo.phone}" style="color:#ffffff; text-decoration:none; font-size:18px;">${personalInfo.phone}</a>
+          </div>
+        ` : ''}
+        ${personalInfo.email ? `
+          <div style="display:flex; align-items:center; margin-bottom:16px;">
+            <span style="color:#00bcd4; margin-right:16px; font-size:18px;">✉️</span>
+            <a href="mailto:${personalInfo.email}" style="color:#ffffff; text-decoration:none; font-size:18px;">${personalInfo.email}</a>
+          </div>
+        ` : ''}
+        ${personalInfo.website ? `
+          <div style="display:flex; align-items:center; margin-bottom:16px;">
+            <span style="color:#00bcd4; margin-right:16px; font-size:18px;">🌐</span>
+            <a href="${personalInfo.website}" style="color:#ffffff; text-decoration:none; font-size:18px;">${personalInfo.website}</a>
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- Social Media Icons -->
+      <div style="display:flex; gap:24px;">
+        ${socialMedia.twitter ? `<a href="${socialMedia.twitter}" style="color:#00bcd4; text-decoration:none; font-size:20px;">❌</a>` : ''}
+        ${socialMedia.linkedin ? `<a href="${socialMedia.linkedin}" style="color:#00bcd4; text-decoration:none; font-size:20px;">💼</a>` : ''}
+        ${socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok ? `<a href="${socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok}" style="color:#00bcd4; text-decoration:none; font-size:20px;">🔗</a>` : ''}
+      </div>
+    </td>
+
+    <!-- Right side - Profile Image -->
+    <td style="vertical-align:top; text-align:center; width:40%; padding:32px; position:relative; z-index:1;">
+      ${images.headshot ? `
+        <div style="position:relative; display:inline-block;">
+          <!-- Cyan glow effect -->
+          <div style="width:160px; height:160px; border-radius:50%; background:linear-gradient(135deg, #00bcd4 0%, #00acc1 100%); padding:4px; box-shadow:0 0 40px rgba(0,188,212,0.6);">
+            <div style="width:152px; height:152px; border-radius:50%; overflow:hidden; border:4px solid #00bcd4;">
+              <img src="${images.headshot}" alt="${personalInfo.name}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          </div>
+        </div>
+      ` : `
+        <div style="width:160px; height:160px; border-radius:50%; background:linear-gradient(135deg, #00bcd4 0%, #00acc1 100%); display:flex; align-items:center; justify-content:center; margin:0 auto; box-shadow:0 0 40px rgba(0,188,212,0.6);">
+          <span style="color:#ffffff; font-size:64px; font-weight:300;">${(personalInfo.name || 'D').charAt(0)}</span>
+        </div>
+      `}
+    </td>
+  </tr>
+</table>`;
+    }
+
     if (selectedTemplate === "sales-professional") {
       return `
 <table cellpadding="0" cellspacing="0" style="width:600px; background:#FFFFFF; border-radius:12px; font-family:Helvetica, Arial, sans-serif; color:#333333; overflow:hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">

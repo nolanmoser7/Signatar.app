@@ -4,6 +4,7 @@ import { SiTiktok } from "react-icons/si";
 import { getAnimationClass } from "@/lib/animations";
 import SalesProfessionalTemplate from "./sales-professional-template";
 import { MinimalTemplate } from "./minimal-template";
+import ModernTemplate from "./modern-template";
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 
 interface SignaturePreviewProps {
@@ -47,6 +48,19 @@ export default function SignaturePreview({
         socialMedia={socialMedia}
         animationType={isAnimating ? animationType : "none"}
         isMobile={deviceView === "mobile"}
+      />
+    );
+  }
+
+  if (templateId === "modern") {
+    return (
+      <ModernTemplate
+        personalInfo={personalInfo}
+        images={images}
+        socialMedia={socialMedia}
+        animationType={animationType}
+        isAnimating={isAnimating}
+        deviceView={deviceView}
       />
     );
   }

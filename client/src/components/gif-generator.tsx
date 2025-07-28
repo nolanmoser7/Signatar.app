@@ -560,6 +560,172 @@ export default function GifGenerator({
         });
         ctx.restore();
 
+      } else if (templateId === "modern") {
+        // Modern template - dark futuristic design
+        
+        // Dark gradient background
+        const backgroundGradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
+        backgroundGradient.addColorStop(0, "#0f172a");
+        backgroundGradient.addColorStop(0.5, "#1e293b");
+        backgroundGradient.addColorStop(1, "#0f172a");
+        ctx.fillStyle = backgroundGradient;
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        
+        // Background decorative circles with low opacity
+        ctx.strokeStyle = "#00bcd4";
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.1;
+        
+        ctx.beginPath();
+        ctx.arc(80, 80, 40, 0, 2 * Math.PI);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.arc(ctx.canvas.width - 80, ctx.canvas.height - 80, 30, 0, 2 * Math.PI);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.arc(ctx.canvas.width * 0.35, ctx.canvas.height * 0.5, 15, 0, 2 * Math.PI);
+        ctx.stroke();
+        
+        ctx.globalAlpha = 1;
+        
+        // Company logo with animation
+        const logoX = 50;
+        const logoY = 60;
+        
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(logoX + 20, logoY);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(logoX + 20), -logoY);
+        }
+        
+        // Tech logo - three horizontal bars
+        ctx.fillStyle = "#00bcd4";
+        ctx.fillRect(logoX, logoY - 15, 28, 5);
+        ctx.fillRect(logoX, logoY - 5, 28, 5);
+        ctx.fillRect(logoX, logoY + 5, 28, 5);
+        
+        // Company name
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "24px Arial, sans-serif";
+        ctx.fillText((personalInfo.company || "TECHSPACE").toUpperCase(), logoX + 40, logoY);
+        ctx.restore();
+        
+        // Name and title
+        const nameY = logoY + 60;
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "32px Arial, sans-serif";
+        ctx.fillText(personalInfo.name || "David Harrison", logoX, nameY);
+        
+        ctx.fillStyle = "#00bcd4";
+        ctx.font = "18px Arial, sans-serif";
+        ctx.fillText(personalInfo.title || "CEO", logoX, nameY + 30);
+        
+        // Contact information
+        let contactY = nameY + 80;
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "16px Arial, sans-serif";
+        
+        if (personalInfo.phone) {
+          ctx.fillStyle = "#00bcd4";
+          ctx.fillText("📞", logoX, contactY);
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(personalInfo.phone, logoX + 25, contactY);
+          contactY += 25;
+        }
+        
+        if (personalInfo.email) {
+          ctx.fillStyle = "#00bcd4";
+          ctx.fillText("✉️", logoX, contactY);
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(personalInfo.email, logoX + 25, contactY);
+          contactY += 25;
+        }
+        
+        if (personalInfo.website) {
+          ctx.fillStyle = "#00bcd4";
+          ctx.fillText("🌐", logoX, contactY);
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(personalInfo.website, logoX + 25, contactY);
+          contactY += 25;
+        }
+        
+        // Social media icons with animation
+        const socialY = contactY + 20;
+        
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(logoX + 50, socialY);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(logoX + 50), -socialY);
+        }
+        
+        let socialX = logoX;
+        ctx.fillStyle = "#00bcd4";
+        ctx.font = "16px Arial, sans-serif";
+        
+        if (socialMedia.twitter) {
+          ctx.fillText("❌", socialX, socialY);
+          socialX += 30;
+        }
+        if (socialMedia.linkedin) {
+          ctx.fillText("💼", socialX, socialY);
+          socialX += 30;
+        }
+        if (socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok) {
+          ctx.fillText("🔗", socialX, socialY);
+          socialX += 30;
+        }
+        ctx.restore();
+        
+        // Profile image with cyan glow effect and animation
+        if (loadedImages.headshot) {
+          const portraitX = ctx.canvas.width - 180;
+          const portraitY = 60;
+          const portraitSize = 140;
+          
+          ctx.save();
+          if (animationType === "fade-in") {
+            ctx.globalAlpha = opacity;
+          } else if (animationType === "pulse") {
+            const pulseScale = 1 + 0.05 * Math.sin(progress * Math.PI * 4);
+            ctx.translate(portraitX + portraitSize/2, portraitY + portraitSize/2);
+            ctx.scale(pulseScale, pulseScale);
+            ctx.translate(-(portraitX + portraitSize/2), -(portraitY + portraitSize/2));
+          }
+          
+          // Outer glow effect
+          ctx.shadowColor = "#00bcd4";
+          ctx.shadowBlur = 20;
+          
+          // Cyan border
+          ctx.fillStyle = "#00bcd4";
+          ctx.beginPath();
+          ctx.arc(portraitX + portraitSize/2, portraitY + portraitSize/2, portraitSize/2, 0, 2 * Math.PI);
+          ctx.fill();
+          
+          ctx.shadowColor = "transparent";
+          ctx.shadowBlur = 0;
+          
+          // Inner image area
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(portraitX + portraitSize/2, portraitY + portraitSize/2, portraitSize/2 - 4, 0, 2 * Math.PI);
+          ctx.clip();
+          
+          ctx.drawImage(loadedImages.headshot, portraitX + 4, portraitY + 4, portraitSize - 8, portraitSize - 8);
+          ctx.restore();
+          ctx.restore();
+        }
+
       } else {
         // Default template rendering
         ctx.fillStyle = "#ffffff";
