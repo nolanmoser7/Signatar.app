@@ -180,7 +180,15 @@ export default function SalesProfessionalTemplate({
           <div className="flex items-center mb-6">
             <div className={`w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mr-3 ${animationClass}`}>
               {images.logo ? (
-                <img src={images.logo} alt="Logo" className="w-8 h-8 object-contain" />
+                <img 
+                  src={images.logo} 
+                  alt="Logo" 
+                  className="object-contain"
+                  style={{
+                    width: `${(images.logoSize || 100) * 0.32}px`,
+                    height: `${(images.logoSize || 100) * 0.32}px`
+                  }}
+                />
               ) : (
                 <span className="text-white font-bold text-lg">J</span>
               )}

@@ -173,6 +173,30 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           inputRef={headshotRef}
         />
         
+        {images.headshot && (
+          <div className="mt-2 space-y-2">
+            <Label className="text-sm font-medium text-gray-700">
+              Headshot Size: {images.headshotSize || 100}%
+            </Label>
+            <Slider
+              value={[images.headshotSize || 100]}
+              onValueChange={(value) => onImagesChange({
+                ...images,
+                headshotSize: value[0]
+              })}
+              max={200}
+              min={50}
+              step={5}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>50%</span>
+              <span>100%</span>
+              <span>200%</span>
+            </div>
+          </div>
+        )}
+        
         <UploadArea
           type="logo"
           icon={Building}
@@ -181,6 +205,30 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           inputRef={logoRef}
           maxSize="1MB"
         />
+        
+        {images.logo && (
+          <div className="mt-2 space-y-2">
+            <Label className="text-sm font-medium text-gray-700">
+              Logo Size: {images.logoSize || 100}%
+            </Label>
+            <Slider
+              value={[images.logoSize || 100]}
+              onValueChange={(value) => onImagesChange({
+                ...images,
+                logoSize: value[0]
+              })}
+              max={200}
+              min={50}
+              step={5}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>50%</span>
+              <span>100%</span>
+              <span>200%</span>
+            </div>
+          </div>
+        )}
         
         <UploadArea
           type="background"

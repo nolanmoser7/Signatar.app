@@ -53,11 +53,23 @@ function ModernTemplate({
             <div className={`flex items-center mb-6 ${getAnimationClass("logo")}`}>
               <div className="flex items-center">
                 {images.logo ? (
-                  <div className="w-8 h-8 mr-3">
+                  <div 
+                    className="mr-3"
+                    style={{
+                      width: `${(images.logoSize || 100) * 0.32}px`,
+                      height: `${(images.logoSize || 100) * 0.32}px`
+                    }}
+                  >
                     <img src={images.logo} alt="Logo" className="w-full h-full object-contain" />
                   </div>
                 ) : (
-                  <div className="w-8 h-8 mr-3">
+                  <div 
+                    className="mr-3"
+                    style={{
+                      width: `${(images.logoSize || 100) * 0.32}px`,
+                      height: `${(images.logoSize || 100) * 0.32}px`
+                    }}
+                  >
                     <svg viewBox="0 0 32 32" className="w-full h-full">
                       <rect x="4" y="6" width="24" height="4" fill="#00bcd4" rx="2"/>
                       <rect x="4" y="14" width="24" height="4" fill="#00bcd4" rx="2"/>
@@ -142,7 +154,13 @@ function ModernTemplate({
                   <div className="w-full h-full bg-slate-900 rounded-full"></div>
                 </div>
                 {/* Profile image */}
-                <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,188,212,0.5)]">
+                <div 
+                  className="relative rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,188,212,0.5)]"
+                  style={{
+                    width: `${(images.headshotSize || 100) * 0.8}px`,
+                    height: `${(images.headshotSize || 100) * 0.8}px`
+                  }}
+                >
                   <img 
                     src={images.headshot} 
                     alt={personalInfo.name}
@@ -176,11 +194,23 @@ function ModernTemplate({
             {/* Company Logo */}
             <div className={`flex items-center mb-8 ${getAnimationClass("logo")}`}>
               {images.logo ? (
-                <div className="w-10 h-10 mr-4">
+                <div 
+                  className="mr-4"
+                  style={{
+                    width: `${(images.logoSize || 100) * 0.4}px`,
+                    height: `${(images.logoSize || 100) * 0.4}px`
+                  }}
+                >
                   <img src={images.logo} alt="Logo" className="w-full h-full object-contain" />
                 </div>
               ) : (
-                <div className="w-10 h-10 mr-4">
+                <div 
+                  className="mr-4"
+                  style={{
+                    width: `${(images.logoSize || 100) * 0.4}px`,
+                    height: `${(images.logoSize || 100) * 0.4}px`
+                  }}
+                >
                   <svg viewBox="0 0 40 40" className="w-full h-full">
                     <rect x="6" y="8" width="28" height="5" fill="#00bcd4" rx="2.5"/>
                     <rect x="6" y="17.5" width="28" height="5" fill="#00bcd4" rx="2.5"/>
@@ -264,7 +294,13 @@ function ModernTemplate({
                   <div className="w-full h-full bg-slate-900 rounded-full"></div>
                 </div>
                 {/* Profile image */}
-                <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-cyan-400 shadow-[0_0_40px_rgba(0,188,212,0.6)]">
+                <div 
+                  className="relative rounded-full overflow-hidden border-4 border-cyan-400 shadow-[0_0_40px_rgba(0,188,212,0.6)]"
+                  style={{
+                    width: `${(images.headshotSize || 100) * 1.6}px`,
+                    height: `${(images.headshotSize || 100) * 1.6}px`
+                  }}
+                >
                   <img 
                     src={images.headshot} 
                     alt={personalInfo.name}

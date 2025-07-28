@@ -156,10 +156,24 @@ export function MinimalTemplate({
           <div className={`flex items-center space-x-3 ${animationClass}`}>
             <div className="relative">
               {images.logo ? (
-                <img src={images.logo} alt="Logo" className="w-12 h-12 object-contain" />
+                <img 
+                  src={images.logo} 
+                  alt="Logo" 
+                  className="object-contain"
+                  style={{
+                    width: `${(images.logoSize || 100) * 0.48}px`,
+                    height: `${(images.logoSize || 100) * 0.48}px`
+                  }}
+                />
               ) : (
                 // Default Apex Solutions logo recreation
-                <div className="w-12 h-12 flex items-center">
+                <div 
+                  className="flex items-center"
+                  style={{
+                    width: `${(images.logoSize || 100) * 0.48}px`,
+                    height: `${(images.logoSize || 100) * 0.48}px`
+                  }}
+                >
                   <div className="relative">
                     <div className="w-8 h-8 bg-purple-600 transform rotate-45 rounded-sm"></div>
                     <div className="absolute top-1 left-1 w-3 h-3 bg-white transform rotate-45"></div>
@@ -213,7 +227,13 @@ export function MinimalTemplate({
         {/* Right Side - Portrait and Social Media */}
         <div className="flex flex-col items-center space-y-6">
           {/* Portrait Circle */}
-          <div className={`w-40 h-40 rounded-full overflow-hidden bg-gradient-to-br from-purple-400 via-blue-400 to-blue-500 p-1 ${animationClass}`}>
+          <div 
+            className={`rounded-full overflow-hidden bg-gradient-to-br from-purple-400 via-blue-400 to-blue-500 p-1 ${animationClass}`}
+            style={{
+              width: `${(images.headshotSize || 100) * 1.6}px`,
+              height: `${(images.headshotSize || 100) * 1.6}px`
+            }}
+          >
             <div className="w-full h-full rounded-full overflow-hidden bg-white">
               {images.headshot ? (
                 <img 
