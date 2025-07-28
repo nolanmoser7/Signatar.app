@@ -80,6 +80,9 @@ export class MemStorage implements IStorage {
     const signature: Signature = {
       ...insertSignature,
       id,
+      userId: insertSignature.userId || null,
+      images: insertSignature.images || null,
+      socialMedia: insertSignature.socialMedia || null,
       createdAt: now,
       updatedAt: now,
     };
@@ -116,7 +119,13 @@ export class MemStorage implements IStorage {
 
   async createTemplate(insertTemplate: InsertTemplate): Promise<Template> {
     const id = randomUUID();
-    const template: Template = { ...insertTemplate, id };
+    const template: Template = { 
+      ...insertTemplate, 
+      id,
+      description: insertTemplate.description || null,
+      previewUrl: insertTemplate.previewUrl || null,
+      isActive: insertTemplate.isActive || null,
+    };
     this.templates.set(id, template);
     return template;
   }

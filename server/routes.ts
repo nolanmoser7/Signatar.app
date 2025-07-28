@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import multer from "multer";
@@ -6,12 +6,16 @@ import path from "path";
 import fs from "fs/promises";
 import { insertSignatureSchema } from "@shared/schema";
 
+interface MulterRequest extends Request {
+  file?: Express.Multer.File;
+}
+
 const upload = multer({
   dest: "uploads/",
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },
-  fileFilter: (req, file, cb) => {
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     const allowedTypes = ["image/jpeg", "image/png", "image/svg+xml", "image/webp"];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
@@ -115,7 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload image
-  app.post("/api/upload", upload.single("image"), async (req, res) => {
+  app.post("/api/upload", upload.single("image"), async (req: MulterRequest, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
@@ -139,6 +143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         url: `/api/files/${newFilename}`,
       });
     } catch (error) {
+      console.error("Upload error:", error);
       res.status(500).json({ message: "Failed to upload file" });
     }
   });
