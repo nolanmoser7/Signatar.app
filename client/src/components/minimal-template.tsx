@@ -63,7 +63,13 @@ export function MinimalTemplate({
           
           {/* Portrait */}
           {images.headshot && (
-            <div className={`w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-purple-400 via-blue-400 to-blue-500 ${animationClass}`}>
+            <div 
+              className={`rounded-full overflow-hidden bg-gradient-to-br from-purple-400 via-blue-400 to-blue-500 ${animationClass}`}
+              style={{
+                width: `${(images.headshotSize || 100) * 0.8}px`,
+                height: `${(images.headshotSize || 100) * 0.8}px`
+              }}
+            >
               <img 
                 src={images.headshot} 
                 alt={personalInfo.name}

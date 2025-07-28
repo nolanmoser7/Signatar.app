@@ -236,7 +236,12 @@ export default function SalesProfessionalTemplate({
         </div>
 
         {/* Right Side - Portrait Area */}
-        <div className="w-64 relative overflow-hidden">
+        <div 
+          className="relative overflow-hidden"
+          style={{
+            width: `${(images.headshotSize || 100) * 2.56}px`
+          }}
+        >
           {images.headshot ? (
             <div className={`absolute inset-0 ${animationClass}`}>
               <img

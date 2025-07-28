@@ -148,19 +148,19 @@ function ModernTemplate({
           {/* Profile Image - positioned on right */}
           {images.headshot && (
             <div className={`absolute top-6 right-6 ${getAnimationClass("headshot")}`}>
-              <div className="relative">
+              <div 
+                className="relative"
+                style={{
+                  width: `${(images.headshotSize || 100) * 0.8}px`,
+                  height: `${(images.headshotSize || 100) * 0.8}px`
+                }}
+              >
                 {/* Cyan glow border */}
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-full p-1">
                   <div className="w-full h-full bg-slate-900 rounded-full"></div>
                 </div>
                 {/* Profile image */}
-                <div 
-                  className="relative rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,188,212,0.5)]"
-                  style={{
-                    width: `${(images.headshotSize || 100) * 0.8}px`,
-                    height: `${(images.headshotSize || 100) * 0.8}px`
-                  }}
-                >
+                <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,188,212,0.5)]">
                   <img 
                     src={images.headshot} 
                     alt={personalInfo.name}
@@ -288,19 +288,19 @@ function ModernTemplate({
           {/* Right side - Profile Image */}
           {images.headshot && (
             <div className={`flex-shrink-0 ${getAnimationClass("headshot")}`}>
-              <div className="relative">
+              <div 
+                className="relative"
+                style={{
+                  width: `${(images.headshotSize || 100) * 1.6}px`,
+                  height: `${(images.headshotSize || 100) * 1.6}px`
+                }}
+              >
                 {/* Cyan glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-full p-1 shadow-[0_0_40px_rgba(0,188,212,0.6)]">
                   <div className="w-full h-full bg-slate-900 rounded-full"></div>
                 </div>
                 {/* Profile image */}
-                <div 
-                  className="relative rounded-full overflow-hidden border-4 border-cyan-400 shadow-[0_0_40px_rgba(0,188,212,0.6)]"
-                  style={{
-                    width: `${(images.headshotSize || 100) * 1.6}px`,
-                    height: `${(images.headshotSize || 100) * 1.6}px`
-                  }}
-                >
+                <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-cyan-400 shadow-[0_0_40px_rgba(0,188,212,0.6)]">
                   <img 
                     src={images.headshot} 
                     alt={personalInfo.name}
