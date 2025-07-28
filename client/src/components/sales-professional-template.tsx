@@ -24,9 +24,9 @@ export default function SalesProfessionalTemplate({
   if (deviceView === "mobile") {
     // Mobile version - simplified layout
     return (
-      <div className={`bg-white rounded-xl shadow-lg p-4 max-w-sm mx-auto ${animationClass}`}>
+      <div className="bg-white rounded-xl shadow-lg p-4 max-w-sm mx-auto">
         <div className="flex items-center space-x-4">
-          <div className="bg-teal-500 rounded-lg p-2 flex flex-col space-y-2">
+          <div className={`bg-teal-500 rounded-lg p-2 flex flex-col space-y-2 ${animationClass}`}>
             {socialMedia.twitter && (
               <a href={socialMedia.twitter} className="text-white hover:text-gray-200">
                 <X className="w-4 h-4" />
@@ -47,7 +47,7 @@ export default function SalesProfessionalTemplate({
           <div className="flex-1">
             {images.logo && (
               <div className="flex items-center mb-3">
-                <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center mr-2">
+                <div className={`w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center mr-2 ${animationClass}`}>
                   <span className="text-white font-bold text-sm">J</span>
                 </div>
                 <span className="font-bold text-lg tracking-wider">{personalInfo.company || "COMPANY"}</span>
@@ -90,7 +90,7 @@ export default function SalesProfessionalTemplate({
 
   // Desktop version - modern sidebar design
   return (
-    <div className={`bg-white rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto relative ${animationClass}`}>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto relative">
       {/* Background geometric pattern */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute right-0 top-0 w-1/2 h-full">
@@ -109,7 +109,7 @@ export default function SalesProfessionalTemplate({
 
       <div className="flex relative z-10">
         {/* Left Sidebar with Social Icons */}
-        <div className="w-20 bg-teal-500 rounded-l-xl flex flex-col items-center py-6 space-y-4">
+        <div className={`w-20 bg-teal-500 rounded-l-xl flex flex-col items-center py-6 space-y-4 ${animationClass}`}>
           {socialMedia.twitter && (
             <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
               <X className="w-5 h-5" />
@@ -133,7 +133,7 @@ export default function SalesProfessionalTemplate({
         <div className="flex-1 p-8">
           {/* Company Logo/Branding */}
           <div className="flex items-center mb-6">
-            <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mr-3">
+            <div className={`w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mr-3 ${animationClass}`}>
               {images.logo ? (
                 <img src={images.logo} alt="Logo" className="w-8 h-8 object-contain" />
               ) : (
@@ -185,7 +185,7 @@ export default function SalesProfessionalTemplate({
         {/* Right Side - Portrait Area */}
         <div className="w-64 relative overflow-hidden">
           {images.headshot ? (
-            <div className="absolute inset-0">
+            <div className={`absolute inset-0 ${animationClass}`}>
               <img
                 src={images.headshot}
                 alt={`${personalInfo.name} portrait`}
@@ -204,7 +204,7 @@ export default function SalesProfessionalTemplate({
             </div>
           ) : (
             <div 
-              className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center"
+              className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center ${animationClass}`}
               style={{
                 clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
               }}

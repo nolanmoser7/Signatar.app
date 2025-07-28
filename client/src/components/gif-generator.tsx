@@ -167,15 +167,19 @@ export default function GifGenerator({
   ) => {
     const renderSignature = (ctx: CanvasRenderingContext2D, opacity: number, scale = 1) => {
       ctx.save();
-      ctx.globalAlpha = opacity;
       
-      // Apply scale transformation
-      if (scale !== 1) {
-        const centerX = ctx.canvas.width / 2;
-        const centerY = ctx.canvas.height / 2;
-        ctx.translate(centerX, centerY);
-        ctx.scale(scale, scale);
-        ctx.translate(-centerX, -centerY);
+      // Don't apply global opacity and scale for sales professional template
+      if (templateId !== "sales-professional") {
+        ctx.globalAlpha = opacity;
+        
+        // Apply scale transformation
+        if (scale !== 1) {
+          const centerX = ctx.canvas.width / 2;
+          const centerY = ctx.canvas.height / 2;
+          ctx.translate(centerX, centerY);
+          ctx.scale(scale, scale);
+          ctx.translate(-centerX, -centerY);
+        }
       }
 
       if (templateId === "sales-professional") {
@@ -197,7 +201,17 @@ export default function GifGenerator({
         ctx.shadowBlur = 0;
         ctx.shadowOffsetY = 0;
 
-        // Left sidebar
+        // Left sidebar with animation
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(60, 150);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-60, -150);
+        }
+        
         ctx.fillStyle = "#4ECDC4";
         ctx.fillRect(20, 30, 80, 240);
         
@@ -227,9 +241,20 @@ export default function GifGenerator({
         }
         // YouTube icon at bottom
         ctx.fillText("📺", 45, 250);
+        ctx.restore();
 
-        // Company branding section
+        // Company branding section with animation
         const contentX = 120;
+        
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(contentX + 24, 74);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(contentX + 24), -74);
+        }
         
         // Company logo background
         ctx.fillStyle = "#4ECDC4";
@@ -245,6 +270,7 @@ export default function GifGenerator({
           ctx.font = "bold 18px Helvetica, Arial, sans-serif";
           ctx.fillText("J", contentX + 20, 80);
         }
+        ctx.restore();
 
         // Company name
         ctx.fillStyle = "#333333";
@@ -292,7 +318,7 @@ export default function GifGenerator({
           ctx.fillText(`🌐 ${personalInfo.website}`, contentX, contactY);
         }
 
-        // Portrait section with clipping
+        // Portrait section with clipping and animation
         const portraitX = ctx.canvas.width - 240;
         const portraitY = 30;
         const portraitWidth = 220;
@@ -300,6 +326,17 @@ export default function GifGenerator({
 
         // Create clipping path for angled portrait
         ctx.save();
+        
+        // Apply animation to portrait
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.05 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(portraitX + portraitWidth/2, portraitY + portraitHeight/2);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(portraitX + portraitWidth/2), -(portraitY + portraitHeight/2));
+        }
+        
         ctx.beginPath();
         ctx.moveTo(portraitX + portraitWidth * 0.25, portraitY);
         ctx.lineTo(portraitX + portraitWidth, portraitY);
