@@ -127,17 +127,23 @@ export default function SalesProfessionalTemplate({
         />
       )}
       
-      {/* Background geometric pattern */}
+      {/* Background geometric pattern - centered and adjusted for headshot */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute right-0 top-0 w-1/2 h-full">
+        <div 
+          className="absolute top-0 h-full"
+          style={{
+            right: `${(images.headshotSize || 100) * 2.56 + 20}px`,
+            width: `calc(50% - ${(images.headshotSize || 100) * 1.28}px)`
+          }}
+        >
           {/* Geometric shapes */}
-          <div className="absolute right-20 top-16 w-32 h-32 transform rotate-45">
+          <div className="absolute right-4 top-16 w-32 h-32 transform rotate-45">
             <div className="w-full h-full bg-gradient-to-br from-teal-400 to-teal-600 opacity-20"></div>
           </div>
-          <div className="absolute right-8 top-32 w-24 h-24 transform -rotate-12">
+          <div className="absolute right-12 top-32 w-24 h-24 transform -rotate-12">
             <div className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 opacity-30"></div>
           </div>
-          <div className="absolute right-16 bottom-16 w-20 h-20 transform rotate-12">
+          <div className="absolute right-8 bottom-16 w-20 h-20 transform rotate-12">
             <div className="w-full h-full bg-gradient-to-br from-teal-500 to-teal-700 opacity-25"></div>
           </div>
         </div>
@@ -175,19 +181,26 @@ export default function SalesProfessionalTemplate({
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 p-8">
+        <div 
+          className="p-8"
+          style={{
+            width: `calc(100% - 80px - ${(images.headshotSize || 100) * 2.56}px)`
+          }}
+        >
           {/* Company Logo/Branding */}
           <div className="flex items-center mb-6">
-            <div className={`w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mr-3 ${animationClass}`}>
+            <div 
+              className={`bg-teal-500 rounded-lg flex items-center justify-center mr-3 ${animationClass}`}
+              style={{
+                width: `${(images.logoSize || 100) * 0.48}px`,
+                height: `${(images.logoSize || 100) * 0.48}px`
+              }}
+            >
               {images.logo ? (
                 <img 
                   src={images.logo} 
                   alt="Logo" 
-                  className="object-contain"
-                  style={{
-                    width: `${(images.logoSize || 100) * 0.32}px`,
-                    height: `${(images.logoSize || 100) * 0.32}px`
-                  }}
+                  className="w-full h-full object-contain p-2"
                 />
               ) : (
                 <span className="text-white font-bold text-lg">J</span>
