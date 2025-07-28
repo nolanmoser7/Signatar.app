@@ -179,92 +179,175 @@ export default function GifGenerator({
       }
 
       if (templateId === "sales-professional") {
-        // Sales Professional template rendering
+        // Sales Professional template - modern design
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        // Draw border
-        ctx.strokeStyle = "#E0E0E0";
-        ctx.lineWidth = 1;
-        ctx.roundRect(20, 50, ctx.canvas.width - 40, 200, 8);
-        ctx.stroke();
+        // Add shadow
+        ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 4;
+        
+        // Main container with rounded corners
+        ctx.fillStyle = "#ffffff";
+        ctx.roundRect(20, 30, ctx.canvas.width - 40, 240, 12);
+        ctx.fill();
+        
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
 
-        // Left accent bar
+        // Left sidebar
         ctx.fillStyle = "#4ECDC4";
-        ctx.fillRect(20, 50, 8, 200);
+        ctx.fillRect(20, 30, 80, 240);
+        
+        // Round left corners
+        ctx.clearRect(20, 30, 12, 12);
+        ctx.clearRect(20, 258, 12, 12);
+        ctx.beginPath();
+        ctx.arc(32, 42, 12, Math.PI, 1.5 * Math.PI);
+        ctx.arc(32, 258, 12, 0.5 * Math.PI, Math.PI);
+        ctx.fill();
 
-        // Right accent bar  
-        ctx.fillRect(ctx.canvas.width - 28, 50, 8, 200);
-
-        // Headshot
-        if (loadedImages.headshot) {
-          ctx.save();
-          const headshotX = 60;
-          const headshotY = 110;
-          ctx.beginPath();
-          ctx.arc(headshotX, headshotY, 40, 0, 2 * Math.PI);
-          ctx.clip();
-          ctx.drawImage(loadedImages.headshot, headshotX - 40, headshotY - 40, 80, 80);
-          ctx.restore();
-          
-          // Teal border
-          ctx.strokeStyle = "#4ECDC4";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(headshotX, headshotY, 40, 0, 2 * Math.PI);
-          ctx.stroke();
+        // Social icons in sidebar
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "16px Arial, sans-serif";
+        let socialY = 60;
+        if (socialMedia.twitter) {
+          ctx.fillText("❌", 45, socialY);
+          socialY += 24;
         }
+        if (socialMedia.linkedin) {
+          ctx.fillText("💼", 45, socialY);
+          socialY += 24;
+        }
+        if (socialMedia.instagram) {
+          ctx.fillText("📷", 45, socialY);
+          socialY += 24;
+        }
+        // YouTube icon at bottom
+        ctx.fillText("📺", 45, 250);
 
-        // Logo
+        // Company branding section
+        const contentX = 120;
+        
+        // Company logo background
+        ctx.fillStyle = "#4ECDC4";
+        ctx.fillRect(contentX, 50, 48, 48);
+        ctx.roundRect(contentX, 50, 48, 48, 8);
+        ctx.fill();
+        
+        // Logo or initial
         if (loadedImages.logo) {
-          ctx.drawImage(loadedImages.logo, 140, 70, 100, 24);
+          ctx.drawImage(loadedImages.logo, contentX + 8, 58, 32, 32);
+        } else {
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 18px Helvetica, Arial, sans-serif";
+          ctx.fillText("J", contentX + 20, 80);
         }
 
-        // Name
-        ctx.fillStyle = "#4ECDC4";
-        ctx.font = "bold 18px Helvetica, Arial, sans-serif";
-        ctx.fillText(personalInfo.name || "Your Name", 140, 120);
-
-        // Title
+        // Company name
+        ctx.fillStyle = "#333333";
+        ctx.font = "bold 24px Helvetica, Arial, sans-serif";
+        const companyName = (personalInfo.company || "COMPANY").toUpperCase();
+        ctx.fillText(companyName, contentX + 60, 75);
+        
+        // "GRAPHICS" subtitle
         ctx.fillStyle = "#777777";
         ctx.font = "12px Helvetica, Arial, sans-serif";
-        const titleText = (personalInfo.title || "Your Title").toUpperCase();
-        ctx.fillText(titleText, 140, 140);
+        ctx.fillText("GRAPHICS", contentX + 60, 90);
 
-        // Contact info
+        // Name with checkmark
         ctx.fillStyle = "#333333";
-        ctx.font = "14px Helvetica, Arial, sans-serif";
-        let contactY = 165;
+        ctx.font = "bold 32px Helvetica, Arial, sans-serif";
+        const nameText = personalInfo.name || "Your Name";
+        ctx.fillText(nameText, contentX, 130);
+        
+        // Checkmark
+        ctx.fillStyle = "#4ECDC4";
+        const nameWidth = ctx.measureText(nameText).width;
+        ctx.fillText("✓", contentX + nameWidth + 8, 130);
+
+        // Title
+        ctx.fillStyle = "#666666";
+        ctx.font = "20px Helvetica, Arial, sans-serif";
+        ctx.fillText(personalInfo.title || "Your Title", contentX, 155);
+
+        // Contact information
+        ctx.fillStyle = "#333333";
+        ctx.font = "16px Helvetica, Arial, sans-serif";
+        let contactY = 185;
 
         if (personalInfo.phone) {
-          ctx.fillText(`📞 ${personalInfo.phone}`, 140, contactY);
-          contactY += 20;
+          ctx.fillText(`📞 ${personalInfo.phone}`, contentX, contactY);
+          contactY += 24;
         }
 
         if (personalInfo.email) {
-          ctx.fillText(`✉️ ${personalInfo.email}`, 140, contactY);
-          contactY += 20;
+          ctx.fillText(`✉️ ${personalInfo.email}`, contentX, contactY);
+          contactY += 24;
         }
 
         if (personalInfo.website) {
-          ctx.fillText(`🌐 ${personalInfo.website}`, 140, contactY);
+          ctx.fillText(`🌐 ${personalInfo.website}`, contentX, contactY);
         }
 
-        // Action buttons
-        const buttonX = ctx.canvas.width - 140;
-        
-        // Schedule Call button
-        ctx.fillStyle = "#4ECDC4";
-        ctx.fillRect(buttonX, 80, 100, 32);
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "13px Helvetica, Arial, sans-serif";
-        ctx.fillText("Schedule Call", buttonX + 15, 100);
+        // Portrait section with clipping
+        const portraitX = ctx.canvas.width - 240;
+        const portraitY = 30;
+        const portraitWidth = 220;
+        const portraitHeight = 240;
 
-        // Get Quote button
-        ctx.fillStyle = "#FF6B6B";
-        ctx.fillRect(buttonX, 120, 100, 32);
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillText("Get Quote", buttonX + 25, 140);
+        // Create clipping path for angled portrait
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(portraitX + portraitWidth * 0.25, portraitY);
+        ctx.lineTo(portraitX + portraitWidth, portraitY);
+        ctx.lineTo(portraitX + portraitWidth, portraitY + portraitHeight);
+        ctx.lineTo(portraitX, portraitY + portraitHeight);
+        ctx.closePath();
+        ctx.clip();
+
+        if (loadedImages.headshot) {
+          ctx.drawImage(loadedImages.headshot, portraitX, portraitY, portraitWidth, portraitHeight);
+          
+          // Overlay gradient
+          const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitWidth, portraitY + portraitHeight);
+          gradient.addColorStop(0, "rgba(78, 205, 196, 0.2)");
+          gradient.addColorStop(1, "rgba(107, 114, 128, 0.2)");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(portraitX, portraitY, portraitWidth, portraitHeight);
+        } else {
+          // Default background
+          const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitWidth, portraitY + portraitHeight);
+          gradient.addColorStop(0, "#E5E7EB");
+          gradient.addColorStop(1, "#9CA3AF");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(portraitX, portraitY, portraitWidth, portraitHeight);
+        }
+        
+        ctx.restore();
+
+        // Geometric decorations
+        ctx.save();
+        ctx.globalAlpha = 0.3;
+        
+        // Teal square
+        ctx.fillStyle = "#4ECDC4";
+        ctx.translate(portraitX + 80, portraitY + 64);
+        ctx.rotate(Math.PI / 4);
+        ctx.fillRect(-64, -64, 128, 128);
+        ctx.restore();
+        
+        ctx.save();
+        ctx.globalAlpha = 0.4;
+        
+        // Gray square
+        ctx.fillStyle = "#6B7280";
+        ctx.translate(portraitX + 160, portraitY + 128);
+        ctx.rotate(-Math.PI / 15);
+        ctx.fillRect(-48, -48, 96, 96);
+        ctx.restore();
 
       } else {
         // Default template rendering

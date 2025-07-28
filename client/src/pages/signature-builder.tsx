@@ -59,30 +59,64 @@ export default function SignatureBuilder() {
   const generateSignatureHtml = (): string => {
     if (selectedTemplate === "sales-professional") {
       return `
-<table cellpadding="0" cellspacing="0" style="width:600px; background:#FFFFFF; border:1px solid #E0E0E0; border-radius:8px; font-family:Helvetica, Arial, sans-serif; color:#333333;">
+<table cellpadding="0" cellspacing="0" style="width:600px; background:#FFFFFF; border-radius:12px; font-family:Helvetica, Arial, sans-serif; color:#333333; overflow:hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
   <tr>
-    <td style="width:8px; background:#4ECDC4; border-top-left-radius:8px; border-bottom-left-radius:8px;"></td>
-    <td style="width:100px; padding:12px 10px; vertical-align:top; text-align:center;">
-      ${images.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" width="80" style="display:block; margin:0 auto; border-radius:50%; border:2px solid #4ECDC4;">` : ''}
-    </td>
-    <td style="padding:12px 10px; vertical-align:top;">
-      ${images.logo ? `<img src="${images.logo}" alt="Logo" width="100" style="display:block; margin-bottom:8px;">` : ''}
-      <p style="margin:0; font-size:18px; font-weight:bold; color:#4ECDC4;">${personalInfo.name || 'Your Name'}</p>
-      <p style="margin:4px 0 12px; font-size:12px; color:#777777; text-transform:uppercase; letter-spacing:1px;">${personalInfo.title || 'Your Title'}</p>
-      ${personalInfo.phone ? `<p style="margin:6px 0; font-size:14px;">📞 <a href="tel:${personalInfo.phone}" style="color:#333333; text-decoration:none;">${personalInfo.phone}</a></p>` : ''}
-      ${personalInfo.email ? `<p style="margin:6px 0; font-size:14px;">✉️ <a href="mailto:${personalInfo.email}" style="color:#333333; text-decoration:none;">${personalInfo.email}</a></p>` : ''}
-      ${personalInfo.website ? `<p style="margin:6px 0; font-size:14px;">🌐 <a href="${personalInfo.website}" style="color:#333333; text-decoration:none;">${personalInfo.website}</a></p>` : ''}
-    </td>
-    <td style="padding:12px 10px; vertical-align:top; text-align:right;">
-      <a href="${personalInfo.website || '#'}" style="display:inline-block; padding:8px 14px; background:#4ECDC4; color:#FFFFFF; text-decoration:none; border-radius:4px; font-size:13px; margin-bottom:8px;">Schedule Call</a><br>
-      <a href="mailto:${personalInfo.email || '#'}" style="display:inline-block; padding:8px 14px; background:#FF6B6B; color:#FFFFFF; text-decoration:none; border-radius:4px; font-size:13px;">Get Quote</a>
-      <div style="margin-top:12px;">
-        ${socialMedia.linkedin ? `<a href="${socialMedia.linkedin}" style="margin:0 4px; text-decoration:none;"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNzdCNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjQ0NyAyMC40NTJoLTMuNTU0di01LjU2OWMwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDZjLjQ3Ny0uOSAxLjYzNy0xLjg1IDMuMzctMS44NSAzLjYwMSAwIDQuMjY3IDIuMzcgNC4yNjcgNS40NTV2Ni4yODZ6TTUuMzM3IDcuNDMzYTIuMDYyIDIuMDYyIDAgMCAxLTIuMDYzLTIuMDY1IDIuMDY0IDIuMDY0IDAgMSAxIDIuMDYzIDIuMDY1em0xLjc4MiAxMy4wMTlIMy41NTVWOWgzLjU2NHYxMS40NTJ6TTIyLjIyNSAwSDEuNzcxQy43OTIgMCAwIC43NzQgMCAxLjcyOXYyMC41NDJDMCAyMy4yMjcuNzkyIDI0IDEuNzcxIDI0aDIwLjQ1MUMyMy4yIDI0IDI0IDIzLjIyNyAyNCAyMi4yNzFWMS43MjlDMjQgLjc3NCAyMy4yIDAgMjIuMjI1IDB6Ii8+Cjwvc3ZnPgo=" width="20" alt="LinkedIn"></a>` : ''}
-        ${socialMedia.twitter ? `<a href="${socialMedia.twitter}" style="margin:0 4px; text-decoration:none;"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzFEQTFGMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIzLjk1MyA0LjU3YTEwIDEwIDAgMCAxLTIuODI1Ljc3NSA0Ljk1OCA0Ljk1OCAwIDAgMCAyLjE2My0yLjcyM2MtLjk1MS41NTUtMi4wMDMuOTU5LTMuMTI3IDEuMTg0YTQuOTIgNC45MiAwIDAgMC04LjM4NCA0LjQ4MkM3LjY5IDguMDk1IDQuMDY3IDYuMTMgMS42NCAzLjE2MmE0LjgyMiA0LjgyMiAwIDAgMC0uNjY2IDIuNDc1YzAgMS43MS44NyAzLjIxMyAyLjE4OCA0LjA5NmE0LjkwNCA0LjkwNCAwIDAgMS0yLjIyOC0uNjE2di4wNmE0LjkyMyA0LjkyMyAwIDAgMCAzLjk0NiA0LjgyNyA0Ljk5NiA0Ljk5NiAwIDAgMS0yLjIxMi4wODUgNC45MzYgNC45MzYgMCAwIDAgNC42MDQgMy40MTcgOS44NjcgOS44NjcgMCAwIDEtNi4xMDIgMi4xMDVjLS4zOSAwLS43NzktLjAyMy0xLjE3LS4wNjdhMTMuOTk1IDEzLjk5NSAwIDAgMCA3LjU1NyAyLjIwOWM5LjA1NCAwIDE0LjAwMS04LjUwOCAxNC4wMDEtMTUuODggMC0uMjQxLS4wMDUtLjQ4Mi0uMDE1LS43MjJBMTAuMDI1IDEwLjAyNSAwIDAgMCAyNCA0LjU5eiIvPgo8L3N2Zz4K" width="20" alt="Twitter"></a>` : ''}
-        ${socialMedia.instagram ? `<a href="${socialMedia.instagram}" style="margin:0 4px; text-decoration:none;"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0U0NDA1RiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIuMTYzYzMuMjA0IDAgMy41ODQuMDEyIDQuODUuMDcgMy4yNTIuMTQ4IDQuNzcxIDEuNjkxIDQuOTE5IDQuOTE5LjA1OCAxLjI2NS4wNjkgMS42NDUuMDY5IDQuODQ4IDAgMy4yMDQtLjAxMiAzLjU4NC0uMDY5IDQuODQ5LS4xNDkgMy4yMjUtMS42NjQgNC43NzEtNC45MTkgNC45MTktMS4yNjYuMDU4LTEuNjQ0LjA3LTQuODUuMDctMy4yMDQgMC0zLjU4NC0uMDEyLTQuODQ5LS4wNy0zLjI2LS4xNDktNC43NzEtMS42OTktNC45MTktNC45MjQtLjA1Ny0xLjI2NS0uMDctMS42NDQtLjA3LTQuODQ5IDAtMy4yMDQuMDEzLTMuNTgzLjA3LTQuODQ4LjE0OS0zLjIyNyAxLjY2NC00Ljc3MSA0LjkxOS00LjkyIDEuMjY2LS4wNTcgMS42NDUtLjA2OSA0Ljg0OS0uMDY5ek0xMiAwQzguNzQxIDAgOC4zMzMuMDE0IDcuMDUzLjA3MiAyLjY5NS4yNzIuMjczIDIuNjkuMDcyIDcuMDUyLjAxNCA4LjMzMyAwIDguNzQxIDAgMTJzLjAxNCAzLjY2OC4wNzIgNC45NDhjLjIgNC4zNTggMi42MTggNi43OCA2Ljk4IDYuOThDOC4zMzMgMjMuOTg3IDguNzQxIDI0IDEyIDI0czMuNjY4LS4wMTMgNC45NDgtLjA3MmM0LjM1NC0uMiA2Ljc4Mi0yLjYxOCA2Ljk3OS02Ljk4LjA1OS0xLjI4LjA3My0xLjY4OS4wNzMtNC45NDhzLS4wMTQtMy42NjctLjA3Mi00Ljk0N0MyMy45MjcgMi42OSAyMS4zMDUuMjcyIDE2Ljk0OC4wNzIgMTUuNjY4LjAxNCAxNS4yNTkgMCAxMiAweiIvPgo8cGF0aCBkPSJNMTIgNS44MzhBNi4xNjIgNi4xNjIgMCAxIDAgMTggMTJhNi4xNjIgNi4xNjIgMCAwIDAtNi02LjE2MnpNMTIgMTZhNCA0IDAgMSAxIDQtNCA0IDQgMCAwIDEtNCA0ek0xOC40MDYgNC4xNTRhMS40NCAxLjQ0IDAgMSAxLTIuODggMCAxLjQ0IDEuNDQgMCAwIDEgMi44OCAweiIvPgo8L3N2Zz4K" width="20" alt="Instagram"></a>` : ''}
+    <!-- Left Sidebar -->
+    <td style="width:80px; background:#4ECDC4; vertical-align:top; text-align:center; padding:24px 0;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+        ${socialMedia.twitter ? `<a href="${socialMedia.twitter}" style="color:#FFFFFF; text-decoration:none;">❌</a>` : ''}
+        ${socialMedia.linkedin ? `<a href="${socialMedia.linkedin}" style="color:#FFFFFF; text-decoration:none;">💼</a>` : ''}
+        ${socialMedia.instagram ? `<a href="${socialMedia.instagram}" style="color:#FFFFFF; text-decoration:none;">📷</a>` : ''}
+        <div style="margin-top:auto;">📺</div>
       </div>
     </td>
-    <td style="width:8px; background:#4ECDC4; border-top-right-radius:8px; border-bottom-right-radius:8px;"></td>
+    
+    <!-- Main Content -->
+    <td style="padding:32px; vertical-align:top; position:relative;">
+      <!-- Company Branding -->
+      <div style="display:flex; align-items:center; margin-bottom:24px;">
+        <div style="width:48px; height:48px; background:#4ECDC4; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-right:12px;">
+          ${images.logo ? `<img src="${images.logo}" alt="Logo" style="width:32px; height:32px; object-fit:contain;">` : '<span style="color:#FFFFFF; font-weight:bold; font-size:18px;">J</span>'}
+        </div>
+        <div>
+          <div style="font-size:24px; font-weight:bold; letter-spacing:2px; color:#333333;">${(personalInfo.company || 'COMPANY').toUpperCase()}</div>
+          <div style="font-size:12px; color:#777777; letter-spacing:3px;">GRAPHICS</div>
+        </div>
+      </div>
+      
+      <!-- Name and Title -->
+      <div style="margin-bottom:24px;">
+        <h1 style="margin:0 0 8px 0; font-size:32px; font-weight:bold; color:#333333;">
+          ${personalInfo.name || 'Your Name'} <span style="color:#4ECDC4;">✓</span>
+        </h1>
+        <p style="margin:0; font-size:20px; color:#666666; font-weight:500;">${personalInfo.title || 'Your Title'}</p>
+      </div>
+      
+      <!-- Contact Info -->
+      <div style="font-size:16px; line-height:1.8;">
+        ${personalInfo.phone ? `<div style="margin-bottom:8px;">📞 <a href="tel:${personalInfo.phone}" style="color:#333333; text-decoration:none;">${personalInfo.phone}</a></div>` : ''}
+        ${personalInfo.email ? `<div style="margin-bottom:8px;">✉️ <a href="mailto:${personalInfo.email}" style="color:#333333; text-decoration:none;">${personalInfo.email}</a></div>` : ''}
+        ${personalInfo.website ? `<div style="margin-bottom:8px;">🌐 <a href="${personalInfo.website}" style="color:#333333; text-decoration:none;">${personalInfo.website}</a></div>` : ''}
+      </div>
+    </td>
+    
+    <!-- Portrait Section -->
+    <td style="width:240px; vertical-align:top; position:relative; background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(107, 114, 128, 0.1) 100%);">
+      ${images.headshot ? `
+        <div style="position:relative; height:300px; overflow:hidden;">
+          <img src="${images.headshot}" alt="${personalInfo.name}" style="width:100%; height:100%; object-fit:cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <div style="position:absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(78, 205, 196, 0.2) 0%, rgba(107, 114, 128, 0.2) 100%); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);"></div>
+        </div>
+      ` : `
+        <div style="height:300px; background: linear-gradient(135deg, #E5E7EB 0%, #9CA3AF 100%); display:flex; align-items:center; justify-content:center; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);">
+          <span style="color:#6B7280;">Portrait</span>
+        </div>
+      `}
+      
+      <!-- Geometric decorations -->
+      <div style="position:absolute; top:64px; right:80px; width:128px; height:128px; background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(78, 205, 196, 0.4)); transform: rotate(45deg); opacity:0.3;"></div>
+      <div style="position:absolute; top:128px; right:32px; width:96px; height:96px; background: linear-gradient(45deg, rgba(107, 114, 128, 0.3), rgba(107, 114, 128, 0.5)); transform: rotate(-12deg); opacity:0.4;"></div>
+    </td>
   </tr>
 </table>`;
     }
