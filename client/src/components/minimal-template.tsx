@@ -41,11 +41,12 @@ export function MinimalTemplate({
         {/* Background Image */}
         {images.background && (
           <div 
-            className="absolute inset-0 opacity-20 pointer-events-none"
+            className="absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: `url(${images.background})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
+              opacity: (images.backgroundOpacity || 20) / 100,
             }}
           />
         )}
@@ -139,11 +140,12 @@ export function MinimalTemplate({
       {/* Background Image */}
       {images.background && (
         <div 
-          className="absolute inset-0 opacity-20 pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
             backgroundImage: `url(${images.background})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            opacity: (images.backgroundOpacity || 20) / 100,
           }}
         />
       )}

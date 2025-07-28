@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import { UserCircle, Building, Image, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -99,7 +100,7 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
     inputRef: React.RefObject<HTMLInputElement>;
     maxSize?: string;
   }) => {
-    const hasImage = !!images[type];
+    const hasImage = !!images[type] && typeof images[type] === 'string';
 
     return (
       <div>
@@ -112,7 +113,7 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <img
-                  src={images[type]}
+                  src={images[type] as string}
                   alt={title}
                   className="w-12 h-12 object-cover rounded"
                 />
@@ -189,6 +190,30 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           inputRef={backgroundRef}
           maxSize="5MB"
         />
+        
+        {images.background && (
+          <div className="mt-4 space-y-2">
+            <Label className="text-sm font-medium text-gray-700">
+              Background Opacity: {images.backgroundOpacity || 20}%
+            </Label>
+            <Slider
+              value={[images.backgroundOpacity || 20]}
+              onValueChange={(value) => onImagesChange({
+                ...images,
+                backgroundOpacity: value[0]
+              })}
+              max={100}
+              min={0}
+              step={5}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>0%</span>
+              <span>50%</span>
+              <span>100%</span>
+            </div>
+          </div>
+        )}
       </div>
       
       {uploadMutation.isPending && (

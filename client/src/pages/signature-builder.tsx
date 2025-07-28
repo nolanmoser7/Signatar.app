@@ -24,7 +24,7 @@ export default function SignatureBuilder() {
     phone: "",
     website: "",
   });
-  const [images, setImages] = useState<Images>({});
+  const [images, setImages] = useState<Images>({ backgroundOpacity: 20 });
   const [animationType, setAnimationType] = useState<AnimationType>("fade-in");
   const [socialMedia, setSocialMedia] = useState<SocialMedia>({});
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");

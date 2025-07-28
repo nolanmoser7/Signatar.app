@@ -45,6 +45,7 @@ export const imagesSchema = z.object({
   headshot: z.string().optional(),
   logo: z.string().optional(),
   background: z.string().optional(),
+  backgroundOpacity: z.number().min(0).max(100).default(20),
 });
 
 export const insertSignatureSchema = createInsertSchema(signatures).omit({
