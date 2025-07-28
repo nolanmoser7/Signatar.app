@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
-import { Mail, Phone, Globe, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Mail, Phone, Globe, Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
+import { SiTiktok } from "react-icons/si";
 import { getAnimationClass } from "@/lib/animations";
 import SalesProfessionalTemplate from "./sales-professional-template";
 import { MinimalTemplate } from "./minimal-template";
@@ -57,6 +58,8 @@ export default function SignaturePreview({
     { key: "linkedin", url: socialMedia.linkedin, icon: Linkedin, color: "bg-blue-600 hover:bg-blue-700" },
     { key: "twitter", url: socialMedia.twitter, icon: Twitter, color: "bg-blue-400 hover:bg-blue-500" },
     { key: "instagram", url: socialMedia.instagram, icon: Instagram, color: "bg-pink-500 hover:bg-pink-600" },
+    { key: "youtube", url: socialMedia.youtube, icon: Youtube, color: "bg-red-600 hover:bg-red-700" },
+    { key: "tiktok", url: socialMedia.tiktok, icon: SiTiktok, color: "bg-black hover:bg-gray-800" },
   ];
 
   return (

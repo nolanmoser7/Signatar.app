@@ -1,4 +1,5 @@
-import { Phone, Mail, Globe, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Phone, Mail, Globe, Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
+import { SiTiktok } from "react-icons/si";
 
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 
@@ -103,6 +104,16 @@ export function MinimalTemplate({
             {socialMedia.instagram && (
               <a href={socialMedia.instagram} className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
                 <Instagram className="w-4 h-4 text-white" />
+              </a>
+            )}
+            {socialMedia.youtube && (
+              <a href={socialMedia.youtube} className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                <Youtube className="w-4 h-4 text-white" />
+              </a>
+            )}
+            {socialMedia.tiktok && (
+              <a href={socialMedia.tiktok} className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                <SiTiktok className="w-4 h-4 text-white" />
               </a>
             )}
           </div>
@@ -215,10 +226,6 @@ export function MinimalTemplate({
               </a>
             )}
 
-            {/* Default GitHub icon (representing the circular icon in the image) */}
-            <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
-              <div className="w-5 h-5 bg-white rounded-full"></div>
-            </div>
             {socialMedia.instagram && (
               <a 
                 href={socialMedia.instagram} 
@@ -226,6 +233,28 @@ export function MinimalTemplate({
               >
                 <Instagram className="w-5 h-5 text-white" />
               </a>
+            )}
+            {socialMedia.youtube && (
+              <a 
+                href={socialMedia.youtube} 
+                className="w-10 h-10 bg-black rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+              >
+                <Youtube className="w-5 h-5 text-white" />
+              </a>
+            )}
+            {socialMedia.tiktok && (
+              <a 
+                href={socialMedia.tiktok} 
+                className="w-10 h-10 bg-black rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+              >
+                <SiTiktok className="w-5 h-5 text-white" />
+              </a>
+            )}
+            {/* Default circular icon when no socials are present */}
+            {!socialMedia.linkedin && !socialMedia.twitter && !socialMedia.instagram && !socialMedia.youtube && !socialMedia.tiktok && (
+              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                <div className="w-5 h-5 bg-white rounded-full"></div>
+              </div>
             )}
           </div>
         </div>

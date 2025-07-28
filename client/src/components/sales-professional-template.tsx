@@ -1,4 +1,5 @@
 import { Mail, Phone, Globe, Linkedin, Twitter, Instagram, Youtube, X } from "lucide-react";
+import { SiTiktok } from "react-icons/si";
 import { getAnimationClass } from "@/lib/animations";
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 
@@ -40,6 +41,16 @@ export default function SalesProfessionalTemplate({
             {socialMedia.instagram && (
               <a href={socialMedia.instagram} className="text-white hover:text-gray-200">
                 <Instagram className="w-4 h-4" />
+              </a>
+            )}
+            {socialMedia.youtube && (
+              <a href={socialMedia.youtube} className="text-white hover:text-gray-200">
+                <Youtube className="w-4 h-4" />
+              </a>
+            )}
+            {socialMedia.tiktok && (
+              <a href={socialMedia.tiktok} className="text-white hover:text-gray-200">
+                <SiTiktok className="w-4 h-4" />
               </a>
             )}
           </div>
@@ -125,8 +136,21 @@ export default function SalesProfessionalTemplate({
               <Instagram className="w-5 h-5" />
             </a>
           )}
+          {socialMedia.youtube && (
+            <a href={socialMedia.youtube} className="text-white hover:text-gray-200 transition-colors">
+              <Youtube className="w-5 h-5" />
+            </a>
+          )}
+          {socialMedia.tiktok && (
+            <a href={socialMedia.tiktok} className="text-white hover:text-gray-200 transition-colors">
+              <SiTiktok className="w-5 h-5" />
+            </a>
+          )}
           <div className="flex-1"></div>
-          <Youtube className="w-5 h-5 text-white opacity-60" />
+          {/* Default YouTube icon when no YouTube link is provided */}
+          {!socialMedia.youtube && (
+            <Youtube className="w-5 h-5 text-white opacity-60" />
+          )}
         </div>
 
         {/* Main Content Area */}

@@ -116,8 +116,10 @@ export default function SignatureBuilder() {
       <div style="display:flex; justify-content:center; gap:16px;">
         ${socialMedia.linkedin ? `<a href="${socialMedia.linkedin}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">💼</span></a>` : ''}
         ${socialMedia.twitter ? `<a href="${socialMedia.twitter}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">🐦</span></a>` : ''}
-        <div style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%;"><span style="color:#FFFFFF; font-size:20px;">⚪</span></div>
         ${socialMedia.instagram ? `<a href="${socialMedia.instagram}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">📷</span></a>` : ''}
+        ${socialMedia.youtube ? `<a href="${socialMedia.youtube}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">📺</span></a>` : ''}
+        ${socialMedia.tiktok ? `<a href="${socialMedia.tiktok}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">🎵</span></a>` : ''}
+        ${!socialMedia.linkedin && !socialMedia.twitter && !socialMedia.instagram && !socialMedia.youtube && !socialMedia.tiktok ? '<div style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%;"><span style="color:#FFFFFF; font-size:20px;">⚪</span></div>' : ''}
       </div>
     </td>
   </tr>
@@ -134,7 +136,9 @@ export default function SignatureBuilder() {
         ${socialMedia.twitter ? `<a href="${socialMedia.twitter}" style="color:#FFFFFF; text-decoration:none;">❌</a>` : ''}
         ${socialMedia.linkedin ? `<a href="${socialMedia.linkedin}" style="color:#FFFFFF; text-decoration:none;">💼</a>` : ''}
         ${socialMedia.instagram ? `<a href="${socialMedia.instagram}" style="color:#FFFFFF; text-decoration:none;">📷</a>` : ''}
-        <div style="margin-top:auto;">📺</div>
+        ${socialMedia.youtube ? `<a href="${socialMedia.youtube}" style="color:#FFFFFF; text-decoration:none;">📺</a>` : ''}
+        ${socialMedia.tiktok ? `<a href="${socialMedia.tiktok}" style="color:#FFFFFF; text-decoration:none;">🎵</a>` : ''}
+        ${!socialMedia.youtube ? '<div style="margin-top:auto;">📺</div>' : ''}
       </div>
     </td>
     

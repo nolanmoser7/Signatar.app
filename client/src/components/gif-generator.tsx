@@ -239,8 +239,18 @@ export default function GifGenerator({
           ctx.fillText("📷", 45, socialY);
           socialY += 24;
         }
-        // YouTube icon at bottom
-        ctx.fillText("📺", 45, 250);
+        if (socialMedia.youtube) {
+          ctx.fillText("📺", 45, socialY);
+          socialY += 24;
+        }
+        if (socialMedia.tiktok) {
+          ctx.fillText("🎵", 45, socialY);
+          socialY += 24;
+        }
+        // Default YouTube icon at bottom if no YouTube link
+        if (!socialMedia.youtube) {
+          ctx.fillText("📺", 45, 250);
+        }
         ctx.restore();
 
         // Company branding section with animation
@@ -524,9 +534,15 @@ export default function GifGenerator({
         const socialIcons = [
           { active: socialMedia.linkedin, emoji: "💼" },
           { active: socialMedia.twitter, emoji: "🐦" },
-          { active: true, emoji: "⚪" }, // Default circular icon
-          { active: socialMedia.instagram, emoji: "📷" }
+          { active: socialMedia.instagram, emoji: "📷" },
+          { active: socialMedia.youtube, emoji: "📺" },
+          { active: socialMedia.tiktok, emoji: "🎵" }
         ];
+        
+        // Add default circular icon if no social media is present
+        if (!socialMedia.linkedin && !socialMedia.twitter && !socialMedia.instagram && !socialMedia.youtube && !socialMedia.tiktok) {
+          socialIcons.push({ active: true, emoji: "⚪" });
+        }
         
         socialIcons.forEach(({ active, emoji }) => {
           if (active) {

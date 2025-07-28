@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Linkedin, Twitter, Instagram } from "lucide-react";
+import { Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
+import { SiTiktok } from "react-icons/si";
 import type { SocialMedia } from "@shared/schema";
 
 interface SocialMediaFormProps {
@@ -49,6 +50,28 @@ export default function SocialMediaForm({ socialMedia, onSocialMediaChange }: So
             placeholder="Instagram profile URL"
             value={socialMedia.instagram || ""}
             onChange={(e) => handleChange("instagram", e.target.value)}
+            className="flex-1 text-sm"
+          />
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <Youtube className="text-red-600 w-5 h-5" />
+          <Input
+            type="url"
+            placeholder="YouTube channel URL"
+            value={socialMedia.youtube || ""}
+            onChange={(e) => handleChange("youtube", e.target.value)}
+            className="flex-1 text-sm"
+          />
+        </div>
+        
+        <div className="flex items-center space-x-3">
+          <SiTiktok className="text-black w-5 h-5" />
+          <Input
+            type="url"
+            placeholder="TikTok profile URL"
+            value={socialMedia.tiktok || ""}
+            onChange={(e) => handleChange("tiktok", e.target.value)}
             className="flex-1 text-sm"
           />
         </div>
