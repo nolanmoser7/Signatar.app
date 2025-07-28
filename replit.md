@@ -41,8 +41,10 @@ The application follows a full-stack monorepo architecture with clear separation
 ### Recent Changes (July 28, 2025)
 - **Sales Professional Template**: Redesigned to match modern visual mockup with left sidebar for social media icons, geometric portrait clipping, and professional branding layout
 - **Template Components**: Created dedicated SalesProfessionalTemplate component with responsive design and modern styling
-- **HTML Export**: Updated HTML generation for Sales Professional template with email-client-compatible table structure and modern visual elements
-- **GIF Generation**: Enhanced canvas rendering to support the new template's geometric shapes, clipped portrait area, and sidebar layout
+- **Minimal Template**: Added new minimal template component matching user's visual mockup with APEX Solutions branding, circular gradient portrait, and clean layout
+- **Individual Element Animations**: Updated animation system to apply micro-animations to specific elements (logo, headshot, social icons) rather than entire template containers
+- **HTML Export**: Updated HTML generation for both Sales Professional and Minimal templates with email-client-compatible table structures
+- **GIF Generation**: Enhanced canvas rendering to support both template designs with element-specific animations and proper visual recreation
 - **Upload System Fix**: Resolved image upload issues by fixing multer TypeScript configuration and FormData handling in API requests
 
 ### Data Models

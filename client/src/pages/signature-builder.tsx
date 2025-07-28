@@ -57,6 +57,73 @@ export default function SignatureBuilder() {
   };
 
   const generateSignatureHtml = (): string => {
+    if (selectedTemplate === "minimal") {
+      return `
+<table cellpadding="0" cellspacing="0" style="width:600px; background:#FFFFFF; border-radius:8px; border:1px solid #e5e7eb; font-family:Helvetica, Arial, sans-serif; color:#333333; padding:32px;">
+  <tr>
+    <td style="vertical-align:top; width:60%;">
+      <!-- Company Logo and Name -->
+      <div style="display:flex; align-items:center; margin-bottom:24px;">
+        <div style="width:48px; height:48px; margin-right:12px; position:relative;">
+          ${images.logo ? `<img src="${images.logo}" alt="Logo" style="width:48px; height:48px; object-fit:contain;">` : `
+            <div style="width:32px; height:32px; background:#7C3AED; transform:rotate(45deg); border-radius:4px; position:relative;">
+              <div style="width:12px; height:12px; background:#FFFFFF; position:absolute; top:10px; left:10px; transform:rotate(-45deg);"></div>
+            </div>
+          `}
+        </div>
+        <div>
+          <div style="font-size:24px; font-weight:bold; letter-spacing:2px; color:#1f2937;">APEX</div>
+          <div style="font-size:14px; color:#6b7280; letter-spacing:4px; margin-top:-4px;">SOLUTIONS</div>
+        </div>
+      </div>
+      
+      <!-- Name and Title -->
+      <div style="margin-bottom:24px;">
+        <h1 style="margin:0 0 8px 0; font-size:36px; font-weight:bold; color:#1f2937;">
+          ${personalInfo.name || 'Mark Johnson'}
+        </h1>
+        <p style="margin:0; font-size:18px; color:#6b7280; font-weight:500;">${personalInfo.title || 'Marketing Manager'}</p>
+      </div>
+      
+      <!-- Contact Info -->
+      <div style="font-size:16px; line-height:1.8; color:#1f2937;">
+        ${personalInfo.phone ? `<div style="margin-bottom:8px; display:flex; align-items:center;"><span style="margin-right:8px;">📞</span> <a href="tel:${personalInfo.phone}" style="color:#1f2937; text-decoration:none;">${personalInfo.phone}</a></div>` : ''}
+        ${personalInfo.email ? `<div style="margin-bottom:8px; display:flex; align-items:center;"><span style="margin-right:8px;">✉️</span> <a href="mailto:${personalInfo.email}" style="color:#1f2937; text-decoration:none;">${personalInfo.email}</a></div>` : ''}
+        ${personalInfo.website ? `<div style="margin-bottom:8px; display:flex; align-items:center;"><span style="margin-right:8px;">🌐</span> <a href="${personalInfo.website}" style="color:#1f2937; text-decoration:none;">${personalInfo.website}</a></div>` : ''}
+      </div>
+    </td>
+    
+    <!-- Right Side - Portrait and Social -->
+    <td style="vertical-align:top; text-align:center; width:40%;">
+      <!-- Portrait Circle -->
+      <div style="margin-bottom:24px;">
+        ${images.headshot ? `
+          <div style="width:140px; height:140px; border-radius:50%; background:linear-gradient(135deg, #A855F7 0%, #3B82F6 50%, #06B6D4 100%); padding:4px; margin:0 auto;">
+            <div style="width:132px; height:132px; border-radius:50%; overflow:hidden; background:#FFFFFF;">
+              <img src="${images.headshot}" alt="${personalInfo.name}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          </div>
+        ` : `
+          <div style="width:140px; height:140px; border-radius:50%; background:linear-gradient(135deg, #A855F7 0%, #3B82F6 50%, #06B6D4 100%); padding:4px; margin:0 auto; display:flex; align-items:center; justify-content:center;">
+            <div style="width:132px; height:132px; border-radius:50%; background:linear-gradient(135deg, #A855F7 0%, #3B82F6 50%, #06B6D4 100%); display:flex; align-items:center; justify-content:center;">
+              <span style="color:#FFFFFF; font-size:48px; font-weight:bold;">${(personalInfo.name || 'M').charAt(0)}</span>
+            </div>
+          </div>
+        `}
+      </div>
+      
+      <!-- Social Media Icons -->
+      <div style="display:flex; justify-content:center; gap:16px;">
+        ${socialMedia.linkedin ? `<a href="${socialMedia.linkedin}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">💼</span></a>` : ''}
+        ${socialMedia.twitter ? `<a href="${socialMedia.twitter}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">🐦</span></a>` : ''}
+        <div style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%;"><span style="color:#FFFFFF; font-size:20px;">⚪</span></div>
+        ${socialMedia.instagram ? `<a href="${socialMedia.instagram}" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:#000000; border-radius:50%; text-decoration:none;"><span style="color:#FFFFFF; font-size:16px;">📷</span></a>` : ''}
+      </div>
+    </td>
+  </tr>
+</table>`;
+    }
+
     if (selectedTemplate === "sales-professional") {
       return `
 <table cellpadding="0" cellspacing="0" style="width:600px; background:#FFFFFF; border-radius:12px; font-family:Helvetica, Arial, sans-serif; color:#333333; overflow:hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">

@@ -386,6 +386,162 @@ export default function GifGenerator({
         ctx.fillRect(-48, -48, 96, 96);
         ctx.restore();
 
+      } else if (templateId === "minimal") {
+        // Minimal template rendering
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        
+        // Border
+        ctx.strokeStyle = "#e5e7eb";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(20, 20, ctx.canvas.width - 40, ctx.canvas.height - 40);
+        
+        const contentX = 60;
+        const contentY = 80;
+        
+        // Company logo with animation
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(contentX + 24, contentY);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(contentX + 24), contentY);
+        }
+        
+        // Apex logo recreation
+        ctx.fillStyle = "#7C3AED";
+        ctx.save();
+        ctx.translate(contentX + 24, contentY);
+        ctx.rotate(Math.PI / 4);
+        ctx.fillRect(-16, -16, 32, 32);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(-6, -6, 12, 12);
+        ctx.restore();
+        
+        // Company text
+        ctx.fillStyle = "#1f2937";
+        ctx.font = "bold 24px Arial, sans-serif";
+        ctx.fillText("APEX", contentX + 60, contentY - 5);
+        ctx.font = "14px Arial, sans-serif";
+        ctx.fillText("SOLUTIONS", contentX + 60, contentY + 15);
+        ctx.restore();
+        
+        // Name and title
+        ctx.fillStyle = "#1f2937";
+        ctx.font = "bold 36px Arial, sans-serif";
+        ctx.fillText(personalInfo.name || "Mark Johnson", contentX, contentY + 80);
+        
+        ctx.font = "18px Arial, sans-serif";
+        ctx.fillStyle = "#6b7280";
+        ctx.fillText(personalInfo.title || "Marketing Manager", contentX, contentY + 110);
+        
+        // Contact info
+        let contactY = contentY + 150;
+        ctx.font = "16px Arial, sans-serif";
+        ctx.fillStyle = "#1f2937";
+        
+        if (personalInfo.phone) {
+          ctx.fillText(`📞 ${personalInfo.phone}`, contentX, contactY);
+          contactY += 25;
+        }
+        if (personalInfo.email) {
+          ctx.fillText(`✉️ ${personalInfo.email}`, contentX, contactY);
+          contactY += 25;
+        }
+        if (personalInfo.website) {
+          ctx.fillText(`🌐 ${personalInfo.website}`, contentX, contactY);
+        }
+        
+        // Portrait with animation
+        const portraitX = ctx.canvas.width - 200;
+        const portraitY = contentY + 20;
+        const portraitSize = 140;
+        
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.05 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(portraitX + portraitSize/2, portraitY + portraitSize/2);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(portraitX + portraitSize/2), -(portraitY + portraitSize/2));
+        }
+        
+        // Gradient border
+        const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitSize, portraitY + portraitSize);
+        gradient.addColorStop(0, "#A855F7");
+        gradient.addColorStop(0.5, "#3B82F6");
+        gradient.addColorStop(1, "#06B6D4");
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(portraitX + portraitSize/2, portraitY + portraitSize/2, portraitSize/2, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Inner white circle
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(portraitX + portraitSize/2, portraitY + portraitSize/2, portraitSize/2 - 4, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Portrait image or placeholder
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(portraitX + portraitSize/2, portraitY + portraitSize/2, portraitSize/2 - 8, 0, 2 * Math.PI);
+        ctx.clip();
+        
+        if (loadedImages.headshot) {
+          ctx.drawImage(loadedImages.headshot, portraitX + 8, portraitY + 8, portraitSize - 16, portraitSize - 16);
+        } else {
+          const portraitGradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitSize, portraitY + portraitSize);
+          portraitGradient.addColorStop(0, "#A855F7");
+          portraitGradient.addColorStop(0.5, "#3B82F6");
+          portraitGradient.addColorStop(1, "#06B6D4");
+          ctx.fillStyle = portraitGradient;
+          ctx.fillRect(portraitX + 8, portraitY + 8, portraitSize - 16, portraitSize - 16);
+        }
+        ctx.restore();
+        ctx.restore();
+        
+        // Social media icons with animation
+        const socialY = portraitY + portraitSize + 30;
+        const socialStartX = portraitX - 20;
+        
+        ctx.save();
+        if (animationType === "fade-in") {
+          ctx.globalAlpha = opacity;
+        } else if (animationType === "pulse") {
+          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+          ctx.translate(socialStartX + 100, socialY);
+          ctx.scale(pulseScale, pulseScale);
+          ctx.translate(-(socialStartX + 100), -socialY);
+        }
+        
+        let socialX = socialStartX;
+        const socialIcons = [
+          { active: socialMedia.linkedin, emoji: "💼" },
+          { active: socialMedia.twitter, emoji: "🐦" },
+          { active: true, emoji: "⚪" }, // Default circular icon
+          { active: socialMedia.instagram, emoji: "📷" }
+        ];
+        
+        socialIcons.forEach(({ active, emoji }) => {
+          if (active) {
+            ctx.fillStyle = "#000000";
+            ctx.beginPath();
+            ctx.arc(socialX + 20, socialY, 20, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "16px Arial, sans-serif";
+            ctx.fillText(emoji, socialX + 14, socialY + 6);
+            
+            socialX += 50;
+          }
+        });
+        ctx.restore();
+
       } else {
         // Default template rendering
         ctx.fillStyle = "#ffffff";

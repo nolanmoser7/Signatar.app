@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Mail, Phone, Globe, Linkedin, Twitter, Instagram } from "lucide-react";
 import { getAnimationClass } from "@/lib/animations";
 import SalesProfessionalTemplate from "./sales-professional-template";
+import { MinimalTemplate } from "./minimal-template";
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 
 interface SignaturePreviewProps {
@@ -23,7 +24,7 @@ export default function SignaturePreview({
   isAnimating,
   deviceView,
 }: SignaturePreviewProps) {
-  // Handle Sales Professional template separately
+  // Handle specific templates separately
   if (templateId === "sales-professional") {
     return (
       <SalesProfessionalTemplate
@@ -33,6 +34,18 @@ export default function SignaturePreview({
         animationType={animationType}
         isAnimating={isAnimating}
         deviceView={deviceView}
+      />
+    );
+  }
+
+  if (templateId === "minimal") {
+    return (
+      <MinimalTemplate
+        personalInfo={personalInfo}
+        images={images}
+        socialMedia={socialMedia}
+        animationType={isAnimating ? animationType : "none"}
+        isMobile={deviceView === "mobile"}
       />
     );
   }
