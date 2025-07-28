@@ -52,13 +52,19 @@ function ModernTemplate({
             {/* Company Logo */}
             <div className={`flex items-center mb-6 ${getAnimationClass("logo")}`}>
               <div className="flex items-center">
-                <div className="w-8 h-8 mr-3">
-                  <svg viewBox="0 0 32 32" className="w-full h-full">
-                    <rect x="4" y="6" width="24" height="4" fill="#00bcd4" rx="2"/>
-                    <rect x="4" y="14" width="24" height="4" fill="#00bcd4" rx="2"/>
-                    <rect x="4" y="22" width="24" height="4" fill="#00bcd4" rx="2"/>
-                  </svg>
-                </div>
+                {images.logo ? (
+                  <div className="w-8 h-8 mr-3">
+                    <img src={images.logo} alt="Logo" className="w-full h-full object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-8 h-8 mr-3">
+                    <svg viewBox="0 0 32 32" className="w-full h-full">
+                      <rect x="4" y="6" width="24" height="4" fill="#00bcd4" rx="2"/>
+                      <rect x="4" y="14" width="24" height="4" fill="#00bcd4" rx="2"/>
+                      <rect x="4" y="22" width="24" height="4" fill="#00bcd4" rx="2"/>
+                    </svg>
+                  </div>
+                )}
                 <h1 className="text-white text-xl font-light tracking-[0.2em]">
                   {personalInfo.company?.toUpperCase() || "TECHSPACE"}
                 </h1>
@@ -99,20 +105,32 @@ function ModernTemplate({
 
             {/* Social Media Icons */}
             <div className={`flex space-x-4 ${getAnimationClass("social")}`}>
-              {socialMedia.twitter && (
+              {socialMedia.twitter ? (
                 <a href={socialMedia.twitter} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiX className="w-5 h-5" />
                 </a>
+              ) : (
+                <div className="text-cyan-400/30">
+                  <SiX className="w-5 h-5" />
+                </div>
               )}
-              {socialMedia.linkedin && (
+              {socialMedia.linkedin ? (
                 <a href={socialMedia.linkedin} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiLinkedin className="w-5 h-5" />
                 </a>
+              ) : (
+                <div className="text-cyan-400/30">
+                  <SiLinkedin className="w-5 h-5" />
+                </div>
               )}
-              {(socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok) && (
-                <a href={socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok} className="text-cyan-400 hover:text-cyan-300 transition-colors">
-                  <Github className="w-5 h-5" />
+              {socialMedia.instagram ? (
+                <a href={socialMedia.instagram} className="text-cyan-400 hover:text-cyan-300 transition-colors">
+                  <SiInstagram className="w-5 h-5" />
                 </a>
+              ) : (
+                <div className="text-cyan-400/30">
+                  <SiInstagram className="w-5 h-5" />
+                </div>
               )}
             </div>
           </div>
@@ -159,13 +177,19 @@ function ModernTemplate({
           <div className="flex-1 pr-8">
             {/* Company Logo */}
             <div className={`flex items-center mb-8 ${getAnimationClass("logo")}`}>
-              <div className="w-10 h-10 mr-4">
-                <svg viewBox="0 0 40 40" className="w-full h-full">
-                  <rect x="6" y="8" width="28" height="5" fill="#00bcd4" rx="2.5"/>
-                  <rect x="6" y="17.5" width="28" height="5" fill="#00bcd4" rx="2.5"/>
-                  <rect x="6" y="27" width="28" height="5" fill="#00bcd4" rx="2.5"/>
-                </svg>
-              </div>
+              {images.logo ? (
+                <div className="w-10 h-10 mr-4">
+                  <img src={images.logo} alt="Logo" className="w-full h-full object-contain" />
+                </div>
+              ) : (
+                <div className="w-10 h-10 mr-4">
+                  <svg viewBox="0 0 40 40" className="w-full h-full">
+                    <rect x="6" y="8" width="28" height="5" fill="#00bcd4" rx="2.5"/>
+                    <rect x="6" y="17.5" width="28" height="5" fill="#00bcd4" rx="2.5"/>
+                    <rect x="6" y="27" width="28" height="5" fill="#00bcd4" rx="2.5"/>
+                  </svg>
+                </div>
+              )}
               <h1 className="text-white text-3xl font-light tracking-[0.3em]">
                 {personalInfo.company?.toUpperCase() || "TECHSPACE"}
               </h1>
@@ -205,20 +229,32 @@ function ModernTemplate({
 
             {/* Social Media Icons */}
             <div className={`flex space-x-6 ${getAnimationClass("social")}`}>
-              {socialMedia.twitter && (
+              {socialMedia.twitter ? (
                 <a href={socialMedia.twitter} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiX className="w-6 h-6" />
                 </a>
+              ) : (
+                <div className="text-cyan-400/30">
+                  <SiX className="w-6 h-6" />
+                </div>
               )}
-              {socialMedia.linkedin && (
+              {socialMedia.linkedin ? (
                 <a href={socialMedia.linkedin} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiLinkedin className="w-6 h-6" />
                 </a>
+              ) : (
+                <div className="text-cyan-400/30">
+                  <SiLinkedin className="w-6 h-6" />
+                </div>
               )}
-              {(socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok) && (
-                <a href={socialMedia.instagram || socialMedia.youtube || socialMedia.tiktok} className="text-cyan-400 hover:text-cyan-300 transition-colors">
-                  <Github className="w-6 h-6" />
+              {socialMedia.instagram ? (
+                <a href={socialMedia.instagram} className="text-cyan-400 hover:text-cyan-300 transition-colors">
+                  <SiInstagram className="w-6 h-6" />
                 </a>
+              ) : (
+                <div className="text-cyan-400/30">
+                  <SiInstagram className="w-6 h-6" />
+                </div>
               )}
             </div>
           </div>
