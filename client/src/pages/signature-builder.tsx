@@ -72,8 +72,8 @@ export default function SignatureBuilder() {
           `}
         </div>
         <div>
-          <div style="font-size:24px; font-weight:bold; letter-spacing:2px; color:#1f2937;">APEX</div>
-          <div style="font-size:14px; color:#6b7280; letter-spacing:4px; margin-top:-4px;">SOLUTIONS</div>
+          <div style="font-size:24px; font-weight:bold; letter-spacing:2px; color:#1f2937;">${(personalInfo.company || 'APEX').toUpperCase()}</div>
+          ${personalInfo.company ? '' : '<div style="font-size:14px; color:#6b7280; letter-spacing:4px; margin-top:-4px;">SOLUTIONS</div>'}
         </div>
       </div>
       

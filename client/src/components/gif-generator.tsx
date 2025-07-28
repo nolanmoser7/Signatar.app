@@ -423,9 +423,11 @@ export default function GifGenerator({
         // Company text
         ctx.fillStyle = "#1f2937";
         ctx.font = "bold 24px Arial, sans-serif";
-        ctx.fillText("APEX", contentX + 60, contentY - 5);
-        ctx.font = "14px Arial, sans-serif";
-        ctx.fillText("SOLUTIONS", contentX + 60, contentY + 15);
+        ctx.fillText((personalInfo.company || "APEX").toUpperCase(), contentX + 60, contentY - 5);
+        if (!personalInfo.company) {
+          ctx.font = "14px Arial, sans-serif";
+          ctx.fillText("SOLUTIONS", contentX + 60, contentY + 15);
+        }
         ctx.restore();
         
         // Name and title

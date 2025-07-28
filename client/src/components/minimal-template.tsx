@@ -44,7 +44,7 @@ export function MinimalTemplate({
               <div className="w-6 h-6 bg-purple-600 rounded-sm flex items-center justify-center">
                 <div className="w-3 h-3 bg-white transform rotate-45"></div>
               </div>
-              <span className="font-bold text-lg tracking-wide">APEX SOLUTIONS</span>
+              <span className="font-bold text-lg tracking-wide">{personalInfo.company?.toUpperCase() || "APEX SOLUTIONS"}</span>
             </div>
           )}
           
@@ -134,10 +134,10 @@ export function MinimalTemplate({
             </div>
             <div>
               <div className="text-2xl font-bold tracking-wider text-gray-900">
-                APEX
+                {personalInfo.company ? personalInfo.company.toUpperCase() : "APEX"}
               </div>
               <div className="text-sm font-medium tracking-widest text-gray-600 -mt-1">
-                SOLUTIONS
+                {personalInfo.company ? "" : "SOLUTIONS"}
               </div>
             </div>
           </div>
