@@ -136,14 +136,14 @@ export default function SalesProfessionalTemplate({
             width: `calc(50% - ${(images.headshotSize || 100) * 1.28}px)`
           }}
         >
-          {/* Geometric shapes */}
-          <div className="absolute right-4 top-16 w-32 h-32 transform rotate-45">
+          {/* Geometric shapes - moved up 10px and right 15px */}
+          <div className="absolute right-[-11px] top-[54px] w-32 h-32 transform rotate-45">
             <div className="w-full h-full bg-gradient-to-br from-teal-400 to-teal-600 opacity-20"></div>
           </div>
-          <div className="absolute right-12 top-32 w-24 h-24 transform -rotate-12">
+          <div className="absolute right-[-3px] top-[118px] w-24 h-24 transform -rotate-12">
             <div className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 opacity-30"></div>
           </div>
-          <div className="absolute right-8 bottom-16 w-20 h-20 transform rotate-12">
+          <div className="absolute right-[-7px] bottom-[74px] w-20 h-20 transform rotate-12">
             <div className="w-full h-full bg-gradient-to-br from-teal-500 to-teal-700 opacity-25"></div>
           </div>
         </div>
