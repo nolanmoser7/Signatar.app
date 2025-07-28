@@ -31,12 +31,17 @@ The application follows a full-stack monorepo architecture with clear separation
 ## Key Components
 
 ### Core Features
-1. **Template System**: Multiple pre-built signature templates (Professional, Modern, Minimal, Creative)
+1. **Template System**: Multiple pre-built signature templates (Professional, Modern, Minimal, Creative, Sales Professional)
 2. **Form Builder**: Step-by-step form for personal information, contact details, and social media
 3. **Image Management**: Upload and manage headshots, logos, and background images
 4. **Animation Engine**: Custom animation system with fade-in, pulse, and cross-dissolve effects
 5. **Live Preview**: Real-time signature preview with device view switching (desktop/mobile)
 6. **Export Options**: HTML and animated GIF generation capabilities
+
+### Recent Changes (July 28, 2025)
+- **Sales Professional Template**: Added new corporate-style template with teal accent colors, action buttons ("Schedule Call", "Get Quote"), and professional layout matching user's HTML design
+- **Template Rendering System**: Enhanced signature preview and GIF generation to support template-specific layouts
+- **Upload System Fix**: Resolved image upload issues by fixing multer TypeScript configuration and FormData handling in API requests
 
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations

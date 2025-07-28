@@ -57,6 +57,13 @@ export class MemStorage implements IStorage {
         previewUrl: "",
         isActive: "true",
       },
+      {
+        id: "sales-professional",
+        name: "Sales Professional",
+        description: "Corporate design with action buttons and accent colors",
+        previewUrl: "",
+        isActive: "true",
+      },
     ];
 
     defaultTemplates.forEach(template => {

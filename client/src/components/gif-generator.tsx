@@ -178,80 +178,170 @@ export default function GifGenerator({
         ctx.translate(-centerX, -centerY);
       }
 
-      // Background
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      if (templateId === "sales-professional") {
+        // Sales Professional template rendering
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-      // Background image if available
-      if (loadedImages.background) {
-        ctx.globalAlpha = opacity * 0.1;
-        ctx.drawImage(loadedImages.background, 0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.globalAlpha = opacity;
-      }
-
-      const startX = 50;
-      const startY = 80;
-
-      // Headshot
-      if (loadedImages.headshot) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(startX + 40, startY, 40, 0, 2 * Math.PI);
-        ctx.clip();
-        ctx.drawImage(loadedImages.headshot, startX, startY - 40, 80, 80);
-        ctx.restore();
-        
-        // Border
-        ctx.strokeStyle = "#e5e7eb";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(startX + 40, startY, 40, 0, 2 * Math.PI);
+        // Draw border
+        ctx.strokeStyle = "#E0E0E0";
+        ctx.lineWidth = 1;
+        ctx.roundRect(20, 50, ctx.canvas.width - 40, 200, 8);
         ctx.stroke();
-      }
 
-      // Text content
-      ctx.fillStyle = "#1f2937";
-      ctx.font = "bold 24px Inter, Arial, sans-serif";
-      ctx.fillText(personalInfo.name || "Your Name", startX + 120, startY - 20);
+        // Left accent bar
+        ctx.fillStyle = "#4ECDC4";
+        ctx.fillRect(20, 50, 8, 200);
 
-      ctx.fillStyle = "#6366f1";
-      ctx.font = "600 18px Inter, Arial, sans-serif";
-      ctx.fillText(personalInfo.title || "Your Title", startX + 120, startY + 5);
+        // Right accent bar  
+        ctx.fillRect(ctx.canvas.width - 28, 50, 8, 200);
 
-      ctx.fillStyle = "#6b7280";
-      ctx.font = "500 16px Inter, Arial, sans-serif";
-      ctx.fillText(personalInfo.company || "Your Company", startX + 120, startY + 30);
+        // Headshot
+        if (loadedImages.headshot) {
+          ctx.save();
+          const headshotX = 60;
+          const headshotY = 110;
+          ctx.beginPath();
+          ctx.arc(headshotX, headshotY, 40, 0, 2 * Math.PI);
+          ctx.clip();
+          ctx.drawImage(loadedImages.headshot, headshotX - 40, headshotY - 40, 80, 80);
+          ctx.restore();
+          
+          // Teal border
+          ctx.strokeStyle = "#4ECDC4";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(headshotX, headshotY, 40, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
 
-      // Contact info
-      let contactY = startY + 60;
-      ctx.fillStyle = "#374151";
-      ctx.font = "14px Inter, Arial, sans-serif";
+        // Logo
+        if (loadedImages.logo) {
+          ctx.drawImage(loadedImages.logo, 140, 70, 100, 24);
+        }
 
-      if (personalInfo.email) {
-        ctx.fillText(`✉ ${personalInfo.email}`, startX + 120, contactY);
-        contactY += 20;
-      }
+        // Name
+        ctx.fillStyle = "#4ECDC4";
+        ctx.font = "bold 18px Helvetica, Arial, sans-serif";
+        ctx.fillText(personalInfo.name || "Your Name", 140, 120);
 
-      if (personalInfo.phone) {
-        ctx.fillText(`📞 ${personalInfo.phone}`, startX + 120, contactY);
-        contactY += 20;
-      }
+        // Title
+        ctx.fillStyle = "#777777";
+        ctx.font = "12px Helvetica, Arial, sans-serif";
+        const titleText = (personalInfo.title || "Your Title").toUpperCase();
+        ctx.fillText(titleText, 140, 140);
 
-      if (personalInfo.website) {
-        ctx.fillText(`🌐 ${personalInfo.website}`, startX + 120, contactY);
-      }
+        // Contact info
+        ctx.fillStyle = "#333333";
+        ctx.font = "14px Helvetica, Arial, sans-serif";
+        let contactY = 165;
 
-      // Company logo
-      if (loadedImages.logo) {
-        const logoWidth = 80;
-        const logoHeight = 48;
-        ctx.drawImage(
-          loadedImages.logo,
-          ctx.canvas.width - logoWidth - 50,
-          startY - 20,
-          logoWidth,
-          logoHeight
-        );
+        if (personalInfo.phone) {
+          ctx.fillText(`📞 ${personalInfo.phone}`, 140, contactY);
+          contactY += 20;
+        }
+
+        if (personalInfo.email) {
+          ctx.fillText(`✉️ ${personalInfo.email}`, 140, contactY);
+          contactY += 20;
+        }
+
+        if (personalInfo.website) {
+          ctx.fillText(`🌐 ${personalInfo.website}`, 140, contactY);
+        }
+
+        // Action buttons
+        const buttonX = ctx.canvas.width - 140;
+        
+        // Schedule Call button
+        ctx.fillStyle = "#4ECDC4";
+        ctx.fillRect(buttonX, 80, 100, 32);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "13px Helvetica, Arial, sans-serif";
+        ctx.fillText("Schedule Call", buttonX + 15, 100);
+
+        // Get Quote button
+        ctx.fillStyle = "#FF6B6B";
+        ctx.fillRect(buttonX, 120, 100, 32);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText("Get Quote", buttonX + 25, 140);
+
+      } else {
+        // Default template rendering
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        // Background image if available
+        if (loadedImages.background) {
+          ctx.globalAlpha = opacity * 0.1;
+          ctx.drawImage(loadedImages.background, 0, 0, ctx.canvas.width, ctx.canvas.height);
+          ctx.globalAlpha = opacity;
+        }
+
+        const startX = 50;
+        const startY = 80;
+
+        // Headshot
+        if (loadedImages.headshot) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(startX + 40, startY, 40, 0, 2 * Math.PI);
+          ctx.clip();
+          ctx.drawImage(loadedImages.headshot, startX, startY - 40, 80, 80);
+          ctx.restore();
+          
+          // Border
+          ctx.strokeStyle = "#e5e7eb";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(startX + 40, startY, 40, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
+
+        // Text content
+        ctx.fillStyle = "#1f2937";
+        ctx.font = "bold 24px Inter, Arial, sans-serif";
+        ctx.fillText(personalInfo.name || "Your Name", startX + 120, startY - 20);
+
+        ctx.fillStyle = "#6366f1";
+        ctx.font = "600 18px Inter, Arial, sans-serif";
+        ctx.fillText(personalInfo.title || "Your Title", startX + 120, startY + 5);
+
+        ctx.fillStyle = "#6b7280";
+        ctx.font = "500 16px Inter, Arial, sans-serif";
+        ctx.fillText(personalInfo.company || "Your Company", startX + 120, startY + 30);
+
+        // Contact info
+        let contactY = startY + 60;
+        ctx.fillStyle = "#374151";
+        ctx.font = "14px Inter, Arial, sans-serif";
+
+        if (personalInfo.email) {
+          ctx.fillText(`✉ ${personalInfo.email}`, startX + 120, contactY);
+          contactY += 20;
+        }
+
+        if (personalInfo.phone) {
+          ctx.fillText(`📞 ${personalInfo.phone}`, startX + 120, contactY);
+          contactY += 20;
+        }
+
+        if (personalInfo.website) {
+          ctx.fillText(`🌐 ${personalInfo.website}`, startX + 120, contactY);
+        }
+
+        // Company logo
+        if (loadedImages.logo) {
+          const logoWidth = 80;
+          const logoHeight = 48;
+          ctx.drawImage(
+            loadedImages.logo,
+            ctx.canvas.width - logoWidth - 50,
+            startY - 20,
+            logoWidth,
+            logoHeight
+          );
+        }
       }
 
       ctx.restore();

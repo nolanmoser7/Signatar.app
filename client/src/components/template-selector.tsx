@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Bus, Palette, Minus, Sparkles } from "lucide-react";
+import { Bus, Palette, Minus, Sparkles, Briefcase } from "lucide-react";
 import type { Template } from "@shared/schema";
 
 interface TemplateSelectorProps {
@@ -14,6 +14,7 @@ const templateIcons = {
   modern: Palette,
   minimal: Minus,
   creative: Sparkles,
+  "sales-professional": Briefcase,
 };
 
 export default function TemplateSelector({ selectedTemplate, onSelectTemplate }: TemplateSelectorProps) {
