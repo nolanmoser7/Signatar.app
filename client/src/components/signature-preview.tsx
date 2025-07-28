@@ -73,7 +73,7 @@ export default function SignaturePreview({
       {/* Background Image */}
       {images.background && (
         <div 
-          className="absolute inset-0 opacity-5 pointer-events-none"
+          className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
             backgroundImage: `url(${images.background})`,
             backgroundSize: "cover",

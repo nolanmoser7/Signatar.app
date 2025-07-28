@@ -37,8 +37,19 @@ export function MinimalTemplate({
   if (isMobile) {
     // Mobile version - simplified stacked layout
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-sm mx-auto">
-        <div className="flex flex-col items-center space-y-4">
+      <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-sm mx-auto relative overflow-hidden">
+        {/* Background Image */}
+        {images.background && (
+          <div 
+            className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: `url(${images.background})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        )}
+        <div className="flex flex-col items-center space-y-4 relative z-10">
           {/* Company Logo */}
           {images.logo && (
             <div className={`flex items-center space-x-2 ${animationClass}`}>
@@ -124,8 +135,19 @@ export function MinimalTemplate({
 
   // Desktop version - exact match to the provided image
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-8 max-w-2xl mx-auto">
-      <div className="flex items-start justify-between">
+    <div className="bg-white rounded-lg border border-gray-200 p-8 max-w-2xl mx-auto relative overflow-hidden">
+      {/* Background Image */}
+      {images.background && (
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: `url(${images.background})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      )}
+      <div className="flex items-start justify-between relative z-10">
         {/* Left Side - Company branding, name, and contact info */}
         <div className="flex-1 space-y-6">
           {/* Company Logo and Name */}

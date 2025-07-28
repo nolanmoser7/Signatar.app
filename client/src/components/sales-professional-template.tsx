@@ -25,8 +25,19 @@ export default function SalesProfessionalTemplate({
   if (deviceView === "mobile") {
     // Mobile version - simplified layout
     return (
-      <div className="bg-white rounded-xl shadow-lg p-4 max-w-sm mx-auto">
-        <div className="flex items-center space-x-4">
+      <div className="bg-white rounded-xl shadow-lg p-4 max-w-sm mx-auto relative overflow-hidden">
+        {/* Background Image */}
+        {images.background && (
+          <div 
+            className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: `url(${images.background})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        )}
+        <div className="flex items-center space-x-4 relative z-10">
           <div className={`bg-teal-500 rounded-lg p-2 flex flex-col space-y-2 ${animationClass}`}>
             {socialMedia.twitter && (
               <a href={socialMedia.twitter} className="text-white hover:text-gray-200">
@@ -102,6 +113,18 @@ export default function SalesProfessionalTemplate({
   // Desktop version - modern sidebar design
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto relative">
+      {/* Background Image */}
+      {images.background && (
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: `url(${images.background})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+      )}
+      
       {/* Background geometric pattern */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute right-0 top-0 w-1/2 h-full">
