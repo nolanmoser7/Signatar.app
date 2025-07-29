@@ -17,16 +17,26 @@ import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/s
 export default function SignatureBuilder() {
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
-    name: "",
-    title: "",
-    company: "",
-    email: "",
-    phone: "",
-    website: "",
+    name: "Sarah Johnson",
+    title: "Senior Marketing Director",
+    company: "TechForward Solutions",
+    email: "sarah.johnson@techforward.com",
+    phone: "+1 (555) 123-4567",
+    website: "https://www.techforward.com",
   });
-  const [images, setImages] = useState<Images>({ backgroundOpacity: 20 });
+  const [images, setImages] = useState<Images>({ 
+    backgroundOpacity: 20,
+    headshotSize: 100,
+    logoSize: 100
+  });
   const [animationType, setAnimationType] = useState<AnimationType>("fade-in");
-  const [socialMedia, setSocialMedia] = useState<SocialMedia>({});
+  const [socialMedia, setSocialMedia] = useState<SocialMedia>({
+    linkedin: "https://linkedin.com/in/sarahjohnson",
+    twitter: "https://twitter.com/sarahjohnson",
+    instagram: "https://instagram.com/sarahjohnson_tech",
+    youtube: "https://youtube.com/@techforwardsolutions",
+    tiktok: "https://tiktok.com/@sarahtech"
+  });
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");
   const [isAnimating, setIsAnimating] = useState(false);
   const [showGifGenerator, setShowGifGenerator] = useState(false);
