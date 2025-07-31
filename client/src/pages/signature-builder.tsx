@@ -22,7 +22,7 @@ export default function SignatureBuilder() {
     name: "Sarah Johnson",
     title: "Senior Marketing Director",
     company: "Signatar",
-    email: "sarah.johnson@signatar.com",
+    email: "sjohnson@signatar.com",
     phone: "+1 (555) 123-4567",
     website: "https://www.signatar.com",
   });
