@@ -13,18 +13,20 @@ import SignaturePreview from "@/components/signature-preview";
 import GifGenerator from "@/components/gif-generator";
 import { useToast } from "@/hooks/use-toast";
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
+import signatarLogo from "@assets/signatar-logo.png";
 
 export default function SignatureBuilder() {
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
     title: "Senior Marketing Director",
-    company: "TechForward Solutions",
-    email: "sarah.johnson@techforward.com",
+    company: "Signatar",
+    email: "sarah.johnson@signatar.com",
     phone: "+1 (555) 123-4567",
-    website: "https://www.techforward.com",
+    website: "https://www.signatar.com",
   });
   const [images, setImages] = useState<Images>({ 
+    logo: signatarLogo,
     backgroundOpacity: 20,
     headshotSize: 100,
     logoSize: 100
@@ -34,8 +36,8 @@ export default function SignatureBuilder() {
     linkedin: "https://linkedin.com/in/sarahjohnson",
     twitter: "https://twitter.com/sarahjohnson",
     instagram: "https://instagram.com/sarahjohnson_tech",
-    youtube: "https://youtube.com/@techforwardsolutions",
-    tiktok: "https://tiktok.com/@sarahtech"
+    youtube: "https://youtube.com/@signatar",
+    tiktok: "https://tiktok.com/@signatar"
   });
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");
   const [isAnimating, setIsAnimating] = useState(false);
