@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,9 +111,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Signatar
             </DialogTitle>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <DialogDescription className="text-sm text-muted-foreground">
             {isLogin ? "Welcome back! Sign in to your account." : "Create your account to get started."}
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
