@@ -16,7 +16,7 @@ import AuthModal from "@/components/auth-modal";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
-import signatarLogo from "@assets/signatar-logo.png";
+import signatarLogo from "@assets/Screenshot 2025-07-31 at 7.53.23 PM_1754006028051.png";
 import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
