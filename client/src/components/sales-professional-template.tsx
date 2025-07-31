@@ -160,19 +160,26 @@ export default function SalesProfessionalTemplate({
 
       <div className="flex relative z-10">
         {/* Left Sidebar with Social Icons */}
-        <div className={`w-20 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${animationClass}`}>
-          {socialMedia.twitter && (
-            <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
-              <X className="w-6 h-6" />
-            </a>
-          )}
-          {socialMedia.linkedin && (
-            <a href={socialMedia.linkedin} className="text-white hover:text-gray-200 transition-colors">
-              <Linkedin className="w-6 h-6" />
-            </a>
-          )}
-          {socialMedia.instagram && (
-            <a href={socialMedia.instagram} className="text-white hover:text-gray-200 transition-colors">
+        <DraggableElement
+          elementId="social"
+          position={elementPositions.social || { x: 0, y: 0, scale: 1 }}
+          onPositionChange={onElementPositionChange}
+          layoutMode={layoutMode}
+          className="w-20"
+        >
+          <div className={`w-20 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${animationClass}`}>
+            {socialMedia.twitter && (
+              <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
+                <X className="w-6 h-6" />
+              </a>
+            )}
+            {socialMedia.linkedin && (
+              <a href={socialMedia.linkedin} className="text-white hover:text-gray-200 transition-colors">
+                <Linkedin className="w-6 h-6" />
+              </a>
+            )}
+            {socialMedia.instagram && (
+              <a href={socialMedia.instagram} className="text-white hover:text-gray-200 transition-colors">
               <Instagram className="w-6 h-6" />
             </a>
           )}
@@ -186,7 +193,8 @@ export default function SalesProfessionalTemplate({
               <SiTiktok className="w-6 h-6" />
             </a>
           )}
-        </div>
+          </div>
+        </DraggableElement>
 
         {/* Main Content Area */}
         <div 
@@ -196,25 +204,32 @@ export default function SalesProfessionalTemplate({
           }}
         >
           {/* Company Logo */}
-          <div className="mb-4">
-            <div 
-              className={`flex items-center justify-center ${animationClass}`}
-              style={{
-                width: `${(images.logoSize || 100) * 0.48}px`,
-                height: `${(images.logoSize || 100) * 0.48}px`
-              }}
-            >
-              {images.logo ? (
-                <img 
-                  src={images.logo} 
-                  alt="Logo" 
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <span className="text-gray-700 font-bold text-lg">S</span>
-              )}
+          <DraggableElement
+            elementId="logo"
+            position={elementPositions.logo || { x: 0, y: 0, scale: 1 }}
+            onPositionChange={onElementPositionChange}
+            layoutMode={layoutMode}
+          >
+            <div className="mb-4">
+              <div 
+                className={`flex items-center justify-center ${animationClass}`}
+                style={{
+                  width: `${(images.logoSize || 100) * 0.48}px`,
+                  height: `${(images.logoSize || 100) * 0.48}px`
+                }}
+              >
+                {images.logo ? (
+                  <img 
+                    src={images.logo} 
+                    alt="Logo" 
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <span className="text-gray-700 font-bold text-lg">S</span>
+                )}
+              </div>
             </div>
-          </div>
+          </DraggableElement>
 
           {/* Company Name */}
           <div className="mb-6">
@@ -224,18 +239,31 @@ export default function SalesProfessionalTemplate({
           </div>
 
           {/* Name and Title */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-              {personalInfo.name || "Your Name"}
-              <span className="text-cyan-500 ml-2">✓</span>
-            </h1>
-            <p className="text-xl text-gray-700 font-medium" style={{ fontFamily: "'Playfair Display', serif" }}>
-              {personalInfo.title || "Your Title"}
-            </p>
-          </div>
+          <DraggableElement
+            elementId="name"
+            position={elementPositions.name || { x: 0, y: 0, scale: 1 }}
+            onPositionChange={onElementPositionChange}
+            layoutMode={layoutMode}
+          >
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {personalInfo.name || "Your Name"}
+                <span className="text-cyan-500 ml-2">✓</span>
+              </h1>
+              <p className="text-xl text-gray-700 font-medium" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {personalInfo.title || "Your Title"}
+              </p>
+            </div>
+          </DraggableElement>
 
           {/* Contact Information */}
-          <div className="space-y-3">
+          <DraggableElement
+            elementId="contact"
+            position={elementPositions.contact || { x: 0, y: 0, scale: 1 }}
+            onPositionChange={onElementPositionChange}
+            layoutMode={layoutMode}
+          >
+            <div className="space-y-3">
             {personalInfo.phone && (
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-gray-600" />
@@ -254,45 +282,53 @@ export default function SalesProfessionalTemplate({
                 <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
               </div>
             )}
-          </div>
+            </div>
+          </DraggableElement>
         </div>
 
         {/* Right Side - Portrait Area */}
-        <div 
-          className="relative overflow-hidden"
-          style={{
-            width: `${(images.headshotSize || 100) * 2.56}px`
-          }}
+        <DraggableElement
+          elementId="headshot"
+          position={elementPositions.headshot || { x: 0, y: 0, scale: 1 }}
+          onPositionChange={onElementPositionChange}
+          layoutMode={layoutMode}
         >
-          {images.headshot ? (
-            <div className={`absolute inset-0 ${animationClass}`}>
-              <img
-                src={images.headshot}
-                alt={`${personalInfo.name} portrait`}
-                className="w-full h-full object-cover"
-                style={{
-                  clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
-                }}
-              />
-              {/* Overlay for geometric effect */}
+          <div 
+            className="relative overflow-hidden"
+            style={{
+              width: `${(images.headshotSize || 100) * 2.56}px`
+            }}
+          >
+            {images.headshot ? (
+              <div className={`absolute inset-0 ${animationClass}`}>
+                <img
+                  src={images.headshot}
+                  alt={`${personalInfo.name} portrait`}
+                  className="w-full h-full object-cover"
+                  style={{
+                    clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
+                  }}
+                />
+                {/* Overlay for geometric effect */}
+                <div 
+                  className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-gray-900/20"
+                  style={{
+                    clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
+                  }}
+                ></div>
+              </div>
+            ) : (
               <div 
-                className="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-gray-900/20"
+                className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center ${animationClass}`}
                 style={{
                   clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
                 }}
-              ></div>
-            </div>
-          ) : (
-            <div 
-              className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center ${animationClass}`}
-              style={{
-                clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
-              }}
-            >
-              <span className="text-gray-600 text-sm">Portrait</span>
-            </div>
-          )}
-        </div>
+              >
+                <span className="text-gray-600 text-sm">Portrait</span>
+              </div>
+            )}
+          </div>
+        </DraggableElement>
       </div>
     </div>
   );

@@ -87,10 +87,18 @@ The application follows a full-stack monorepo architecture with clear separation
   - Template selector shows availability status with visual indicators
   - Focused user experience on the fully-featured template for initial launch
 - **Vertical Tab Interface**: Restructured entire interface from vertical stack to organized vertical tabs
-  - Template, Personal Information, Images, Animations, Link Social Media tabs
+  - Template, Personal Information, Images, Layout, Animations, Link Social Media tabs
   - Full-width descriptive labels for step-by-step workflow navigation
   - Active tab styling uses Signatar blue (primary color) for brand consistency
   - Improved user experience with clear section organization
+- **Advanced Layout Customization**: Added comprehensive drag-and-drop layout editor
+  - New "Layout" tab with toggle for entering layout mode
+  - Direct click-and-drag functionality in live preview window
+  - Shift+drag for scaling elements, regular drag for repositioning
+  - All signature elements are draggable: logo, headshot, name, title, contact info, social icons
+  - Visual indicators show draggable elements with blue borders and labels
+  - Fine-tune controls with X/Y position sliders and scale controls
+  - Reset layout button to restore default positions
 
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations
