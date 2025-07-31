@@ -151,6 +151,29 @@
   }
 }
 
+.animate-stick-on {
+  transform-origin: center bottom;
+  animation: stickOnRotate 1s both, stickOnClip 2s both;
+}
+
+@keyframes stickOnRotate {
+  from {
+    transform: rotate(-50deg);
+  }
+  to {
+    transform: rotate(-40deg);
+  }
+}
+
+@keyframes stickOnClip {
+  from {
+    clip-path: inset(0 80% 0 0);
+  }
+  50%, to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
 @keyframes crossDissolve {
   0% {
     opacity: 0;

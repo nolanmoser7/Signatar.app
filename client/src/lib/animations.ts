@@ -1,5 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
-export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep";
+export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep" | "stick-on";
 
 export interface AnimationConfig {
   name: string;
@@ -59,6 +59,12 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     description: "Color sweep overlay effect",
     duration: 5000,
     className: "animate-test-sweep",
+  },
+  "stick-on": {
+    name: "Stick-on",
+    description: "3D rotation with clipping reveal effect",
+    duration: 2000,
+    className: "animate-stick-on",
   },
 };
 
