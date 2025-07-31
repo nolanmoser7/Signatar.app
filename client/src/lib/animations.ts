@@ -1,4 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
+export type ElementAnimationType = "none" | "fade-in" | "pulse" | "zoom-in" | "rotate";
 
 export interface AnimationConfig {
   name: string;
@@ -28,12 +29,53 @@ export const animations: Record<AnimationType, AnimationConfig> = {
   },
 };
 
+export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = {
+  "none": {
+    name: "None",
+    description: "No animation",
+    duration: 0,
+    className: "",
+  },
+  "fade-in": {
+    name: "Fade In",
+    description: "Smooth fade-in effect",
+    duration: 1500,
+    className: "animate-fade-in",
+  },
+  "pulse": {
+    name: "Pulse",
+    description: "Gentle pulsing effect",
+    duration: 2000,
+    className: "animate-pulse-custom",
+  },
+  "zoom-in": {
+    name: "Zoom In",
+    description: "Scale up from small",
+    duration: 1200,
+    className: "animate-zoom-in",
+  },
+  "rotate": {
+    name: "Rotate",
+    description: "360° rotation effect",
+    duration: 1800,
+    className: "animate-rotate-360",
+  },
+};
+
 export function getAnimationClass(animationType: AnimationType): string {
   return animations[animationType]?.className || "";
 }
 
 export function getAnimationDuration(animationType: AnimationType): number {
   return animations[animationType]?.duration || 2000;
+}
+
+export function getElementAnimationClass(animationType: ElementAnimationType): string {
+  return elementAnimations[animationType]?.className || "";
+}
+
+export function getElementAnimationDuration(animationType: ElementAnimationType): number {
+  return elementAnimations[animationType]?.duration || 0;
 }
 
 // Canvas animation functions for GIF generation

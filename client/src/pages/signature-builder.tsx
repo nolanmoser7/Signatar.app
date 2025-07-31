@@ -13,7 +13,7 @@ import SocialMediaForm from "@/components/social-media-form";
 import SignaturePreview from "@/components/signature-preview";
 import GifGenerator from "@/components/gif-generator";
 import { useToast } from "@/hooks/use-toast";
-import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
+import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo.png";
 import defaultHeadshot from "@assets/default-headshot.png";
 
@@ -35,6 +35,11 @@ export default function SignatureBuilder() {
     logoSize: 160
   });
   const [animationType, setAnimationType] = useState<AnimationType>("fade-in");
+  const [elementAnimations, setElementAnimations] = useState<ElementAnimations>({
+    headshot: "none",
+    logo: "none", 
+    socialIcons: "none"
+  });
   const [socialMedia, setSocialMedia] = useState<SocialMedia>({
     linkedin: "https://linkedin.com/in/sarahjohnson",
     twitter: "https://twitter.com/sarahjohnson",
@@ -531,8 +536,10 @@ export default function SignatureBuilder() {
               
               <TabsContent value="animations" className="space-y-6">
                 <AnimationSelector 
-                  selectedAnimation={animationType}
-                  onAnimationChange={setAnimationType}
+                  elementAnimations={elementAnimations}
+                  onElementAnimationChange={(element, animation) => 
+                    setElementAnimations(prev => ({ ...prev, [element]: animation }))
+                  }
                 />
               </TabsContent>
               

@@ -73,3 +73,11 @@ export type Images = z.infer<typeof imagesSchema>;
 export type Template = typeof templates.$inferSelect;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
+
+export const elementAnimationSchema = z.object({
+  headshot: z.enum(["none", "fade-in", "pulse", "zoom-in", "rotate"]).default("none"),
+  logo: z.enum(["none", "fade-in", "pulse", "zoom-in", "rotate"]).default("none"), 
+  socialIcons: z.enum(["none", "fade-in", "pulse", "zoom-in", "rotate"]).default("none"),
+});
+
+export type ElementAnimations = z.infer<typeof elementAnimationSchema>;
