@@ -1,5 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
-export type ElementAnimationType = "none" | "fade-in" | "pulse" | "zoom-in" | "test-sweep";
+export type ElementAnimationType = "none" | "fade-in" | "halo-glow" | "zoom-in" | "test-sweep";
 
 export interface AnimationConfig {
   name: string;
@@ -42,16 +42,16 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     duration: 1500,
     className: "animate-fade-in",
   },
-  "pulse": {
-    name: "Pulse",
-    description: "Gentle pulsing effect",
-    duration: 2000,
-    className: "animate-pulse-custom",
+  "halo-glow": {
+    name: "Halo Glow",
+    description: "Rotating shimmer glow around border",
+    duration: 3000,
+    className: "animate-halo-glow",
   },
   "zoom-in": {
     name: "Zoom In",
     description: "Scale up from small",
-    duration: 1200,
+    duration: 2500,
     className: "animate-zoom-in",
   },
   "test-sweep": {
