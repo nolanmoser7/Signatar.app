@@ -180,38 +180,25 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
             
             {/* Action buttons for headshot and logo */}
             {(type === 'headshot' || type === 'logo') && (
-              <div className="flex flex-col gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => openCropper(type as 'headshot' | 'logo')}
-                  className="w-full"
-                >
-                  <Crop className="w-4 h-4 mr-2" />
-                  Crop & Position
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => inputRef.current?.click()}
-                  className="w-full"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Replace
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => openCropper(type as 'headshot' | 'logo')}
+                className="w-full"
+              >
+                <Crop className="w-4 h-4 mr-2" />
+                Crop & Position
+              </Button>
             )}
             
-            {/* Background images only get replace option */}
-            {type === 'background' && (
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileSelect(e, type)}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-            )}
+            {/* All image types get click-to-replace functionality */}
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileSelect(e, type)}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
           </Card>
         ) : (
           <Card
