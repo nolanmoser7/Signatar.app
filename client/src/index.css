@@ -104,30 +104,22 @@
 
 .animate-halo-glow {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   z-index: 1;
 }
 
 .animate-halo-glow::before {
   content: '';
   position: absolute;
-  inset: -2px 70%;
-  background: linear-gradient(45deg, 
+  inset: -3px 80%;
+  background: linear-gradient(90deg, 
     rgba(6, 182, 212, 1) 0%, 
-    rgba(6, 182, 212, 0.8) 50%, 
+    rgba(6, 182, 212, 0.6) 50%, 
     rgba(6, 182, 212, 1) 100%);
   animation: haloRotate 3s linear infinite;
   z-index: -1;
-  border-radius: inherit;
-}
-
-.animate-halo-glow::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  background: inherit;
-  border-radius: inherit;
-  z-index: -1;
+  border-radius: 50px;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.8);
 }
 
 .animate-cross-dissolve {
