@@ -313,3 +313,120 @@
     opacity: 1;
   }
 }
+
+/* Blur-slide animation */
+.animate-blur-slide {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.animate-blur-slide-delay-0 {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.animate-blur-slide-delay-250 {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.25s both;
+}
+
+.animate-blur-slide-delay-500 {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.5s both;
+}
+
+@keyframes blurSlideIn {
+  0% {
+    transform: translate(-1000px, -1000px) skew(80deg, 10deg);
+    transform-origin: 100% 0%;
+    filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0) skew(0deg, 0deg);
+    transform-origin: 50% 50%;
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+/* L-R Sweep animation */
+.animate-lr-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-lr-sweep::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 182, 212, 0.8);
+  animation: lrSweepReveal 5s ease-in-out;
+  clip-path: inset(0 100% 0 0);
+  z-index: 1;
+}
+
+.animate-lr-sweep-delay-0 {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-lr-sweep-delay-0::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 182, 212, 0.8);
+  animation: lrSweepReveal 5s ease-in-out;
+  clip-path: inset(0 100% 0 0);
+  z-index: 1;
+}
+
+.animate-lr-sweep-delay-250 {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-lr-sweep-delay-250::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 182, 212, 0.8);
+  animation: lrSweepReveal 5s ease-in-out 0.25s both;
+  clip-path: inset(0 100% 0 0);
+  z-index: 1;
+}
+
+.animate-lr-sweep-delay-500 {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-lr-sweep-delay-500::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 182, 212, 0.8);
+  animation: lrSweepReveal 5s ease-in-out 0.5s both;
+  clip-path: inset(0 100% 0 0);
+  z-index: 1;
+}
+
+@keyframes lrSweepReveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  30% {
+    clip-path: inset(0 0% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0% 0 0);
+  }
+}
