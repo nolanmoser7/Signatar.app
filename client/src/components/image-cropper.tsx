@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { RotateCcw, ZoomIn, ZoomOut, Move } from "lucide-react";
 
@@ -39,9 +39,6 @@ export function ImageCropper({
 
     const canvasWidth = 400;
     const canvasHeight = aspectRatio ? canvasWidth / aspectRatio : 400;
-    
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
 
     // Clear canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -94,19 +91,31 @@ export function ImageCropper({
   }, [scale, position, rotation, aspectRatio]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
     setIsDragging(true);
-    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (rect) {
+      setDragStart({ 
+        x: e.clientX - rect.left - position.x, 
+        y: e.clientY - rect.top - position.y 
+      });
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
-    setPosition({
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y
-    });
+    e.preventDefault();
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (rect) {
+      setPosition({
+        x: e.clientX - rect.left - dragStart.x,
+        y: e.clientY - rect.top - dragStart.y
+      });
+    }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: React.MouseEvent) => {
+    e.preventDefault();
     setIsDragging(false);
   };
 
@@ -146,11 +155,48 @@ export function ImageCropper({
     setRotation([0]);
   };
 
+  // Redraw canvas when transforms change
+  useEffect(() => {
+    drawCanvas();
+  }, [position, scale, rotation, drawCanvas]);
+
+  // Add global mouse event listeners for dragging
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (rect) {
+        setPosition({
+          x: e.clientX - rect.left - dragStart.x,
+          y: e.clientY - rect.top - dragStart.y
+        });
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Crop and Position {title}</DialogTitle>
+          <DialogDescription>
+            Adjust the scale, rotation, and position of your image. Click and drag on the image to reposition it within the crop area.
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -159,10 +205,16 @@ export function ImageCropper({
               <canvas
                 ref={canvasRef}
                 className="cursor-move"
+                width={400}
+                height={aspectRatio ? 400 / aspectRatio : 400}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
+                style={{ 
+                  display: 'block',
+                  border: '1px solid #ccc'
+                }}
               />
               <img
                 ref={imageRef}
@@ -183,10 +235,7 @@ export function ImageCropper({
               </label>
               <Slider
                 value={scale}
-                onValueChange={(value) => {
-                  setScale(value);
-                  setTimeout(drawCanvas, 0);
-                }}
+                onValueChange={setScale}
                 min={50}
                 max={200}
                 step={5}
@@ -201,10 +250,7 @@ export function ImageCropper({
               </label>
               <Slider
                 value={rotation}
-                onValueChange={(value) => {
-                  setRotation(value);
-                  setTimeout(drawCanvas, 0);
-                }}
+                onValueChange={setRotation}
                 min={-180}
                 max={180}
                 step={5}
