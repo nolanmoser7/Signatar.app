@@ -1,14 +1,17 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 import { elementAnimations } from "@/lib/animations";
 import type { ElementAnimations } from "@shared/schema";
 
 interface AnimationSelectorProps {
   elementAnimations: ElementAnimations;
   onElementAnimationChange: (element: keyof ElementAnimations, animation: string) => void;
+  onApplyAnimations: () => void;
 }
 
-export default function AnimationSelector({ elementAnimations: selectedAnimations, onElementAnimationChange }: AnimationSelectorProps) {
+export default function AnimationSelector({ elementAnimations: selectedAnimations, onElementAnimationChange, onApplyAnimations }: AnimationSelectorProps) {
   const animatableElements = [
     { key: 'headshot' as const, label: 'Headshot' },
     { key: 'logo' as const, label: 'Logo' },
@@ -42,6 +45,17 @@ export default function AnimationSelector({ elementAnimations: selectedAnimation
             </Select>
           </div>
         ))}
+        
+        <div className="pt-4 border-t border-gray-200">
+          <Button 
+            onClick={onApplyAnimations}
+            className="w-full"
+            size="default"
+          >
+            <Play className="w-4 h-4 mr-2" />
+            Apply Animation
+          </Button>
+        </div>
       </div>
     </div>
   );

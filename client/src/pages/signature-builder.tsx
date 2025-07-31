@@ -49,6 +49,7 @@ export default function SignatureBuilder() {
   });
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isElementAnimating, setIsElementAnimating] = useState(false);
   const [showGifGenerator, setShowGifGenerator] = useState(false);
   const [activeTab, setActiveTab] = useState("template");
   const [layoutMode, setLayoutMode] = useState(false);
@@ -66,6 +67,11 @@ export default function SignatureBuilder() {
   const handlePlayAnimation = () => {
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 2500);
+  };
+
+  const handleApplyElementAnimations = () => {
+    setIsElementAnimating(true);
+    setTimeout(() => setIsElementAnimating(false), 3000);
   };
 
   const handleCopyHtml = async () => {
@@ -540,6 +546,7 @@ export default function SignatureBuilder() {
                   onElementAnimationChange={(element, animation) => 
                     setElementAnimations(prev => ({ ...prev, [element]: animation }))
                   }
+                  onApplyAnimations={handleApplyElementAnimations}
                 />
               </TabsContent>
               
@@ -607,6 +614,8 @@ export default function SignatureBuilder() {
                 deviceView={deviceView}
                 layoutMode={layoutMode}
                 elementPositions={elementPositions}
+                elementAnimations={elementAnimations}
+                isElementAnimating={isElementAnimating}
                 onElementPositionChange={(elementId, position) => 
                   setElementPositions(prev => ({ ...prev, [elementId]: position }))
                 }

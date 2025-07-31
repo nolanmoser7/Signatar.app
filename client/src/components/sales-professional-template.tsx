@@ -1,8 +1,8 @@
 import { Mail, Phone, Globe, Linkedin, Twitter, Instagram, Youtube, X } from "lucide-react";
 import { SiTiktok } from "react-icons/si";
-import { getAnimationClass } from "@/lib/animations";
+import { getAnimationClass, getElementAnimationClass } from "@/lib/animations";
 import DraggableElement from "./draggable-element";
-import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
+import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
 
 interface SalesProfessionalTemplateProps {
   personalInfo: PersonalInfo;
@@ -15,6 +15,8 @@ interface SalesProfessionalTemplateProps {
   elementPositions?: {
     [key: string]: { x: number; y: number; scale: number };
   };
+  elementAnimations?: ElementAnimations;
+  isElementAnimating?: boolean;
   onElementPositionChange?: (elementId: string, position: { x: number; y: number; scale: number }) => void;
 }
 
@@ -27,9 +29,16 @@ export default function SalesProfessionalTemplate({
   deviceView,
   layoutMode = false,
   elementPositions = {},
+  elementAnimations = { headshot: "none", logo: "none", socialIcons: "none" },
+  isElementAnimating = false,
   onElementPositionChange = () => {},
 }: SalesProfessionalTemplateProps) {
   const animationClass = isAnimating ? getAnimationClass(animationType) : "";
+  
+  // Get element-specific animation classes
+  const logoAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.logo) : "";
+  const headshotAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.headshot) : "";
+  const socialAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.socialIcons) : "";
 
   if (deviceView === "mobile") {
     // Mobile version - simplified layout
@@ -166,7 +175,7 @@ export default function SalesProfessionalTemplate({
           onPositionChange={onElementPositionChange}
           layoutMode={layoutMode}
         >
-          <div className={`w-20 h-full bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${animationClass}`}>
+          <div className={`w-20 h-full bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${socialAnimationClass}`}>
             {socialMedia.twitter && (
               <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
                 <X className="w-6 h-6" />
@@ -211,7 +220,7 @@ export default function SalesProfessionalTemplate({
           >
             <div className="mb-4">
               <div 
-                className={`flex items-center justify-center ${animationClass}`}
+                className={`flex items-center justify-center ${logoAnimationClass}`}
                 style={{
                   width: `${(images.logoSize || 100) * 0.48}px`,
                   height: `${(images.logoSize || 100) * 0.48}px`
@@ -306,7 +315,7 @@ export default function SalesProfessionalTemplate({
             }}
           >
             {images.headshot ? (
-              <div className={`absolute inset-0 ${animationClass}`}>
+              <div className={`absolute inset-0 ${headshotAnimationClass}`}>
                 <img
                   src={images.headshot}
                   alt={`${personalInfo.name} portrait`}
@@ -325,7 +334,7 @@ export default function SalesProfessionalTemplate({
               </div>
             ) : (
               <div 
-                className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center ${animationClass}`}
+                className={`absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400 flex items-center justify-center ${headshotAnimationClass}`}
                 style={{
                   clipPath: 'polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%)'
                 }}

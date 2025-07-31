@@ -5,7 +5,7 @@ import { getAnimationClass } from "@/lib/animations";
 import SalesProfessionalTemplate from "./sales-professional-template";
 import { MinimalTemplate } from "./minimal-template";
 import ModernTemplate from "./modern-template";
-import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
+import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
 
 interface SignaturePreviewProps {
   personalInfo: PersonalInfo;
@@ -19,6 +19,8 @@ interface SignaturePreviewProps {
   elementPositions?: {
     [key: string]: { x: number; y: number; scale: number };
   };
+  elementAnimations?: ElementAnimations;
+  isElementAnimating?: boolean;
   onElementPositionChange?: (elementId: string, position: { x: number; y: number; scale: number }) => void;
 }
 
@@ -32,6 +34,8 @@ export default function SignaturePreview({
   deviceView,
   layoutMode = false,
   elementPositions = {},
+  elementAnimations = { headshot: "none", logo: "none", socialIcons: "none" },
+  isElementAnimating = false,
   onElementPositionChange = () => {},
 }: SignaturePreviewProps) {
   // Handle specific templates separately
@@ -46,6 +50,8 @@ export default function SignaturePreview({
         deviceView={deviceView}
         layoutMode={layoutMode}
         elementPositions={elementPositions}
+        elementAnimations={elementAnimations}
+        isElementAnimating={isElementAnimating}
         onElementPositionChange={onElementPositionChange}
       />
     );
