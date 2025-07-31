@@ -387,7 +387,8 @@ export default function SignatureBuilder() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">S</span>
               </div>
-              <h1 className="text-xl font-semibold text-neutral">SignaturePro</h1>
+              <h1 className="text-xl font-semibold text-neutral">Siignatar
+</h1>
             </div>
           </div>
           <div className="flex items-center space-x-3">
@@ -407,7 +408,6 @@ export default function SignatureBuilder() {
           </div>
         </div>
       </header>
-
       <div className="flex h-[calc(100vh-73px)]">
         {/* Sidebar */}
         <aside className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
@@ -691,7 +691,6 @@ export default function SignatureBuilder() {
           </div>
         </main>
       </div>
-
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
