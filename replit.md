@@ -73,6 +73,13 @@ The application follows a full-stack monorepo architecture with clear separation
 - **Social Media Layout Improvements**: Enhanced icon positioning and sizing
   - Sales Professional template: Centered social icons vertically and increased size to 24px
   - Modern template: Repositioned social icons with 48px right margin for better alignment
+- **Advanced Image Cropping Feature**: Implemented comprehensive image editing capabilities
+  - Added ImageCropper component with interactive canvas for drag, scale, and rotate controls
+  - Headshot cropper enforces 1:1 aspect ratio for perfect circular portraits
+  - Logo cropper allows free-form cropping for flexible brand positioning
+  - "Crop & Position" and "Replace" buttons stacked vertically for optimal container fit
+  - Real-time preview with transform controls (50-200% scale, -180° to +180° rotation)
+  - Integrated @radix-ui/react-dialog for professional modal interface
 
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations

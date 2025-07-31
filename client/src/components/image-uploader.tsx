@@ -180,12 +180,12 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
             
             {/* Action buttons for headshot and logo */}
             {(type === 'headshot' || type === 'logo') && (
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => openCropper(type as 'headshot' | 'logo')}
-                  className="flex-1"
+                  className="w-full"
                 >
                   <Crop className="w-4 h-4 mr-2" />
                   Crop & Position
@@ -194,7 +194,7 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
                   variant="outline"
                   size="sm"
                   onClick={() => inputRef.current?.click()}
-                  className="flex-1"
+                  className="w-full"
                 >
                   <Upload className="w-4 h-4 mr-2" />
                   Replace
