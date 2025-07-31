@@ -186,8 +186,11 @@
   from {
     transform: rotate(-50deg);
   }
-  to {
+  50% {
     transform: rotate(-40deg);
+  }
+  to {
+    transform: rotate(0deg);
   }
 }
 
