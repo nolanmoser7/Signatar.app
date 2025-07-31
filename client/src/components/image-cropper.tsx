@@ -43,6 +43,20 @@ export function ImageCropper({
     // Clear canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
+    // Calculate image dimensions to maintain aspect ratio
+    const imageAspectRatio = image.naturalWidth / image.naturalHeight;
+    let drawWidth = canvasWidth;
+    let drawHeight = canvasHeight;
+    
+    // Fit image to canvas while maintaining aspect ratio
+    if (imageAspectRatio > canvasWidth / canvasHeight) {
+      // Image is wider than canvas ratio
+      drawHeight = canvasWidth / imageAspectRatio;
+    } else {
+      // Image is taller than canvas ratio
+      drawWidth = canvasHeight * imageAspectRatio;
+    }
+
     // Save context
     ctx.save();
 
@@ -50,10 +64,10 @@ export function ImageCropper({
     ctx.translate(canvasWidth / 2, canvasHeight / 2);
     ctx.rotate((rotation[0] * Math.PI) / 180);
     ctx.scale(scale[0] / 100, scale[0] / 100);
-    ctx.translate(-canvasWidth / 2 + position.x, -canvasHeight / 2 + position.y);
+    ctx.translate(position.x, position.y);
 
-    // Draw image
-    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+    // Draw image centered and maintaining aspect ratio
+    ctx.drawImage(image, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
 
     // Restore context
     ctx.restore();
@@ -79,9 +93,10 @@ export function ImageCropper({
     ctx.translate(canvasWidth / 2, canvasHeight / 2);
     ctx.rotate((rotation[0] * Math.PI) / 180);
     ctx.scale(scale[0] / 100, scale[0] / 100);
-    ctx.translate(-canvasWidth / 2 + position.x, -canvasHeight / 2 + position.y);
+    ctx.translate(position.x, position.y);
     
-    ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
+    // Draw image centered and maintaining aspect ratio in crop area
+    ctx.drawImage(image, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
     ctx.restore();
 
     // Draw crop border
@@ -121,7 +136,8 @@ export function ImageCropper({
 
   const handleCrop = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const image = imageRef.current;
+    if (!canvas || !image) return;
 
     const finalCanvas = document.createElement("canvas");
     const finalCtx = finalCanvas.getContext("2d");
@@ -133,16 +149,30 @@ export function ImageCropper({
 
     const canvasWidth = 400;
     const canvasHeight = aspectRatio ? canvasWidth / aspectRatio : 400;
-    const cropWidth = aspectRatio ? Math.min(canvasWidth, canvasHeight * aspectRatio) : canvasWidth;
-    const cropHeight = aspectRatio ? cropWidth / aspectRatio : canvasHeight;
-    const cropX = (canvasWidth - cropWidth) / 2;
-    const cropY = (canvasHeight - cropHeight) / 2;
+    
+    // Calculate image dimensions to maintain aspect ratio (same as in drawCanvas)
+    const imageAspectRatio = image.naturalWidth / image.naturalHeight;
+    let drawWidth = canvasWidth;
+    let drawHeight = canvasHeight;
+    
+    if (imageAspectRatio > canvasWidth / canvasHeight) {
+      drawHeight = canvasWidth / imageAspectRatio;
+    } else {
+      drawWidth = canvasHeight * imageAspectRatio;
+    }
 
-    finalCtx.drawImage(
-      canvas,
-      cropX, cropY, cropWidth, cropHeight,
-      0, 0, finalCanvas.width, finalCanvas.height
-    );
+    // Apply transformations and draw to final canvas
+    finalCtx.save();
+    finalCtx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
+    finalCtx.rotate((rotation[0] * Math.PI) / 180);
+    finalCtx.scale(scale[0] / 100, scale[0] / 100);
+    finalCtx.translate(position.x * (finalCanvas.width / canvasWidth), position.y * (finalCanvas.height / canvasHeight));
+
+    const finalDrawWidth = drawWidth * (finalCanvas.width / canvasWidth);
+    const finalDrawHeight = drawHeight * (finalCanvas.height / canvasHeight);
+    
+    finalCtx.drawImage(image, -finalDrawWidth / 2, -finalDrawHeight / 2, finalDrawWidth, finalDrawHeight);
+    finalCtx.restore();
 
     const croppedImageUrl = finalCanvas.toDataURL("image/png");
     onCropComplete(croppedImageUrl);
