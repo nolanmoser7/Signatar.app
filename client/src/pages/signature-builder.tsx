@@ -66,7 +66,11 @@ export default function SignatureBuilder() {
 
   const handlePlayAnimation = () => {
     setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 2500);
+    setIsElementAnimating(true);
+    setTimeout(() => {
+      setIsAnimating(false);
+      setIsElementAnimating(false);
+    }, 3000);
   };
 
   const handleApplyElementAnimations = () => {
@@ -627,17 +631,28 @@ export default function SignatureBuilder() {
                   <h3 className="font-semibold text-neutral">Animation Preview</h3>
                   <Button onClick={handlePlayAnimation} size="sm">
                     <Play className="w-4 h-4 mr-2" />
-                    Play Animation
+                    Play All Animations
                   </Button>
                 </div>
-                <div className="flex items-center space-x-4 text-sm text-gray-600">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2 h-2 bg-primary rounded-full"></span>
-                    <span>Current: {animationType.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-2 h-2 bg-primary rounded-full"></span>
+                      <span>Global: {animationType.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase())}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
+                      <span>Duration: 3.0s</span>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
-                    <span>Duration: 2.0s</span>
+                  <div className="text-sm text-gray-600">
+                    <span>Elements: </span>
+                    <span className="text-teal-600">
+                      {Object.entries(elementAnimations)
+                        .filter(([_, animation]) => animation !== "none")
+                        .map(([element, animation]) => `${element.charAt(0).toUpperCase() + element.slice(1)} (${animation})`)
+                        .join(", ") || "None selected"}
+                    </span>
                   </div>
                 </div>
               </Card>
