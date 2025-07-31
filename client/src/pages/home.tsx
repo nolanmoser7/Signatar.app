@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle, Star, Users, Zap } from "lucide-react";
 import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo.png";
+import AuthModal from "@/components/auth-modal";
 
 export default function Home() {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
@@ -16,7 +20,9 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-primary">Signatar</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost">Login</Button>
+            <Button variant="ghost" onClick={() => setShowAuthModal(true)}>
+              Login
+            </Button>
             <Link href="/builder">
               <Button>Get Started</Button>
             </Link>
@@ -188,6 +194,11 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
     </div>
   );
 }

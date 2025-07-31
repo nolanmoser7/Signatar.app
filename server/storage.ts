@@ -1,4 +1,4 @@
-import { type Signature, type InsertSignature, type Template, type InsertTemplate, signatures, templates } from "@shared/schema";
+import { type Signature, type InsertSignature, type Template, type InsertTemplate, type User, type InsertUser, signatures, templates, users } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -15,15 +15,23 @@ export interface IStorage {
   getTemplate(id: string): Promise<Template | undefined>;
   getAllTemplates(): Promise<Template[]>;
   createTemplate(template: InsertTemplate): Promise<Template>;
+  
+  // User operations
+  getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
 }
 
 export class MemStorage implements IStorage {
   private signatures: Map<string, Signature>;
   private templates: Map<string, Template>;
+  private users: Map<string, User>;
 
   constructor() {
     this.signatures = new Map();
     this.templates = new Map();
+    this.users = new Map();
     
     // Initialize with default templates
     this.initializeTemplates();
@@ -137,6 +145,42 @@ export class MemStorage implements IStorage {
     };
     this.templates.set(id, template);
     return template;
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.email === email);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = randomUUID();
+    const now = new Date();
+    const user: User = {
+      ...insertUser,
+      id,
+      firstName: insertUser.firstName || null,
+      lastName: insertUser.lastName || null,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.users.set(id, user);
+    return user;
+  }
+
+  async updateUser(id: string, updateData: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser: User = {
+      ...user,
+      ...updateData,
+      updatedAt: new Date(),
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 }
 
@@ -259,6 +303,39 @@ export class DatabaseStorage implements IStorage {
       .values(templateData)
       .returning();
     return template;
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = randomUUID();
+    const userData = {
+      ...insertUser,
+      id,
+    };
+    
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .returning();
+    return user;
+  }
+
+  async updateUser(id: string, updateData: Partial<InsertUser>): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ ...updateData, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
   }
 }
 

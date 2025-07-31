@@ -5,6 +5,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs/promises";
 import { insertSignatureSchema } from "@shared/schema";
+import { registerAuthRoutes } from "./routes/auth";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -26,6 +27,9 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register authentication routes
+  registerAuthRoutes(app);
+
   // Get all templates
   app.get("/api/templates", async (req, res) => {
     try {
