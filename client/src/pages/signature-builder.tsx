@@ -361,11 +361,36 @@ export default function SignatureBuilder() {
           <div className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full" orientation="vertical">
               <TabsList className="flex flex-col h-auto w-full mb-6 bg-gray-50">
-                <TabsTrigger value="template" className="w-full justify-start text-sm py-3 px-4 mb-1">Choose Template</TabsTrigger>
-                <TabsTrigger value="personal" className="w-full justify-start text-sm py-3 px-4 mb-1">Personal Information</TabsTrigger>
-                <TabsTrigger value="images" className="w-full justify-start text-sm py-3 px-4 mb-1">Images</TabsTrigger>
-                <TabsTrigger value="animations" className="w-full justify-start text-sm py-3 px-4 mb-1">Animations</TabsTrigger>
-                <TabsTrigger value="social" className="w-full justify-start text-sm py-3 px-4">Link Social Media</TabsTrigger>
+                <TabsTrigger 
+                  value="template" 
+                  className="w-full justify-start text-sm py-3 px-4 mb-1 data-[state=active]:bg-primary data-[state=active]:text-white"
+                >
+                  Choose Template
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="personal" 
+                  className="w-full justify-start text-sm py-3 px-4 mb-1 data-[state=active]:bg-primary data-[state=active]:text-white"
+                >
+                  Personal Information
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="images" 
+                  className="w-full justify-start text-sm py-3 px-4 mb-1 data-[state=active]:bg-primary data-[state=active]:text-white"
+                >
+                  Images
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="animations" 
+                  className="w-full justify-start text-sm py-3 px-4 mb-1 data-[state=active]:bg-primary data-[state=active]:text-white"
+                >
+                  Animations
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="social" 
+                  className="w-full justify-start text-sm py-3 px-4 data-[state=active]:bg-primary data-[state=active]:text-white"
+                >
+                  Link Social Media
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="template" className="space-y-6">
