@@ -4,14 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Download, Copy, Dock, Smartphone, Play } from "lucide-react";
+import { Save, Download, Dock, Smartphone, Play, CheckCircle } from "lucide-react";
 import TemplateSelector from "@/components/template-selector";
 import PersonalInfoForm from "@/components/personal-info-form";
 import ImageUploader from "@/components/image-uploader";
 import AnimationSelector from "@/components/animation-selector";
 import SocialMediaForm from "@/components/social-media-form";
 import SignaturePreview from "@/components/signature-preview";
-import GifGenerator from "@/components/gif-generator";
+
 import { useToast } from "@/hooks/use-toast";
 import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo.png";
@@ -50,7 +50,7 @@ export default function SignatureBuilder() {
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");
   const [isAnimating, setIsAnimating] = useState(false);
   const [isElementAnimating, setIsElementAnimating] = useState(false);
-  const [showGifGenerator, setShowGifGenerator] = useState(false);
+
   const [activeTab, setActiveTab] = useState("template");
   const [layoutMode, setLayoutMode] = useState(false);
   const [elementPositions, setElementPositions] = useState({
@@ -76,24 +76,6 @@ export default function SignatureBuilder() {
   const handleApplyElementAnimations = () => {
     setIsElementAnimating(true);
     setTimeout(() => setIsElementAnimating(false), 3000);
-  };
-
-  const handleCopyHtml = async () => {
-    try {
-      // Generate HTML version of the signature
-      const htmlContent = generateSignatureHtml();
-      await navigator.clipboard.writeText(htmlContent);
-      toast({
-        title: "HTML Copied!",
-        description: "Signature HTML has been copied to clipboard.",
-      });
-    } catch (error) {
-      toast({
-        title: "Copy Failed",
-        description: "Failed to copy HTML to clipboard.",
-        variant: "destructive",
-      });
-    }
   };
 
   const generateSignatureHtml = (): string => {
@@ -371,7 +353,7 @@ export default function SignatureBuilder() {
               <Save className="w-4 h-4 mr-2" />
               Save Template
             </Button>
-            <Button onClick={() => setShowGifGenerator(true)}>
+            <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
@@ -593,13 +575,9 @@ export default function SignatureBuilder() {
                   <span className="w-2 h-2 bg-success rounded-full"></span>
                   <span>Live Preview</span>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleCopyHtml}>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy HTML
-                </Button>
-                <Button variant="outline" size="sm" className="bg-warning text-white hover:bg-warning/90" onClick={() => setShowGifGenerator(true)}>
-                  <Download className="w-4 h-4 mr-2" />
-                  Generate GIF
+                <Button variant="default" size="sm" className="bg-primary text-white hover:bg-primary/90">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Finished Creating!
                 </Button>
               </div>
             </div>
@@ -661,17 +639,7 @@ export default function SignatureBuilder() {
         </main>
       </div>
 
-      {/* GIF Generator Modal */}
-      {showGifGenerator && (
-        <GifGenerator
-          personalInfo={personalInfo}
-          images={images}
-          socialMedia={socialMedia}
-          animationType={animationType}
-          templateId={selectedTemplate}
-          onClose={() => setShowGifGenerator(false)}
-        />
-      )}
+
     </div>
   );
 }
