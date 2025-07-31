@@ -55,7 +55,7 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     className: "animate-zoom-in",
   },
   "test-sweep": {
-    name: "Test Sweep",
+    name: "L-R Sweep",
     description: "Color sweep overlay effect",
     duration: 5000,
     className: "animate-test-sweep",
