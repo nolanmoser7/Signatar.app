@@ -77,7 +77,7 @@ function ModernTemplate({
                     </svg>
                   </div>
                 )}
-                <h1 className="text-white text-xl font-light tracking-[0.2em]">
+                <h1 className="text-white text-xl font-light tracking-[0.2em]" style={{ fontFamily: "'Playfair Display', serif" }}>
                   {personalInfo.company?.toUpperCase() || "TECHSPACE"}
                 </h1>
               </div>
@@ -85,10 +85,10 @@ function ModernTemplate({
 
             {/* Name and Title */}
             <div className="mb-6">
-              <h2 className="text-white text-2xl font-light mb-2">
+              <h2 className="text-white text-2xl font-light mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.name || "David Harrison"}
               </h2>
-              <p className="text-cyan-400 text-lg font-light">
+              <p className="text-cyan-400 text-lg font-light" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.title || "CEO"}
               </p>
             </div>
@@ -98,19 +98,19 @@ function ModernTemplate({
               {personalInfo.phone && (
                 <div className="flex items-center text-cyan-400">
                   <Phone className="w-4 h-4 mr-3" />
-                  <span className="text-white">{personalInfo.phone}</span>
+                  <span className="text-white" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.phone}</span>
                 </div>
               )}
               {personalInfo.email && (
                 <div className="flex items-center text-cyan-400">
                   <Mail className="w-4 h-4 mr-3" />
-                  <span className="text-white">{personalInfo.email}</span>
+                  <span className="text-white" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
                 </div>
               )}
               {personalInfo.website && (
                 <div className="flex items-center text-cyan-400">
                   <Globe className="w-4 h-4 mr-3" />
-                  <span className="text-white">{personalInfo.website}</span>
+                  <span className="text-white" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
                 </div>
               )}
             </div>
@@ -218,17 +218,17 @@ function ModernTemplate({
                   </svg>
                 </div>
               )}
-              <h1 className="text-white text-3xl font-light tracking-[0.3em]">
+              <h1 className="text-white text-3xl font-light tracking-[0.3em]" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.company?.toUpperCase() || "TECHSPACE"}
               </h1>
             </div>
 
             {/* Name and Title */}
             <div className="mb-8">
-              <h2 className="text-white text-4xl font-light mb-3">
+              <h2 className="text-white text-4xl font-light mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.name || "David Harrison"}
               </h2>
-              <p className="text-cyan-400 text-2xl font-light">
+              <p className="text-cyan-400 text-2xl font-light" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.title || "CEO"}
               </p>
             </div>
@@ -238,19 +238,19 @@ function ModernTemplate({
               {personalInfo.phone && (
                 <div className="flex items-center">
                   <Phone className="w-5 h-5 mr-4 text-cyan-400" />
-                  <span className="text-white text-lg">{personalInfo.phone}</span>
+                  <span className="text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.phone}</span>
                 </div>
               )}
               {personalInfo.email && (
                 <div className="flex items-center">
                   <Mail className="w-5 h-5 mr-4 text-cyan-400" />
-                  <span className="text-white text-lg">{personalInfo.email}</span>
+                  <span className="text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
                 </div>
               )}
               {personalInfo.website && (
                 <div className="flex items-center">
                   <Globe className="w-5 h-5 mr-4 text-cyan-400" />
-                  <span className="text-white text-lg">{personalInfo.website}</span>
+                  <span className="text-white text-lg" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
                 </div>
               )}
             </div>

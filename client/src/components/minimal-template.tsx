@@ -57,7 +57,7 @@ export function MinimalTemplate({
               <div className="w-6 h-6 bg-purple-600 rounded-sm flex items-center justify-center">
                 <div className="w-3 h-3 bg-white transform rotate-45"></div>
               </div>
-              <span className="font-bold text-lg tracking-wide">{personalInfo.company?.toUpperCase() || "APEX SOLUTIONS"}</span>
+              <span className="font-bold text-lg tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.company?.toUpperCase() || "APEX SOLUTIONS"}</span>
             </div>
           )}
           
@@ -80,8 +80,8 @@ export function MinimalTemplate({
           
           {/* Name and Title */}
           <div className="text-center">
-            <h1 className="text-xl font-bold text-gray-900">{personalInfo.name || "Mark Johnson"}</h1>
-            <p className="text-gray-600 text-sm">{personalInfo.title || "Marketing Manager"}</p>
+            <h1 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.name || "Mark Johnson"}</h1>
+            <p className="text-gray-600 text-sm" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.title || "Marketing Manager"}</p>
           </div>
           
           {/* Contact Info */}
@@ -89,19 +89,19 @@ export function MinimalTemplate({
             {personalInfo.phone && (
               <div className="flex items-center justify-center space-x-2">
                 <Phone className="w-3 h-3" />
-                <span>{personalInfo.phone}</span>
+                <span style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.phone}</span>
               </div>
             )}
             {personalInfo.email && (
               <div className="flex items-center justify-center space-x-2">
                 <Mail className="w-3 h-3" />
-                <span>{personalInfo.email}</span>
+                <span style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
               </div>
             )}
             {personalInfo.website && (
               <div className="flex items-center justify-center space-x-2">
                 <Globe className="w-3 h-3" />
-                <span>{personalInfo.website}</span>
+                <span style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
               </div>
             )}
           </div>
@@ -188,10 +188,10 @@ export function MinimalTemplate({
               )}
             </div>
             <div>
-              <div className="text-2xl font-bold tracking-wider text-gray-900">
+              <div className="text-2xl font-bold tracking-wider text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.company ? personalInfo.company.toUpperCase() : "APEX"}
               </div>
-              <div className="text-sm font-medium tracking-widest text-gray-600 -mt-1">
+              <div className="text-sm font-medium tracking-widest text-gray-600 -mt-1" style={{ fontFamily: "'Playfair Display', serif" }}>
                 {personalInfo.company ? "" : "SOLUTIONS"}
               </div>
             </div>
@@ -199,10 +199,10 @@ export function MinimalTemplate({
           
           {/* Name and Title */}
           <div className="space-y-1">
-            <h1 className="text-4xl font-bold text-gray-900">
+            <h1 className="text-4xl font-bold text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
               {personalInfo.name || "Mark Johnson"}
             </h1>
-            <p className="text-xl text-gray-600 font-medium">
+            <p className="text-xl text-gray-600 font-medium" style={{ fontFamily: "'Playfair Display', serif" }}>
               {personalInfo.title || "Marketing Manager"}
             </p>
           </div>
@@ -212,19 +212,19 @@ export function MinimalTemplate({
             {personalInfo.phone && (
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-gray-700" />
-                <span className="text-lg text-gray-900">{personalInfo.phone}</span>
+                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.phone}</span>
               </div>
             )}
             {personalInfo.email && (
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-gray-700" />
-                <span className="text-lg text-gray-900">{personalInfo.email}</span>
+                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
               </div>
             )}
             {personalInfo.website && (
               <div className="flex items-center space-x-3">
                 <Globe className="w-5 h-5 text-gray-700" />
-                <span className="text-lg text-gray-900">{personalInfo.website}</span>
+                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
               </div>
             )}
           </div>

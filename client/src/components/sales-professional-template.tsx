@@ -209,18 +209,18 @@ export default function SalesProfessionalTemplate({
 
           {/* Company Name */}
           <div className="mb-6">
-            <h2 className="text-2xl font-bold tracking-wider text-gray-900">
+            <h2 className="text-2xl font-bold tracking-wider text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
               {personalInfo.company?.toUpperCase() || "COMPANY"}
             </h2>
           </div>
 
           {/* Name and Title */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
               {personalInfo.name || "Your Name"}
               <span className="text-cyan-500 ml-2">✓</span>
             </h1>
-            <p className="text-xl text-gray-700 font-medium">
+            <p className="text-xl text-gray-700 font-medium" style={{ fontFamily: "'Playfair Display', serif" }}>
               {personalInfo.title || "Your Title"}
             </p>
           </div>
@@ -230,19 +230,19 @@ export default function SalesProfessionalTemplate({
             {personalInfo.phone && (
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-gray-600" />
-                <span className="text-lg text-gray-900">{personalInfo.phone}</span>
+                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.phone}</span>
               </div>
             )}
             {personalInfo.email && (
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-gray-600" />
-                <span className="text-lg text-gray-900">{personalInfo.email}</span>
+                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
               </div>
             )}
             {personalInfo.website && (
               <div className="flex items-center space-x-3">
                 <Globe className="w-5 h-5 text-gray-600" />
-                <span className="text-lg text-gray-900">{personalInfo.website}</span>
+                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
               </div>
             )}
           </div>

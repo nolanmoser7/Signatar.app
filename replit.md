@@ -38,7 +38,7 @@ The application follows a full-stack monorepo architecture with clear separation
 5. **Live Preview**: Real-time signature preview with device view switching (desktop/mobile)
 6. **Export Options**: HTML and animated GIF generation capabilities
 
-### Recent Changes (July 28, 2025)
+### Recent Changes (July 31, 2025)
 - **PostgreSQL Database Integration**: Successfully migrated from in-memory storage to PostgreSQL using Neon Database
   - Implemented DatabaseStorage class to replace MemStorage while maintaining the same IStorage interface
   - All signatures and templates are now persisted in the database with proper CRUD operations
@@ -61,6 +61,18 @@ The application follows a full-stack monorepo architecture with clear separation
 - **HTML Export**: Updated HTML generation for all templates with email-client-compatible table structures
 - **GIF Generation**: Enhanced canvas rendering to support all template designs with element-specific animations and proper visual recreation
 - **Upload System Fix**: Resolved image upload issues by fixing multer TypeScript configuration and FormData handling in API requests
+- **Typography Update**: Changed all template fonts to "Playfair Display" serif font for enhanced visual appeal and professional appearance
+  - Updated Modern template with Playfair Display for company name, personal name, title, and contact information
+  - Updated Sales Professional template with Playfair Display throughout all text elements
+  - Updated Minimal template with Playfair Display for both mobile and desktop versions
+  - Added Google Fonts import for Playfair Display with full weight and style support (400-900, normal and italic)
+- **Default Image Settings**: Set optimized default sizes for better template previews
+  - Logo size default increased to 160% for better brand visibility
+  - Headshot size default set to 110% for optimal portrait presentation
+  - Added professional default headshot image for complete template previews
+- **Social Media Layout Improvements**: Enhanced icon positioning and sizing
+  - Sales Professional template: Centered social icons vertically and increased size to 24px
+  - Modern template: Repositioned social icons with 48px right margin for better alignment
 
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations
