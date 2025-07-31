@@ -1,5 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
-export type ElementAnimationType = "none" | "fade-in" | "pulse" | "zoom-in" | "rotate";
+export type ElementAnimationType = "none" | "fade-in" | "pulse" | "zoom-in" | "test-sweep";
 
 export interface AnimationConfig {
   name: string;
@@ -54,11 +54,11 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     duration: 1200,
     className: "animate-zoom-in",
   },
-  "rotate": {
-    name: "Rotate",
-    description: "360° rotation effect",
-    duration: 1800,
-    className: "animate-rotate-360",
+  "test-sweep": {
+    name: "Test Sweep",
+    description: "Color sweep overlay effect",
+    duration: 5000,
+    className: "animate-test-sweep",
   },
 };
 

@@ -114,8 +114,22 @@
   animation: zoomIn 1.2s ease-out;
 }
 
-.animate-rotate-360 {
-  animation: rotate360 1.8s ease-in-out;
+.animate-test-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-test-sweep::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(6, 182, 212, 0.8) 0%, rgba(6, 182, 212, 0) 30%);
+  background-size: 200% 100%;
+  animation: colorSweep 5s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes fadeIn {
@@ -173,17 +187,14 @@
   }
 }
 
-@keyframes rotate360 {
+@keyframes colorSweep {
   0% {
-    opacity: 0;
-    transform: rotate(0deg) scale(0.8);
+    background-position: -100% 0;
   }
-  50% {
-    opacity: 0.8;
-    transform: rotate(180deg) scale(1.1);
+  30% {
+    background-position: 0 0;
   }
   100% {
-    opacity: 1;
-    transform: rotate(360deg) scale(1);
+    background-position: 0 0;
   }
 }
