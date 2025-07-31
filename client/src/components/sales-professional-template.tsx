@@ -151,33 +151,32 @@ export default function SalesProfessionalTemplate({
 
       <div className="flex relative z-10">
         {/* Left Sidebar with Social Icons */}
-        <div className={`w-20 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center py-6 space-y-4 ${animationClass}`}>
+        <div className={`w-20 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${animationClass}`}>
           {socialMedia.twitter && (
             <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </a>
           )}
           {socialMedia.linkedin && (
             <a href={socialMedia.linkedin} className="text-white hover:text-gray-200 transition-colors">
-              <Linkedin className="w-5 h-5" />
+              <Linkedin className="w-6 h-6" />
             </a>
           )}
           {socialMedia.instagram && (
             <a href={socialMedia.instagram} className="text-white hover:text-gray-200 transition-colors">
-              <Instagram className="w-5 h-5" />
+              <Instagram className="w-6 h-6" />
             </a>
           )}
           {socialMedia.youtube && (
             <a href={socialMedia.youtube} className="text-white hover:text-gray-200 transition-colors">
-              <Youtube className="w-5 h-5" />
+              <Youtube className="w-6 h-6" />
             </a>
           )}
           {socialMedia.tiktok && (
             <a href={socialMedia.tiktok} className="text-white hover:text-gray-200 transition-colors">
-              <SiTiktok className="w-5 h-5" />
+              <SiTiktok className="w-6 h-6" />
             </a>
           )}
-          <div className="flex-1"></div>
         </div>
 
         {/* Main Content Area */}
