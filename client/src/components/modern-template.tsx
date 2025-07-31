@@ -256,7 +256,7 @@ function ModernTemplate({
             </div>
 
             {/* Social Media Icons */}
-            <div className={`flex justify-center space-x-6 ${getAnimationClass("social")}`}>
+            <div className={`flex space-x-6 ml-12 ${getAnimationClass("social")}`}>
               {socialMedia.twitter && (
                 <a href={socialMedia.twitter} className="text-cyan-400 hover:text-cyan-300 transition-colors">
                   <SiX className="w-6 h-6" />
