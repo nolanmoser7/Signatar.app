@@ -1,5 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
-export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep" | "swing-in";
+export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "curveball" | "swing-in";
 
 export interface AnimationConfig {
   name: string;
@@ -54,11 +54,11 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     duration: 2500,
     className: "animate-zoom-in",
   },
-  "test-sweep": {
-    name: "L-R Sweep",
-    description: "Color sweep overlay effect",
-    duration: 5000,
-    className: "animate-test-sweep",
+  "curveball": {
+    name: "Curveball",
+    description: "Elliptical slide-in with 3D rotation and scaling",
+    duration: 1800,
+    className: "animate-curveball",
   },
   "swing-in": {
     name: "Swing-in",

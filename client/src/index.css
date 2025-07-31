@@ -203,20 +203,20 @@
   animation: zoomIn 2.5s ease-out 0.5s both;
 }
 
-.animate-test-sweep {
-  animation: lrSweepReveal 5s ease-in-out forwards;
+.animate-curveball {
+  animation: curveballSlide 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-.animate-test-sweep-delay-0 {
-  animation: lrSweepReveal 5s ease-in-out forwards;
+.animate-curveball-delay-0 {
+  animation: curveballSlide 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-.animate-test-sweep-delay-250 {
-  animation: lrSweepReveal 5s ease-in-out 0.25s both;
+.animate-curveball-delay-250 {
+  animation: curveballSlide 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.25s both;
 }
 
-.animate-test-sweep-delay-500 {
-  animation: lrSweepReveal 5s ease-in-out 0.5s both;
+.animate-curveball-delay-500 {
+  animation: curveballSlide 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
 }
 
 @keyframes fadeIn {
@@ -301,17 +301,15 @@
   }
 }
 
-@keyframes lrSweepReveal {
+@keyframes curveballSlide {
   0% {
-    clip-path: inset(0 100% 0 0);
-    opacity: 1;
-  }
-  30% {
-    clip-path: inset(0 0% 0 0);
-    opacity: 1;
+    transform: translateX(800px) rotateY(-30deg) scale(0);
+    transform-origin: -100% 50%;
+    opacity: 0;
   }
   100% {
-    clip-path: inset(0 0% 0 0);
+    transform: translateX(0) rotateY(0) scale(1);
+    transform-origin: -1800px 50%;
     opacity: 1;
   }
 }
