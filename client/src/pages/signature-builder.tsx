@@ -51,7 +51,7 @@ export default function SignatureBuilder() {
     logo: { x: 0, y: 0, scale: 1 },
     headshot: { x: 0, y: 0, scale: 1 },
     name: { x: 0, y: 0, scale: 1 },
-    title: { x: 0, y: 0, scale: 1 },
+    company: { x: 0, y: 0, scale: 1 },
     contact: { x: 0, y: 0, scale: 1 },
     social: { x: 0, y: 0, scale: 1 }
   });
@@ -466,7 +466,7 @@ export default function SignatureBuilder() {
                                     className="w-full"
                                     onChange={(e) => setElementPositions(prev => ({
                                       ...prev,
-                                      [element]: { ...prev[element], x: parseInt(e.target.value) }
+                                      [element]: { ...prev[element as keyof typeof prev], x: parseInt(e.target.value) }
                                     }))}
                                   />
                                   <span className="text-gray-500">{position.x}px</span>
@@ -481,7 +481,7 @@ export default function SignatureBuilder() {
                                     className="w-full"
                                     onChange={(e) => setElementPositions(prev => ({
                                       ...prev,
-                                      [element]: { ...prev[element], y: parseInt(e.target.value) }
+                                      [element]: { ...prev[element as keyof typeof prev], y: parseInt(e.target.value) }
                                     }))}
                                   />
                                   <span className="text-gray-500">{position.y}px</span>
@@ -497,7 +497,7 @@ export default function SignatureBuilder() {
                                     className="w-full"
                                     onChange={(e) => setElementPositions(prev => ({
                                       ...prev,
-                                      [element]: { ...prev[element], scale: parseFloat(e.target.value) }
+                                      [element]: { ...prev[element as keyof typeof prev], scale: parseFloat(e.target.value) }
                                     }))}
                                   />
                                   <span className="text-gray-500">{Math.round(position.scale * 100)}%</span>
@@ -515,7 +515,7 @@ export default function SignatureBuilder() {
                               logo: { x: 0, y: 0, scale: 1 },
                               headshot: { x: 0, y: 0, scale: 1 },
                               name: { x: 0, y: 0, scale: 1 },
-                              title: { x: 0, y: 0, scale: 1 },
+                              company: { x: 0, y: 0, scale: 1 },
                               contact: { x: 0, y: 0, scale: 1 },
                               social: { x: 0, y: 0, scale: 1 }
                             })}
