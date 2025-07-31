@@ -1,5 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
-export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep" | "stick-on";
+export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep" | "blur-slide";
 
 export interface AnimationConfig {
   name: string;
@@ -60,11 +60,11 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     duration: 5000,
     className: "animate-test-sweep",
   },
-  "stick-on": {
-    name: "Stick-on",
-    description: "3D rotation with clipping reveal effect",
-    duration: 2000,
-    className: "animate-stick-on",
+  "blur-slide": {
+    name: "Blur-slide",
+    description: "Blurred slide-in from top-left with skew effect",
+    duration: 1500,
+    className: "animate-blur-slide",
   },
 };
 

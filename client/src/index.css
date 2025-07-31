@@ -151,68 +151,22 @@
   }
 }
 
-.animate-stick-on {
-  position: relative;
-  transform-style: preserve-3d;
-  transform-origin: center bottom;
-  animation: stickOnRotate 1s both;
+.animate-blur-slide {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
-.animate-stick-on::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  animation: stickOnReveal 2s both;
-}
-
-.animate-stick-on::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  filter: brightness(0.2);
-  transform: rotateY(-180deg);
-  animation: stickOnShadow 2s both;
-}
-
-@keyframes stickOnRotate {
-  from {
-    transform: rotate(-50deg);
+@keyframes blurSlideIn {
+  0% {
+    transform: translate(-1000px, -1000px) skew(80deg, 10deg);
+    transform-origin: 100% 0%;
+    filter: blur(40px);
+    opacity: 0;
   }
-  50% {
-    transform: rotate(-40deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-@keyframes stickOnReveal {
-  from {
-    clip-path: inset(0 80% 0 0);
-  }
-  50%, to {
-    clip-path: inset(0 0% 0 0);
-  }
-}
-
-@keyframes stickOnShadow {
-  from {
-    clip-path: inset(0 0 0 20%);
-    transform-origin: 20% 0;
-    transform: rotateY(-180deg);
-  }
-  50%, to {
-    clip-path: inset(0 0 0 100%);
-    transform-origin: 100% 0;
-    transform: rotateY(-180deg);
+  100% {
+    transform: translate(0, 0) skew(0deg, 0deg);
+    transform-origin: 50% 50%;
+    filter: blur(0);
+    opacity: 1;
   }
 }
 
