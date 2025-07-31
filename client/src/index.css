@@ -105,20 +105,17 @@
 .animate-block-reveal {
   position: relative;
   overflow: hidden;
-  mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
-  -webkit-mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
-  animation: blockRevealMask 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
 }
 
 .animate-block-reveal::before {
   content: '';
   position: absolute;
   left: 0;
-  right: 100%;
+  right: 0;
   bottom: 0;
   top: 0;
   background-color: rgba(6, 182, 212, 0.9);
-  animation: blockRevealSweep 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+  animation: blockRevealRetract 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
   z-index: 1;
 }
 
@@ -145,23 +142,12 @@
   }
 }
 
-@keyframes blockRevealMask {
+@keyframes blockRevealRetract {
   0% {
-    mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
-    -webkit-mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
+    left: 0;
   }
   100% {
-    mask: linear-gradient(to right, transparent 0%, transparent 0%, black 100%, black 100%);
-    -webkit-mask: linear-gradient(to right, transparent 0%, transparent 0%, black 100%, black 100%);
-  }
-}
-
-@keyframes blockRevealSweep {
-  0% {
-    right: 100%;
-  }
-  100% {
-    right: 0%;
+    left: 100%;
   }
 }
 
