@@ -29,7 +29,7 @@ export default function SignatureBuilder() {
     logo: signatarLogo,
     backgroundOpacity: 20,
     headshotSize: 100,
-    logoSize: 100
+    logoSize: 160
   });
   const [animationType, setAnimationType] = useState<AnimationType>("fade-in");
   const [socialMedia, setSocialMedia] = useState<SocialMedia>({
