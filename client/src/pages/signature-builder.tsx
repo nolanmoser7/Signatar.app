@@ -384,7 +384,9 @@ export default function SignatureBuilder() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <img src={signatarLogo} alt="Signatar" className="w-8 h-8" />
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm font-bold">S</span>
+              </div>
               <h1 className="text-xl font-semibold text-neutral">Signatar</h1>
             </div>
           </div>
