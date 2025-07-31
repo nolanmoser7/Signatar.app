@@ -1,0 +1,65 @@
+<div class="option-con one">
+  <p class="option-title">Option 1</p>
+  <div class="main-item">
+    <div class="avatar-bg">
+      <div class="avatar">
+        <img src="https://lh3.googleusercontent.com/iUjcaWjKfAiKQ8iqzbrP6b-T0f5TPI_bjQvMEvBJZ2eWHdFPKKj0FEEF6JCiOzrT1R4-3Ff597VFW_-Ej5Hpx2nnHith3vooxmqSmtyhh_2Hp3vQf-SBZwcosz8FUxf_Pa5pCkKGEBbx-bTBG_sd5AqM--08S-jWPeJqY2u5E3qgmnOQLC1rH1sBTmbhG6dhhcQYjiTnoNrmUKdVt9DHjwI7DzYaGJot6Ff-QX-GTEOOFBeSEftLx6H-QupbrqRsm7Ho0MDnq1YlWjnu1NRpYo8_g7MLLg15EUha8QTAfTPd8wjC24xvCzhQcB66gbpO87ffpeOXx9FXC9RFc9aGzSZpvSSu3YJh92OmGR3PYX2RITqNhoDX3XQqrRjx5nwajRYTBXGGmRvbubHwJkddNU3XCdYbhEvw8YsrHOggBxBmQg37T5PPQ_Z_01mT2uCKK6B_exNw_j1JwwdpLTahpS4IWUngv8oCzHCCHzzx9CsiZI_MT5FldPzq7VMrzVtpmJ3hbMjAD8JURWiQesDBuKx5hAFZpYpUgwb4kJy9yPyYUg7jEUWlypSRcgqNzqtOjO8EFeN7FtlxZR3pVNccBiahKduoS-lYR8B8vj6mAhh7cKj2mVH74gzpZcN6cLo03CWegdRxluWDwb9zBa9XACAtetINxvakY9wEm3rOoQ=s500-no" alt="" />
+      </div>
+
+    </div>
+    <p class="title">In Love With A Ghost</p>
+    <div class="label">
+      <p class="hashtag">#hover #pink</p>
+      <p class="link">Open Link</p>
+    </div>
+  </div>
+
+
+  <div class="main-item green">
+    <div class="avatar-bg">
+      <div class="avatar">
+        <img src="https://lh3.googleusercontent.com/14ctj8zq_qkw0kpyWaMH22bgcpGvE8tqO4_CtJmWIDLe1FAs6hXcwm9re-Z1Yi4x1449_HQmXAb-8wfWsIKtZbbajNNQaF9zCREx4_2ojgY5pUz14IQYeaDalSGzU4xGHAkNkqxfmIO51RC4COO1tqE6VZzO4Xq6aCpqvd5ks9AtBrAH7IBZHdbE6dN7aUvMsQdkt6_GPWGlQoz7L06yDsjffiveXm73GnwTpJKLePcUgvVXD5K58i9YJQ4lRM1t4S2RM7FL4nfILztR4Xfd0UTzLkRwNlNBph4Nv-aKr6Fx2BlV6x36O8j3PVlKF6Hfo5P9l9Paefvjm7rz0ki4NhuKHNyzXjyGyWJaHseAj5P0r_tLkh2K6O-LMV0cyMxsdtjHd4-_-rd1fVj62YXAR4jdT6IkRiSNsyidCNXHWePR3hgygTuhaKyYe8FbfCncNFpPX7C8r_XzhBTzWFu6t5hMtDDcw5kvrJTbhcKLfjlEUy9O1NHMxWOvE5YcH9F9v7OoOsg3_G8d69zsA42lB1rXYPTPZ8ogRgKyE0d6qgpM-o-mLSyWN0k3jiYSSGY1I3DMnOajJLL5A222_i1PdVRuIDJP2YPYPhl-YmWa4aK2TLlopWhN8urntBaY_oCwiDXfGheDpJ6lrLf41AuliA0xrudbLpCGh0fcr92G2g=s500-no" alt="" />
+      </div>
+
+    </div>
+    <p class="title">In Love With A Ghost</p>
+    <div class="label">
+      <p class="hashtag">#hover #green</p>
+      <p class="link">Open Link</p>
+    </div>
+  </div>
+</div>
+
+<div class="cleara"></div>
+
+<div class="option-con">
+  <p class="option-title">Option 2</p>
+  <div class="main-item pink optiontwo">
+    <div class="avatar-bg">
+      <div class="avatar">
+               <img src="https://lh3.googleusercontent.com/iUjcaWjKfAiKQ8iqzbrP6b-T0f5TPI_bjQvMEvBJZ2eWHdFPKKj0FEEF6JCiOzrT1R4-3Ff597VFW_-Ej5Hpx2nnHith3vooxmqSmtyhh_2Hp3vQf-SBZwcosz8FUxf_Pa5pCkKGEBbx-bTBG_sd5AqM--08S-jWPeJqY2u5E3qgmnOQLC1rH1sBTmbhG6dhhcQYjiTnoNrmUKdVt9DHjwI7DzYaGJot6Ff-QX-GTEOOFBeSEftLx6H-QupbrqRsm7Ho0MDnq1YlWjnu1NRpYo8_g7MLLg15EUha8QTAfTPd8wjC24xvCzhQcB66gbpO87ffpeOXx9FXC9RFc9aGzSZpvSSu3YJh92OmGR3PYX2RITqNhoDX3XQqrRjx5nwajRYTBXGGmRvbubHwJkddNU3XCdYbhEvw8YsrHOggBxBmQg37T5PPQ_Z_01mT2uCKK6B_exNw_j1JwwdpLTahpS4IWUngv8oCzHCCHzzx9CsiZI_MT5FldPzq7VMrzVtpmJ3hbMjAD8JURWiQesDBuKx5hAFZpYpUgwb4kJy9yPyYUg7jEUWlypSRcgqNzqtOjO8EFeN7FtlxZR3pVNccBiahKduoS-lYR8B8vj6mAhh7cKj2mVH74gzpZcN6cLo03CWegdRxluWDwb9zBa9XACAtetINxvakY9wEm3rOoQ=s500-no" alt="" />
+      </div>
+
+    </div>
+    <p class="title">In Love With A Ghost</p>
+    <div class="label">
+      <p class="hashtag">#hover #pink</p>
+      <p class="link">Open Link</p>
+    </div>
+  </div>
+
+
+  <div class="main-item green optiontwo">
+    <div class="avatar-bg">
+      <div class="avatar">
+         <img src="https://lh3.googleusercontent.com/14ctj8zq_qkw0kpyWaMH22bgcpGvE8tqO4_CtJmWIDLe1FAs6hXcwm9re-Z1Yi4x1449_HQmXAb-8wfWsIKtZbbajNNQaF9zCREx4_2ojgY5pUz14IQYeaDalSGzU4xGHAkNkqxfmIO51RC4COO1tqE6VZzO4Xq6aCpqvd5ks9AtBrAH7IBZHdbE6dN7aUvMsQdkt6_GPWGlQoz7L06yDsjffiveXm73GnwTpJKLePcUgvVXD5K58i9YJQ4lRM1t4S2RM7FL4nfILztR4Xfd0UTzLkRwNlNBph4Nv-aKr6Fx2BlV6x36O8j3PVlKF6Hfo5P9l9Paefvjm7rz0ki4NhuKHNyzXjyGyWJaHseAj5P0r_tLkh2K6O-LMV0cyMxsdtjHd4-_-rd1fVj62YXAR4jdT6IkRiSNsyidCNXHWePR3hgygTuhaKyYe8FbfCncNFpPX7C8r_XzhBTzWFu6t5hMtDDcw5kvrJTbhcKLfjlEUy9O1NHMxWOvE5YcH9F9v7OoOsg3_G8d69zsA42lB1rXYPTPZ8ogRgKyE0d6qgpM-o-mLSyWN0k3jiYSSGY1I3DMnOajJLL5A222_i1PdVRuIDJP2YPYPhl-YmWa4aK2TLlopWhN8urntBaY_oCwiDXfGheDpJ6lrLf41AuliA0xrudbLpCGh0fcr92G2g=s500-no" alt="" />
+      </div>
+
+    </div>
+    <p class="title">In Love With A Ghost</p>
+    <div class="label">
+      <p class="hashtag">#hover #green</p>
+      <p class="link">Open Link</p>
+    </div>
+  </div>
+</div>
