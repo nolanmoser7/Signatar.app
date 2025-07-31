@@ -152,8 +152,34 @@
 }
 
 .animate-stick-on {
+  position: relative;
+  transform-style: preserve-3d;
   transform-origin: center bottom;
-  animation: stickOnRotate 1s both, stickOnClip 2s both;
+  animation: stickOnRotate 1s both;
+}
+
+.animate-stick-on::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  animation: stickOnReveal 2s both;
+}
+
+.animate-stick-on::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  filter: brightness(0.2);
+  transform: rotateY(-180deg);
+  animation: stickOnShadow 2s both;
 }
 
 @keyframes stickOnRotate {
@@ -165,12 +191,25 @@
   }
 }
 
-@keyframes stickOnClip {
+@keyframes stickOnReveal {
   from {
     clip-path: inset(0 80% 0 0);
   }
   50%, to {
     clip-path: inset(0 0% 0 0);
+  }
+}
+
+@keyframes stickOnShadow {
+  from {
+    clip-path: inset(0 0 0 20%);
+    transform-origin: 20% 0;
+    transform: rotateY(-180deg);
+  }
+  50%, to {
+    clip-path: inset(0 0 0 100%);
+    transform-origin: 100% 0;
+    transform: rotateY(-180deg);
   }
 }
 
