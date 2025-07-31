@@ -1,6 +1,7 @@
 import { Mail, Phone, Globe, Linkedin, Twitter, Instagram, Youtube, X } from "lucide-react";
 import { SiTiktok } from "react-icons/si";
 import { getAnimationClass } from "@/lib/animations";
+import DraggableElement from "./draggable-element";
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 
 interface SalesProfessionalTemplateProps {
@@ -10,6 +11,11 @@ interface SalesProfessionalTemplateProps {
   animationType: AnimationType;
   isAnimating: boolean;
   deviceView: "desktop" | "mobile";
+  layoutMode?: boolean;
+  elementPositions?: {
+    [key: string]: { x: number; y: number; scale: number };
+  };
+  onElementPositionChange?: (elementId: string, position: { x: number; y: number; scale: number }) => void;
 }
 
 export default function SalesProfessionalTemplate({
@@ -19,6 +25,9 @@ export default function SalesProfessionalTemplate({
   animationType,
   isAnimating,
   deviceView,
+  layoutMode = false,
+  elementPositions = {},
+  onElementPositionChange = () => {},
 }: SalesProfessionalTemplateProps) {
   const animationClass = isAnimating ? getAnimationClass(animationType) : "";
 

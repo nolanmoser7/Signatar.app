@@ -46,6 +46,15 @@ export default function SignatureBuilder() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showGifGenerator, setShowGifGenerator] = useState(false);
   const [activeTab, setActiveTab] = useState("template");
+  const [layoutMode, setLayoutMode] = useState(false);
+  const [elementPositions, setElementPositions] = useState({
+    logo: { x: 0, y: 0, scale: 1 },
+    headshot: { x: 0, y: 0, scale: 1 },
+    name: { x: 0, y: 0, scale: 1 },
+    title: { x: 0, y: 0, scale: 1 },
+    contact: { x: 0, y: 0, scale: 1 },
+    social: { x: 0, y: 0, scale: 1 }
+  });
   
   const { toast } = useToast();
 
@@ -380,6 +389,12 @@ export default function SignatureBuilder() {
                   Images
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="layout" 
+                  className="w-full justify-start text-sm py-3 px-4 mb-1 data-[state=active]:bg-primary data-[state=active]:text-white"
+                >
+                  Layout
+                </TabsTrigger>
+                <TabsTrigger 
                   value="animations" 
                   className="w-full justify-start text-sm py-3 px-4 mb-1 data-[state=active]:bg-primary data-[state=active]:text-white"
                 >
@@ -412,6 +427,106 @@ export default function SignatureBuilder() {
                   images={images}
                   onImagesChange={setImages}
                 />
+              </TabsContent>
+              
+              <TabsContent value="layout" className="space-y-6">
+                <div>
+                  <h2 className="text-lg font-semibold text-neutral mb-4">Custom Layout</h2>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="text-sm font-medium">Layout Mode</span>
+                      <Button
+                        variant={layoutMode ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setLayoutMode(!layoutMode)}
+                      >
+                        {layoutMode ? "Exit Layout Mode" : "Enter Layout Mode"}
+                      </Button>
+                    </div>
+                    
+                    {layoutMode && (
+                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h3 className="font-medium text-blue-900 mb-2">Layout Mode Active</h3>
+                        <p className="text-sm text-blue-700 mb-3">
+                          Click and drag elements in the preview to reposition them. Use the controls below to fine-tune positioning and scaling.
+                        </p>
+                        
+                        <div className="space-y-4">
+                          {Object.entries(elementPositions).map(([element, position]) => (
+                            <div key={element} className="bg-white p-3 rounded border">
+                              <h4 className="font-medium mb-2 capitalize">{element}</h4>
+                              <div className="grid grid-cols-3 gap-2 text-xs">
+                                <div>
+                                  <label className="block text-gray-600 mb-1">X Position</label>
+                                  <input
+                                    type="range"
+                                    min="-100"
+                                    max="100"
+                                    value={position.x}
+                                    className="w-full"
+                                    onChange={(e) => setElementPositions(prev => ({
+                                      ...prev,
+                                      [element]: { ...prev[element], x: parseInt(e.target.value) }
+                                    }))}
+                                  />
+                                  <span className="text-gray-500">{position.x}px</span>
+                                </div>
+                                <div>
+                                  <label className="block text-gray-600 mb-1">Y Position</label>
+                                  <input
+                                    type="range"
+                                    min="-100"
+                                    max="100"
+                                    value={position.y}
+                                    className="w-full"
+                                    onChange={(e) => setElementPositions(prev => ({
+                                      ...prev,
+                                      [element]: { ...prev[element], y: parseInt(e.target.value) }
+                                    }))}
+                                  />
+                                  <span className="text-gray-500">{position.y}px</span>
+                                </div>
+                                <div>
+                                  <label className="block text-gray-600 mb-1">Scale</label>
+                                  <input
+                                    type="range"
+                                    min="0.5"
+                                    max="2"
+                                    step="0.1"
+                                    value={position.scale}
+                                    className="w-full"
+                                    onChange={(e) => setElementPositions(prev => ({
+                                      ...prev,
+                                      [element]: { ...prev[element], scale: parseFloat(e.target.value) }
+                                    }))}
+                                  />
+                                  <span className="text-gray-500">{Math.round(position.scale * 100)}%</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="mt-4 flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setElementPositions({
+                              logo: { x: 0, y: 0, scale: 1 },
+                              headshot: { x: 0, y: 0, scale: 1 },
+                              name: { x: 0, y: 0, scale: 1 },
+                              title: { x: 0, y: 0, scale: 1 },
+                              contact: { x: 0, y: 0, scale: 1 },
+                              social: { x: 0, y: 0, scale: 1 }
+                            })}
+                          >
+                            Reset Layout
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </TabsContent>
               
               <TabsContent value="animations" className="space-y-6">
@@ -483,6 +598,11 @@ export default function SignatureBuilder() {
                 templateId={selectedTemplate}
                 isAnimating={isAnimating}
                 deviceView={deviceView}
+                layoutMode={layoutMode}
+                elementPositions={elementPositions}
+                onElementPositionChange={(elementId, position) => 
+                  setElementPositions(prev => ({ ...prev, [elementId]: position }))
+                }
               />
 
               {/* Animation Preview Controls */}

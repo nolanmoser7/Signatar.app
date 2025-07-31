@@ -15,6 +15,11 @@ interface SignaturePreviewProps {
   templateId: string;
   isAnimating: boolean;
   deviceView: "desktop" | "mobile";
+  layoutMode?: boolean;
+  elementPositions?: {
+    [key: string]: { x: number; y: number; scale: number };
+  };
+  onElementPositionChange?: (elementId: string, position: { x: number; y: number; scale: number }) => void;
 }
 
 export default function SignaturePreview({
@@ -25,6 +30,9 @@ export default function SignaturePreview({
   templateId,
   isAnimating,
   deviceView,
+  layoutMode = false,
+  elementPositions = {},
+  onElementPositionChange = () => {},
 }: SignaturePreviewProps) {
   // Handle specific templates separately
   if (templateId === "sales-professional") {
@@ -36,6 +44,9 @@ export default function SignaturePreview({
         animationType={animationType}
         isAnimating={isAnimating}
         deviceView={deviceView}
+        layoutMode={layoutMode}
+        elementPositions={elementPositions}
+        onElementPositionChange={onElementPositionChange}
       />
     );
   }
