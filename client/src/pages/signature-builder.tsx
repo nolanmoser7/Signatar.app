@@ -11,8 +11,10 @@ import ImageUploader from "@/components/image-uploader";
 import AnimationSelector from "@/components/animation-selector";
 import SocialMediaForm from "@/components/social-media-form";
 import SignaturePreview from "@/components/signature-preview";
+import AuthModal from "@/components/auth-modal";
 
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo.png";
 import defaultHeadshot from "@assets/default-headshot.png";
@@ -50,6 +52,7 @@ export default function SignatureBuilder() {
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");
   const [isAnimating, setIsAnimating] = useState(false);
   const [isElementAnimating, setIsElementAnimating] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const [activeTab, setActiveTab] = useState("template");
   const [layoutMode, setLayoutMode] = useState(false);
@@ -63,6 +66,7 @@ export default function SignatureBuilder() {
   });
   
   const { toast } = useToast();
+  const { isAuthenticated, isLoading } = useAuth();
 
   const handlePlayAnimation = () => {
     setIsAnimating(true);
@@ -76,6 +80,25 @@ export default function SignatureBuilder() {
   const handleApplyElementAnimations = () => {
     setIsElementAnimating(true);
     setTimeout(() => setIsElementAnimating(false), 3000);
+  };
+
+  const handleFinishedCreating = () => {
+    if (!isAuthenticated && !isLoading) {
+      // User is not signed in, show auth modal
+      setShowAuthModal(true);
+      toast({
+        title: "Account Required",
+        description: "Please sign in or create an account to save your signature.",
+        variant: "default",
+      });
+    } else {
+      // User is signed in, proceed with save/next step
+      toast({
+        title: "Success",
+        description: "Your signature is ready! Saving to your account...",
+      });
+      // TODO: Add save signature logic here
+    }
   };
 
   const generateSignatureHtml = (): string => {
@@ -575,7 +598,13 @@ export default function SignatureBuilder() {
                   <span className="w-2 h-2 bg-success rounded-full"></span>
                   <span>Live Preview</span>
                 </div>
-                <Button variant="default" size="sm" className="bg-primary text-white hover:bg-primary/90">
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  className="bg-primary text-white hover:bg-primary/90"
+                  onClick={handleFinishedCreating}
+                  disabled={isLoading}
+                >
                   <CheckCircle className="w-4 h-4 mr-2" />
                   Finished Creating!
                 </Button>
@@ -639,7 +668,10 @@ export default function SignatureBuilder() {
         </main>
       </div>
 
-
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+      />
     </div>
   );
 }
