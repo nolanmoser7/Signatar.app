@@ -156,26 +156,41 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
         </Label>
         
         {hasImage ? (
-          <Card className="relative p-4 border-2 border-gray-200">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-3">
-                <img
-                  src={images[type] as string}
-                  alt={title}
-                  className="w-12 h-12 object-cover rounded"
-                />
-                <div>
-                  <p className="text-sm font-medium">Image uploaded</p>
-                  <p className="text-xs text-gray-500">Click to replace</p>
+          <Card className="p-4 border-2 border-gray-200">
+            <div className="relative">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <img
+                    src={images[type] as string}
+                    alt={title}
+                    className="w-12 h-12 object-cover rounded"
+                  />
+                  <div>
+                    <p className="text-sm font-medium">Image uploaded</p>
+                    <p className="text-xs text-gray-500">Click to replace</p>
+                  </div>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeImage(type);
+                  }}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => removeImage(type)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
+              
+              {/* Click-to-replace overlay - only on the image info area */}
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileSelect(e, type)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                style={{ height: '60px' }} // Only cover the image info area
+              />
             </div>
             
             {/* Action buttons for headshot and logo */}
@@ -183,22 +198,16 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => openCropper(type as 'headshot' | 'logo')}
-                className="w-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openCropper(type as 'headshot' | 'logo');
+                }}
+                className="w-full relative z-20"
               >
                 <Crop className="w-4 h-4 mr-2" />
                 Crop & Position
               </Button>
             )}
-            
-            {/* All image types get click-to-replace functionality */}
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileSelect(e, type)}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
           </Card>
         ) : (
           <Card
