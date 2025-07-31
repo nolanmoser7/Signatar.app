@@ -105,6 +105,9 @@
 .animate-block-reveal {
   position: relative;
   overflow: hidden;
+  mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
+  -webkit-mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
+  animation: blockRevealMask 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
 }
 
 .animate-block-reveal::before {
@@ -142,15 +145,23 @@
   }
 }
 
+@keyframes blockRevealMask {
+  0% {
+    mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
+    -webkit-mask: linear-gradient(to right, transparent 0%, transparent 0%, black 0%, black 100%);
+  }
+  100% {
+    mask: linear-gradient(to right, transparent 0%, transparent 0%, black 100%, black 100%);
+    -webkit-mask: linear-gradient(to right, transparent 0%, transparent 0%, black 100%, black 100%);
+  }
+}
+
 @keyframes blockRevealSweep {
   0% {
     right: 100%;
   }
-  60% {
-    right: 0%;
-  }
   100% {
-    right: 100%;
+    right: 0%;
   }
 }
 
