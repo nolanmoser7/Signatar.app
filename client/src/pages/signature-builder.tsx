@@ -14,6 +14,7 @@ import GifGenerator from "@/components/gif-generator";
 import { useToast } from "@/hooks/use-toast";
 import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo.png";
+import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
@@ -27,6 +28,7 @@ export default function SignatureBuilder() {
   });
   const [images, setImages] = useState<Images>({ 
     logo: signatarLogo,
+    headshot: defaultHeadshot,
     backgroundOpacity: 20,
     headshotSize: 100,
     logoSize: 160
