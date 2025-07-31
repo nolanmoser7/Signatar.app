@@ -165,9 +165,8 @@ export default function SalesProfessionalTemplate({
           position={elementPositions.social || { x: 0, y: 0, scale: 1 }}
           onPositionChange={onElementPositionChange}
           layoutMode={layoutMode}
-          className="w-20"
         >
-          <div className={`w-20 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${animationClass}`}>
+          <div className={`w-20 h-full bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center justify-center space-y-5 ${animationClass}`}>
             {socialMedia.twitter && (
               <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
                 <X className="w-6 h-6" />
@@ -232,11 +231,18 @@ export default function SalesProfessionalTemplate({
           </DraggableElement>
 
           {/* Company Name */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold tracking-wider text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
-              {personalInfo.company?.toUpperCase() || "COMPANY"}
-            </h2>
-          </div>
+          <DraggableElement
+            elementId="company"
+            position={elementPositions.company || { x: 0, y: 0, scale: 1 }}
+            onPositionChange={onElementPositionChange}
+            layoutMode={layoutMode}
+          >
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold tracking-wider text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {personalInfo.company?.toUpperCase() || "COMPANY"}
+              </h2>
+            </div>
+          </DraggableElement>
 
           {/* Name and Title */}
           <DraggableElement
@@ -294,7 +300,7 @@ export default function SalesProfessionalTemplate({
           layoutMode={layoutMode}
         >
           <div 
-            className="relative overflow-hidden"
+            className="relative overflow-hidden h-full"
             style={{
               width: `${(images.headshotSize || 100) * 2.56}px`
             }}
