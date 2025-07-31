@@ -30,7 +30,7 @@ export default function SignatureBuilder() {
     logo: signatarLogo,
     headshot: defaultHeadshot,
     backgroundOpacity: 20,
-    headshotSize: 100,
+    headshotSize: 110,
     logoSize: 160
   });
   const [animationType, setAnimationType] = useState<AnimationType>("fade-in");
