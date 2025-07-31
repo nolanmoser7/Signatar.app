@@ -32,6 +32,13 @@ export class MemStorage implements IStorage {
   private initializeTemplates() {
     const defaultTemplates: Template[] = [
       {
+        id: "sales-professional",
+        name: "Sales Professional",
+        description: "Corporate design with action buttons and accent colors",
+        previewUrl: "",
+        isActive: "true",
+      },
+      {
         id: "professional",
         name: "Professional",
         description: "Clean and professional design",
@@ -56,13 +63,6 @@ export class MemStorage implements IStorage {
         id: "creative",
         name: "Creative",
         description: "Creative design with unique elements",
-        previewUrl: "",
-        isActive: "true",
-      },
-      {
-        id: "sales-professional",
-        name: "Sales Professional",
-        description: "Corporate design with action buttons and accent colors",
         previewUrl: "",
         isActive: "true",
       },

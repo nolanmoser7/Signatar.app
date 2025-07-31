@@ -35,31 +35,55 @@ export default function TemplateSelector({ selectedTemplate, onSelectTemplate }:
     );
   }
 
+  // Sort templates to put Sales Professional first
+  const sortedTemplates = templates ? [...templates].sort((a, b) => {
+    if (a.id === "sales-professional") return -1;
+    if (b.id === "sales-professional") return 1;
+    return 0;
+  }) : [];
+
   return (
     <div>
       <h2 className="text-lg font-semibold text-neutral mb-4">Choose Template</h2>
       <div className="grid grid-cols-2 gap-3">
-        {templates?.map((template) => {
+        {sortedTemplates?.map((template) => {
           const Icon = templateIcons[template.id as keyof typeof templateIcons] || Bus;
           const isSelected = selectedTemplate === template.id;
+          const isAvailable = template.id === "sales-professional";
+          const isComingSoon = !isAvailable;
           
           return (
             <Card
               key={template.id}
-              className={`p-3 cursor-pointer transition-colors ${
-                isSelected
-                  ? "border-2 border-primary bg-indigo-50"
-                  : "border-2 border-gray-200 hover:border-primary"
+              className={`p-3 transition-colors relative ${
+                isAvailable 
+                  ? isSelected
+                    ? "border-2 border-primary bg-indigo-50 cursor-pointer"
+                    : "border-2 border-gray-200 hover:border-primary cursor-pointer"
+                  : "border-2 border-gray-200 opacity-60 cursor-not-allowed"
               }`}
-              onClick={() => onSelectTemplate(template.id)}
+              onClick={() => isAvailable && onSelectTemplate(template.id)}
             >
+              {isComingSoon && (
+                <div className="absolute top-2 right-2 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
+                  Coming Soon
+                </div>
+              )}
               <div className={`rounded h-16 mb-2 flex items-center justify-center ${
-                isSelected ? "bg-primary/20" : "bg-gray-100"
+                isAvailable 
+                  ? isSelected ? "bg-primary/20" : "bg-gray-100"
+                  : "bg-gray-50"
               }`}>
-                <Icon className={`${isSelected ? "text-primary" : "text-gray-400"}`} size={20} />
+                <Icon className={`${
+                  isAvailable 
+                    ? isSelected ? "text-primary" : "text-gray-400"
+                    : "text-gray-300"
+                }`} size={20} />
               </div>
               <p className={`text-sm font-medium text-center ${
-                isSelected ? "text-primary" : "text-gray-900"
+                isAvailable 
+                  ? isSelected ? "text-primary" : "text-gray-900"
+                  : "text-gray-400"
               }`}>
                 {template.name}
               </p>

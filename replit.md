@@ -80,6 +80,12 @@ The application follows a full-stack monorepo architecture with clear separation
   - "Crop & Position" and "Replace" buttons stacked vertically for optimal container fit
   - Real-time preview with transform controls (50-200% scale, -180° to +180° rotation)
   - Integrated @radix-ui/react-dialog for professional modal interface
+  - Fixed image stretching by preserving original aspect ratios in cropper
+- **MVP Template Strategy**: Prioritized Sales Professional template for launch
+  - Sales Professional template moved to top of template list
+  - Other templates marked as "Coming Soon" with disabled interaction
+  - Template selector shows availability status with visual indicators
+  - Focused user experience on the fully-featured template for initial launch
 
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations
