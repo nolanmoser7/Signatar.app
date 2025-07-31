@@ -102,6 +102,19 @@
   animation: fadeIn 2s ease-in-out;
 }
 
+/* Delayed animations for staggered effect */
+.animate-fade-in-delay-0 {
+  animation: fadeIn 2s ease-in-out;
+}
+
+.animate-fade-in-delay-250 {
+  animation: fadeIn 2s ease-in-out 0.25s both;
+}
+
+.animate-fade-in-delay-500 {
+  animation: fadeIn 2s ease-in-out 0.5s both;
+}
+
 .animate-block-reveal {
   position: relative;
   overflow: hidden;
@@ -119,6 +132,57 @@
   z-index: 1;
 }
 
+.animate-block-reveal-delay-0 {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-block-reveal-delay-0::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgb(6, 182, 212);
+  animation: blockRevealRetract 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+  z-index: 1;
+}
+
+.animate-block-reveal-delay-250 {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-block-reveal-delay-250::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgb(6, 182, 212);
+  animation: blockRevealRetract 1.5s cubic-bezier(0.85, 0, 0.15, 1) 0.25s both;
+  z-index: 1;
+}
+
+.animate-block-reveal-delay-500 {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-block-reveal-delay-500::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgb(6, 182, 212);
+  animation: blockRevealRetract 1.5s cubic-bezier(0.85, 0, 0.15, 1) 0.5s both;
+  z-index: 1;
+}
+
 .animate-cross-dissolve {
   animation: crossDissolve 2s ease-in-out;
 }
@@ -127,8 +191,32 @@
   animation: zoomIn 2.5s ease-out;
 }
 
+.animate-zoom-in-delay-0 {
+  animation: zoomIn 2.5s ease-out;
+}
+
+.animate-zoom-in-delay-250 {
+  animation: zoomIn 2.5s ease-out 0.25s both;
+}
+
+.animate-zoom-in-delay-500 {
+  animation: zoomIn 2.5s ease-out 0.5s both;
+}
+
 .animate-test-sweep {
   animation: lrSweepReveal 5s ease-in-out forwards;
+}
+
+.animate-test-sweep-delay-0 {
+  animation: lrSweepReveal 5s ease-in-out forwards;
+}
+
+.animate-test-sweep-delay-250 {
+  animation: lrSweepReveal 5s ease-in-out 0.25s both;
+}
+
+.animate-test-sweep-delay-500 {
+  animation: lrSweepReveal 5s ease-in-out 0.5s both;
 }
 
 @keyframes fadeIn {
@@ -153,6 +241,18 @@
 
 .animate-blur-slide {
   animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.animate-blur-slide-delay-0 {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.animate-blur-slide-delay-250 {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.25s both;
+}
+
+.animate-blur-slide-delay-500 {
+  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.5s both;
 }
 
 @keyframes blurSlideIn {

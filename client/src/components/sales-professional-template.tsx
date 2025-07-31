@@ -35,10 +35,10 @@ export default function SalesProfessionalTemplate({
 }: SalesProfessionalTemplateProps) {
   const animationClass = isAnimating ? getAnimationClass(animationType) : "";
   
-  // Get element-specific animation classes
-  const logoAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.logo) : "";
-  const headshotAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.headshot) : "";
-  const socialAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.socialIcons) : "";
+  // Get element-specific animation classes with staggered delays
+  const headshotAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.headshot, 0) : ""; // First - no delay
+  const logoAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.logo, 250) : ""; // Second - 0.25s delay
+  const socialAnimationClass = isElementAnimating ? getElementAnimationClass(elementAnimations.socialIcons, 500) : ""; // Third - 0.5s delay
 
   if (deviceView === "mobile") {
     // Mobile version - simplified layout

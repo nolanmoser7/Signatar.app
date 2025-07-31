@@ -76,8 +76,16 @@ export function getAnimationDuration(animationType: AnimationType): number {
   return animations[animationType]?.duration || 2000;
 }
 
-export function getElementAnimationClass(animationType: ElementAnimationType): string {
-  return elementAnimations[animationType]?.className || "";
+export function getElementAnimationClass(animationType: ElementAnimationType, delay: number = 0): string {
+  const baseClassName = elementAnimations[animationType]?.className || "";
+  
+  if (animationType === "none" || delay === 0) {
+    return baseClassName;
+  }
+  
+  // Return delayed animation classes based on delay
+  const delayClass = delay === 250 ? "delay-250" : delay === 500 ? "delay-500" : "delay-0";
+  return baseClassName ? `${baseClassName}-${delayClass}` : "";
 }
 
 export function getElementAnimationDuration(animationType: ElementAnimationType): number {
