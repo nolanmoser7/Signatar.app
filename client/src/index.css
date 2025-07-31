@@ -110,14 +110,48 @@
 .animate-halo-glow::before {
   content: '';
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
   border-radius: inherit;
-  background: conic-gradient(from 0deg, transparent, rgba(6, 182, 212, 0.8), transparent, rgba(6, 182, 212, 0.4), transparent);
-  animation: haloRotate 3s linear infinite;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(6, 182, 212, 0.3) 320deg,
+    rgba(6, 182, 212, 0.7) 340deg,
+    rgba(6, 182, 212, 1) 350deg,
+    rgba(6, 182, 212, 0.7) 360deg,
+    rgba(6, 182, 212, 0.3) 20deg,
+    transparent 40deg,
+    transparent 360deg
+  );
+  animation: haloTravel 3s linear infinite;
   z-index: -1;
+  pointer-events: none;
+}
+
+.animate-halo-glow::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 330deg,
+    rgba(6, 182, 212, 0.8) 345deg,
+    rgba(134, 239, 172, 1) 350deg,
+    rgba(6, 182, 212, 0.8) 355deg,
+    transparent 370deg,
+    transparent 360deg
+  );
+  animation: haloTravel 3s linear infinite;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -144,17 +178,12 @@
   }
 }
 
-@keyframes haloRotate {
+@keyframes haloTravel {
   0% {
     transform: rotate(0deg);
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
   }
   100% {
     transform: rotate(360deg);
-    opacity: 0.6;
   }
 }
 
