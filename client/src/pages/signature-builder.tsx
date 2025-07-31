@@ -387,7 +387,7 @@ export default function SignatureBuilder() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-white text-sm font-bold">S</span>
               </div>
-              <h1 className="text-xl font-semibold text-neutral">iignatar</h1>
+              <h1 className="text-xl font-semibold text-neutral">Signatar</h1>
             </div>
           </div>
           <div className="flex items-center space-x-3">
