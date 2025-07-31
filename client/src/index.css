@@ -239,33 +239,31 @@
   }
 }
 
-.animate-blur-slide {
-  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+.animate-swing-in {
+  animation: swingInBottom 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
-.animate-blur-slide-delay-0 {
-  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) both;
+.animate-swing-in-delay-0 {
+  animation: swingInBottom 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
-.animate-blur-slide-delay-250 {
-  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.25s both;
+.animate-swing-in-delay-250 {
+  animation: swingInBottom 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.25s both;
 }
 
-.animate-blur-slide-delay-500 {
-  animation: blurSlideIn 1.5s cubic-bezier(0.23, 1, 0.32, 1) 0.5s both;
+.animate-swing-in-delay-500 {
+  animation: swingInBottom 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both;
 }
 
-@keyframes blurSlideIn {
+@keyframes swingInBottom {
   0% {
-    transform: translate(-1000px, -1000px) skew(80deg, 10deg);
-    transform-origin: 100% 0%;
-    filter: blur(40px);
+    transform: rotateX(100deg);
+    transform-origin: bottom;
     opacity: 0;
   }
   100% {
-    transform: translate(0, 0) skew(0deg, 0deg);
-    transform-origin: 50% 50%;
-    filter: blur(0);
+    transform: rotateX(0);
+    transform-origin: bottom;
     opacity: 1;
   }
 }

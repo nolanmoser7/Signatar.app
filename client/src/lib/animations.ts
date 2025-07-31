@@ -1,5 +1,5 @@
 export type AnimationType = "fade-in" | "pulse" | "cross-dissolve";
-export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep" | "blur-slide";
+export type ElementAnimationType = "none" | "fade-in" | "block-reveal" | "zoom-in" | "test-sweep" | "swing-in";
 
 export interface AnimationConfig {
   name: string;
@@ -60,11 +60,11 @@ export const elementAnimations: Record<ElementAnimationType, AnimationConfig> = 
     duration: 5000,
     className: "animate-test-sweep",
   },
-  "blur-slide": {
-    name: "Blur-slide",
-    description: "Blurred slide-in from top-left with skew effect",
-    duration: 1500,
-    className: "animate-blur-slide",
+  "swing-in": {
+    name: "Swing-in",
+    description: "3D swing animation rotating from bottom",
+    duration: 1200,
+    className: "animate-swing-in",
   },
 };
 
