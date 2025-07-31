@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, Download, Copy, Dock, Smartphone, Play } from "lucide-react";
 import TemplateSelector from "@/components/template-selector";
 import PersonalInfoForm from "@/components/personal-info-form";
@@ -44,6 +45,7 @@ export default function SignatureBuilder() {
   const [deviceView, setDeviceView] = useState<"desktop" | "mobile">("desktop");
   const [isAnimating, setIsAnimating] = useState(false);
   const [showGifGenerator, setShowGifGenerator] = useState(false);
+  const [activeTab, setActiveTab] = useState("template");
   
   const { toast } = useToast();
 
@@ -356,31 +358,51 @@ export default function SignatureBuilder() {
       <div className="flex h-[calc(100vh-73px)]">
         {/* Sidebar */}
         <aside className="w-80 bg-white border-r border-gray-200 overflow-y-auto">
-          <div className="p-6 space-y-8">
-            <TemplateSelector 
-              selectedTemplate={selectedTemplate}
-              onSelectTemplate={setSelectedTemplate}
-            />
-            
-            <PersonalInfoForm 
-              personalInfo={personalInfo}
-              onPersonalInfoChange={setPersonalInfo}
-            />
-            
-            <ImageUploader 
-              images={images}
-              onImagesChange={setImages}
-            />
-            
-            <AnimationSelector 
-              selectedAnimation={animationType}
-              onAnimationChange={setAnimationType}
-            />
-            
-            <SocialMediaForm 
-              socialMedia={socialMedia}
-              onSocialMediaChange={setSocialMedia}
-            />
+          <div className="p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-5 mb-6">
+                <TabsTrigger value="template" className="text-xs">Template</TabsTrigger>
+                <TabsTrigger value="personal" className="text-xs">Personal</TabsTrigger>
+                <TabsTrigger value="images" className="text-xs">Images</TabsTrigger>
+                <TabsTrigger value="animations" className="text-xs">Animations</TabsTrigger>
+                <TabsTrigger value="social" className="text-xs">Social</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="template" className="space-y-6">
+                <TemplateSelector 
+                  selectedTemplate={selectedTemplate}
+                  onSelectTemplate={setSelectedTemplate}
+                />
+              </TabsContent>
+              
+              <TabsContent value="personal" className="space-y-6">
+                <PersonalInfoForm 
+                  personalInfo={personalInfo}
+                  onPersonalInfoChange={setPersonalInfo}
+                />
+              </TabsContent>
+              
+              <TabsContent value="images" className="space-y-6">
+                <ImageUploader 
+                  images={images}
+                  onImagesChange={setImages}
+                />
+              </TabsContent>
+              
+              <TabsContent value="animations" className="space-y-6">
+                <AnimationSelector 
+                  selectedAnimation={animationType}
+                  onAnimationChange={setAnimationType}
+                />
+              </TabsContent>
+              
+              <TabsContent value="social" className="space-y-6">
+                <SocialMediaForm 
+                  socialMedia={socialMedia}
+                  onSocialMediaChange={setSocialMedia}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </aside>
 
