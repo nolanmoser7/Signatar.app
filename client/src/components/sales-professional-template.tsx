@@ -151,7 +151,7 @@ export default function SalesProfessionalTemplate({
 
       <div className="flex relative z-10">
         {/* Left Sidebar with Social Icons */}
-        <div className={`w-20 bg-teal-500 rounded-l-xl flex flex-col items-center py-6 space-y-4 ${animationClass}`}>
+        <div className={`w-20 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-xl flex flex-col items-center py-6 space-y-4 ${animationClass}`}>
           {socialMedia.twitter && (
             <a href={socialMedia.twitter} className="text-white hover:text-gray-200 transition-colors">
               <X className="w-5 h-5" />
@@ -190,7 +190,7 @@ export default function SalesProfessionalTemplate({
           {/* Company Logo */}
           <div className="mb-4">
             <div 
-              className={`bg-teal-500 rounded-lg flex items-center justify-center ${animationClass}`}
+              className={`flex items-center justify-center ${animationClass}`}
               style={{
                 width: `${(images.logoSize || 100) * 0.48}px`,
                 height: `${(images.logoSize || 100) * 0.48}px`
@@ -200,10 +200,10 @@ export default function SalesProfessionalTemplate({
                 <img 
                   src={images.logo} 
                   alt="Logo" 
-                  className="w-full h-full object-contain p-2"
+                  className="w-full h-full object-contain"
                 />
               ) : (
-                <span className="text-white font-bold text-lg">J</span>
+                <span className="text-gray-700 font-bold text-lg">S</span>
               )}
             </div>
           </div>
@@ -219,7 +219,7 @@ export default function SalesProfessionalTemplate({
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {personalInfo.name || "Your Name"}
-              <span className="text-teal-500 ml-2">✓</span>
+              <span className="text-cyan-500 ml-2">✓</span>
             </h1>
             <p className="text-xl text-gray-700 font-medium">
               {personalInfo.title || "Your Title"}
