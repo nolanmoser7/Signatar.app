@@ -61,33 +61,32 @@ export default function PersonalInfoForm({ personalInfo, onPersonalInfoChange }:
           />
         </div>
         
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-              Phone
-            </Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="+1 (555) 123-4567"
-              value={personalInfo.phone || ""}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email *
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="john@company.com"
-              value={personalInfo.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              className="mt-1"
-            />
-          </div>
+        <div>
+          <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+            Phone
+          </Label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="+1 (555) 123-4567"
+            value={personalInfo.phone || ""}
+            onChange={(e) => handleChange("phone", e.target.value)}
+            className="mt-1"
+          />
+        </div>
+        
+        <div>
+          <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+            Email *
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="john@company.com"
+            value={personalInfo.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+            className="mt-1"
+          />
         </div>
         
         <div>
