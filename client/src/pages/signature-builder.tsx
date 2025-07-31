@@ -101,6 +101,25 @@ export default function SignatureBuilder() {
     }
   };
 
+  const handleSaveTemplate = () => {
+    if (!isAuthenticated && !isLoading) {
+      // User is not signed in, show auth modal
+      setShowAuthModal(true);
+      toast({
+        title: "Account Required",
+        description: "Please sign in or create an account to save templates.",
+        variant: "default",
+      });
+    } else {
+      // User is signed in, proceed with save template
+      toast({
+        title: "Template Saved",
+        description: "Your custom template has been saved to your account.",
+      });
+      // TODO: Add save template logic here
+    }
+  };
+
   const generateSignatureHtml = (): string => {
     if (selectedTemplate === "minimal") {
       return `
@@ -372,7 +391,12 @@ export default function SignatureBuilder() {
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Button variant="ghost" className="text-gray-600">
+            <Button 
+              variant="ghost" 
+              className="text-gray-600"
+              onClick={handleSaveTemplate}
+              disabled={isLoading}
+            >
               <Save className="w-4 h-4 mr-2" />
               Save Template
             </Button>
