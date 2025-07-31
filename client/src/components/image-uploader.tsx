@@ -1,12 +1,13 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { UserCircle, Building, Image, Upload, X } from "lucide-react";
+import { UserCircle, Building, Image, Upload, X, Crop } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { ImageCropper } from "@/components/image-cropper";
 import type { Images } from "@shared/schema";
 
 interface ImageUploaderProps {
@@ -25,6 +26,18 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
   const logoRef = useRef<HTMLInputElement>(null);
   const backgroundRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  
+  const [cropperState, setCropperState] = useState<{
+    isOpen: boolean;
+    imageUrl: string;
+    type: 'headshot' | 'logo' | null;
+    title: string;
+  }>({
+    isOpen: false,
+    imageUrl: '',
+    type: null,
+    title: ''
+  });
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File): Promise<UploadResponse> => {
@@ -85,6 +98,40 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
     });
   };
 
+  const openCropper = (type: 'headshot' | 'logo') => {
+    const imageUrl = images[type];
+    if (!imageUrl) return;
+    
+    setCropperState({
+      isOpen: true,
+      imageUrl,
+      type,
+      title: type === 'headshot' ? 'Headshot' : 'Logo'
+    });
+  };
+
+  const handleCropComplete = (croppedImageUrl: string) => {
+    if (cropperState.type) {
+      onImagesChange({
+        ...images,
+        [cropperState.type]: croppedImageUrl,
+      });
+      toast({
+        title: "Image Updated",
+        description: `${cropperState.title} has been cropped successfully`,
+      });
+    }
+  };
+
+  const closeCropper = () => {
+    setCropperState({
+      isOpen: false,
+      imageUrl: '',
+      type: null,
+      title: ''
+    });
+  };
+
   const UploadArea = ({ 
     type, 
     icon: Icon, 
@@ -110,7 +157,7 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
         
         {hasImage ? (
           <Card className="relative p-4 border-2 border-gray-200">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-3">
                 <img
                   src={images[type] as string}
@@ -130,13 +177,41 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
                 <X className="w-4 h-4" />
               </Button>
             </div>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileSelect(e, type)}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            />
+            
+            {/* Action buttons for headshot and logo */}
+            {(type === 'headshot' || type === 'logo') && (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCropper(type as 'headshot' | 'logo')}
+                  className="flex-1"
+                >
+                  <Crop className="w-4 h-4 mr-2" />
+                  Crop & Position
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => inputRef.current?.click()}
+                  className="flex-1"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Replace
+                </Button>
+              </div>
+            )}
+            
+            {/* Background images only get replace option */}
+            {type === 'background' && (
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileSelect(e, type)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            )}
           </Card>
         ) : (
           <Card
@@ -269,6 +344,15 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           <p className="text-sm text-gray-600">Uploading...</p>
         </div>
       )}
+      
+      <ImageCropper
+        isOpen={cropperState.isOpen}
+        onClose={closeCropper}
+        imageUrl={cropperState.imageUrl}
+        onCropComplete={handleCropComplete}
+        aspectRatio={cropperState.type === 'headshot' ? 1 : undefined}
+        title={cropperState.title}
+      />
     </div>
   );
 }
