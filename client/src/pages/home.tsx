@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle, Star, Users, Zap } from "lucide-react";
 import { Link } from "wouter";
-import signatarLogo from "@assets/signatar-logo.png";
+import signatarLogo from "@assets/new-signatar-logo.png";
 import AuthModal from "@/components/auth-modal";
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <img src={signatarLogo} alt="Signatar" className="w-10 h-10" />
+            <img src={signatarLogo} alt="Signatar" className="w-10 h-10 object-contain" />
             <h1 className="text-2xl font-bold text-primary">Signatar</h1>
           </div>
           <div className="flex items-center space-x-4">
@@ -177,7 +177,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <img src={signatarLogo} alt="Signatar" className="w-8 h-8" />
+              <img src={signatarLogo} alt="Signatar" className="w-8 h-8 object-contain" />
               <span className="text-lg font-semibold">Signatar</span>
             </div>
             
