@@ -472,7 +472,7 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate Gmail-compatible HTML that matches the original signature design
+   * Generate Gmail-compatible HTML that exactly matches the Sales Professional template structure
    */
   private async generateGmailCompatibleHtml(signature: Signature): Promise<string> {
     const { personalInfo, images, socialMedia } = signature;
@@ -481,90 +481,96 @@ export class SignatureExportService {
     const processedSignature = await this.processImageUrlsForStatic(signature);
     const processedImages = processedSignature.images as any;
     
-    // Generate social media icons using Gmail-safe methods
-    const socialIconsHtml = this.generateGmailSocialIcons(socialMedia);
-    
-    // Get headshot and logo sizes from signature settings
+    // Get image sizes from signature settings
     const headshotSize = processedImages?.headshotSize || 110;
     const logoSize = processedImages?.logoSize || 160;
     
+    // Create social media icons HTML matching the original vertical layout
+    const socialIconsHtml = this.generateGmailSocialIcons(socialMedia);
+    
     return `
-<table cellpadding="0" cellspacing="0" border="0" style="font-family: 'Playfair Display', Georgia, serif; max-width: 650px; background: linear-gradient(135deg, #22d3ee, #0891b2); border-radius: 16px; position: relative; overflow: hidden;">
+<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; max-width: 650px; position: relative;">
   <!-- Background geometric elements -->
   <tr>
     <td style="position: relative;">
-      <!-- Main signature content -->
+      <!-- Background pattern overlay -->
+      <div style="position: absolute; top: 54px; right: 11px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1; z-index: 1;"></div>
+      <div style="position: absolute; top: 118px; right: 3px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #374151, #1f2937); opacity: 0.2; z-index: 1;"></div>
+      <div style="position: absolute; bottom: 74px; right: 7px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15; z-index: 1;"></div>
+      
+      <!-- Main layout table -->
       <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; position: relative; z-index: 10;">
         <tr>
-          <!-- Left sidebar with gradient and geometric elements -->
-          <td style="width: 200px; background: linear-gradient(180deg, rgba(34, 211, 238, 0.9), rgba(8, 145, 178, 0.9)); padding: 32px 24px; vertical-align: top; position: relative;">
-            <!-- Geometric background blocks -->
-            <div style="position: absolute; top: -20px; left: -20px; width: 80px; height: 80px; background: linear-gradient(135deg, #22d3ee, #0891b2); transform: rotate(45deg); opacity: 0.1;"></div>
-            <div style="position: absolute; bottom: -30px; right: -30px; width: 100px; height: 100px; background: linear-gradient(135deg, #0891b2, #0e7490); transform: rotate(45deg); opacity: 0.15;"></div>
-            
-            <!-- Logo -->
-            ${processedImages?.logo ? `
-            <div style="margin-bottom: 24px; text-align: center;">
-              <img src="${processedImages.logo}" alt="Company Logo" style="width: ${Math.min(logoSize, 140)}px; height: auto; max-height: 80px; display: block; margin: 0 auto;" width="${Math.min(logoSize, 140)}" />
-            </div>
-            ` : ''}
-            
-            <!-- Headshot with diagonal styling -->
-            ${processedImages?.headshot ? `
-            <div style="margin-bottom: 24px; text-align: center; position: relative;">
-              <div style="width: ${headshotSize}px; height: ${headshotSize}px; margin: 0 auto; position: relative; transform: rotate(-5deg);">
-                <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
-              </div>
-            </div>
-            ` : ''}
-            
-            <!-- Social Media Icons -->
-            ${socialIconsHtml ? `
-            <div style="text-align: center;">
-              ${socialIconsHtml}
-            </div>
-            ` : ''}
+          <!-- Left sidebar with social media -->
+          <td style="width: 80px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; padding: 20px 0;">
+            ${socialIconsHtml}
           </td>
           
           <!-- Main content area -->
-          <td style="padding: 32px; vertical-align: top; color: white; background: rgba(255,255,255,0.05);">
+          <td style="padding: 32px; vertical-align: top; width: calc(100% - 80px - ${headshotSize * 2.56}px);">
+            <!-- Company Logo -->
+            ${processedImages?.logo ? `
+            <div style="margin-bottom: 16px;">
+              <img src="${processedImages.logo}" alt="Company Logo" style="width: ${Math.min(logoSize * 0.48, 77)}px; height: ${Math.min(logoSize * 0.48, 77)}px; object-fit: contain; display: block;" width="${Math.min(logoSize * 0.48, 77)}" height="${Math.min(logoSize * 0.48, 77)}" />
+            </div>
+            ` : ''}
+            
+            <!-- Company Name -->
+            <div style="margin-bottom: 24px;">
+              <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: bold; letter-spacing: 0.1em; color: #111827; margin: 0; text-transform: uppercase;">${personalInfo.company || "COMPANY"}</h2>
+            </div>
+            
             <!-- Name and Title -->
             <div style="margin-bottom: 24px;">
-              <h1 style="font-size: 32px; font-weight: 700; margin: 0 0 8px 0; color: white; font-family: 'Playfair Display', Georgia, serif; line-height: 1.2;">${personalInfo.name}</h1>
-              <p style="font-size: 18px; font-weight: 500; margin: 0 0 4px 0; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">${personalInfo.title}</p>
-              <p style="font-size: 16px; font-weight: 400; margin: 0; color: rgba(255,255,255,0.8); font-family: 'Playfair Display', Georgia, serif;">${personalInfo.company}</p>
+              <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: bold; color: #111827; margin: 0 0 8px 0; line-height: 1.2;">${personalInfo.name || "Your Name"}<span style="color: #22d3ee; margin-left: 8px;">✓</span></h1>
+              <p style="font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 500; color: #374151; margin: 0;">${personalInfo.title || "Your Title"}</p>
             </div>
             
             <!-- Contact Information -->
-            <div style="margin-bottom: 20px;">
+            <div>
               <table cellpadding="0" cellspacing="0" border="0">
-                ${personalInfo.email ? `
+                ${personalInfo.phone ? `
                 <tr>
-                  <td style="padding-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">
-                    <span style="display: inline-block; width: 20px; text-align: center; margin-right: 8px;">📧</span>
-                    <a href="mailto:${personalInfo.email}" style="color: white; text-decoration: none;">${personalInfo.email}</a>
+                  <td style="padding-bottom: 8px; vertical-align: middle; width: 20px;">
+                    <span style="color: #6b7280; font-size: 16px;">📞</span>
+                  </td>
+                  <td style="padding-bottom: 8px; padding-left: 8px; font-size: 16px; color: #374151;">
+                    <a href="tel:${personalInfo.phone}" style="color: #374151; text-decoration: none;">${personalInfo.phone}</a>
                   </td>
                 </tr>
                 ` : ''}
-                ${personalInfo.phone ? `
+                ${personalInfo.email ? `
                 <tr>
-                  <td style="padding-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">
-                    <span style="display: inline-block; width: 20px; text-align: center; margin-right: 8px;">📞</span>
-                    <a href="tel:${personalInfo.phone}" style="color: white; text-decoration: none;">${personalInfo.phone}</a>
+                  <td style="padding-bottom: 8px; vertical-align: middle; width: 20px;">
+                    <span style="color: #6b7280; font-size: 16px;">📧</span>
+                  </td>
+                  <td style="padding-bottom: 8px; padding-left: 8px; font-size: 16px; color: #374151;">
+                    <a href="mailto:${personalInfo.email}" style="color: #374151; text-decoration: none;">${personalInfo.email}</a>
                   </td>
                 </tr>
                 ` : ''}
                 ${personalInfo.website ? `
                 <tr>
-                  <td style="padding-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">
-                    <span style="display: inline-block; width: 20px; text-align: center; margin-right: 8px;">🌐</span>
-                    <a href="${personalInfo.website}" style="color: white; text-decoration: none;">${personalInfo.website}</a>
+                  <td style="padding-bottom: 8px; vertical-align: middle; width: 20px;">
+                    <span style="color: #6b7280; font-size: 16px;">🌐</span>
+                  </td>
+                  <td style="padding-bottom: 8px; padding-left: 8px; font-size: 16px; color: #374151;">
+                    <a href="${personalInfo.website}" style="color: #374151; text-decoration: none;">${personalInfo.website}</a>
                   </td>
                 </tr>
                 ` : ''}
               </table>
             </div>
           </td>
+          
+          <!-- Right section with headshot -->
+          ${processedImages?.headshot ? `
+          <td style="width: ${headshotSize * 2.56}px; padding: 32px; vertical-align: top; text-align: center; position: relative;">
+            <div style="width: ${headshotSize}px; height: ${headshotSize}px; margin: 0 auto; transform: rotate(-5deg); position: relative; z-index: 5;">
+              <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(34, 211, 238, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
+            </div>
+          </td>
+          ` : ''}
         </tr>
       </table>
     </td>
@@ -573,17 +579,17 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate Gmail-compatible social media icons that match the original design
+   * Generate Gmail-compatible social media icons in vertical layout like the original template
    */
   private generateGmailSocialIcons(socialMedia: SocialMedia | null): string {
     if (!socialMedia) return '';
     
     const socialLinks = [
-      { key: 'linkedin', url: socialMedia.linkedin, emoji: '💼', bgColor: '#0077b5' },
-      { key: 'twitter', url: socialMedia.twitter, emoji: '🐦', bgColor: '#1da1f2' },
-      { key: 'instagram', url: socialMedia.instagram, emoji: '📷', bgColor: '#e4405f' },
-      { key: 'youtube', url: socialMedia.youtube, emoji: '▶️', bgColor: '#ff0000' },
-      { key: 'tiktok', url: socialMedia.tiktok, emoji: '🎵', bgColor: '#000000' },
+      { key: 'twitter', url: socialMedia.twitter, icon: '✕', bgColor: 'rgba(255,255,255,0.2)' },
+      { key: 'linkedin', url: socialMedia.linkedin, icon: 'in', bgColor: 'rgba(255,255,255,0.2)' },
+      { key: 'instagram', url: socialMedia.instagram, icon: '📷', bgColor: 'rgba(255,255,255,0.2)' },
+      { key: 'youtube', url: socialMedia.youtube, icon: '▶', bgColor: 'rgba(255,255,255,0.2)' },
+      { key: 'tiktok', url: socialMedia.tiktok, icon: '♫', bgColor: 'rgba(255,255,255,0.2)' },
     ];
 
     const validLinks = socialLinks.filter(link => link.url);
@@ -591,63 +597,21 @@ export class SignatureExportService {
     if (validLinks.length === 0) return '';
 
     return validLinks.map(link => `
-      <a href="${link.url}" style="display: inline-block; width: 32px; height: 32px; background-color: ${link.bgColor}; border-radius: 50%; text-align: center; line-height: 32px; color: white; text-decoration: none; font-size: 16px; margin: 4px 2px;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
-        ${link.emoji}
+      <a href="${link.url}" style="display: block; width: 24px; height: 24px; color: white; text-decoration: none; font-size: 16px; text-align: center; line-height: 24px; margin-bottom: 20px; transition: opacity 0.2s;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
+        ${link.icon}
       </a>
     `).join('');
   }
 
   /**
-   * Generate static HTML for signatures without animations
+   * Generate static HTML for signatures without animations - optimized for Gmail copy/paste
    */
   private async generateStaticSignatureHtml(signature: Signature): Promise<string> {
-    const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
-    
     // Convert relative URLs to absolute URLs for static export
     const processedSignature = await this.processImageUrlsForStatic(signature);
     
-    // Generate Gmail-compatible HTML for better email client support
-    const gmailHtml = await this.generateGmailCompatibleHtml(processedSignature);
-    
-    return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Signature</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f8f9fa;
-        }
-        
-        /* Gmail compatibility styles */
-        table { 
-            border-collapse: collapse; 
-        }
-        
-        img { 
-            border: 0; 
-            outline: none;
-            display: block; 
-        }
-        
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-    <div style="margin: 0; padding: 0;">
-        ${gmailHtml}
-    </div>
-</body>
-</html>
-    `.trim();
+    // Generate Gmail-compatible HTML that can be directly copy/pasted
+    return await this.generateGmailCompatibleHtml(processedSignature);
   }
 
   /**
