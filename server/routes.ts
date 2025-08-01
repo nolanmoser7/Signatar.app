@@ -217,6 +217,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Export signature using inline table format for maximum email client compatibility
+  app.post("/api/signatures/:id/export-inline", async (req, res) => {
+    try {
+      const signature = await storage.getSignature(req.params.id);
+      if (!signature) {
+        return res.status(404).json({ message: "Signature not found" });
+      }
+
+      const result = await signatureExportService.exportInlineTableSignature(signature);
+      res.json(result);
+    } catch (error) {
+      console.error("Inline table export failed:", error);
+      res.status(500).json({ 
+        message: "Failed to export inline table signature",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

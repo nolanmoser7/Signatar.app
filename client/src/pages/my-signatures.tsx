@@ -12,6 +12,7 @@ import { apiRequest } from "@/lib/queryClient";
 import type { Signature, PersonalInfo, SocialMedia } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import SignatureExport from "@/components/signature-export";
+import { InlineTableExport } from "@/components/inline-table-export";
 import {
   AlertDialog,
   AlertDialogAction,

@@ -28,7 +28,7 @@ Preferred communication style: Simple, everyday language.
     - **Authentication System**: Cookie-based session management, bcrypt password hashing, secure API routes.
     - **Data Persistence**: Signatures and templates stored in PostgreSQL, replacing in-memory storage.
     - **Signature Management**: Full CRUD operations with naming, complete state saving (personal info, images, social media, animations, element positions, custom layouts), tagging (static/dynamic), and secure deletion with confirmation dialogs.
-    - **Gmail-Optimized Export Pipeline**: Professional email signature export with Gmail-specific table-based layouts, eliminating flexbox and clip-path for maximum compatibility. Features 550px max-width, emoji icons, professional styling preservation, and comprehensive email client optimization.
+    - **Universal Single Table Export Pipeline**: Professional email signature export using single HTML table structure with all CSS inlined for maximum email client compatibility. Features Gmail, Outlook, and Apple Mail optimization, 550px max-width, emoji icons, explicit image dimensions, and comprehensive validation system. Powered by Juice library for CSS inlining and guaranteed to work across all major email clients.
     - **Image Handling**: Support for both uploaded files (/api/files/) and attached assets (/attached_assets/) with automatic URL conversion for email compatibility.
 
 ### System Design Choices

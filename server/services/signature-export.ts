@@ -4,6 +4,7 @@ import path from 'path';
 // @ts-ignore - No types available for gifencoder
 import GIFEncoder from 'gifencoder';
 import type { Signature, PersonalInfo, SocialMedia, Images, ElementAnimations } from '@shared/schema';
+import { InlineTableExporter } from './inline-table-export';
 
 interface ExportResult {
   finalHtml: string;
@@ -27,6 +28,11 @@ const DEFAULT_ANIMATION_CONFIG: AnimationConfig = {
 
 export class SignatureExportService {
   private browser: Browser | null = null;
+  private inlineTableExporter: InlineTableExporter;
+
+  constructor() {
+    this.inlineTableExporter = new InlineTableExporter();
+  }
 
   async initialize(): Promise<void> {
     if (!this.browser) {
@@ -75,6 +81,34 @@ export class SignatureExportService {
     } else {
       // Complex export with GIF baking for dynamic signatures
       return await this.bakeSignatureAnimations(signature, emailClient);
+    }
+  }
+
+  /**
+   * Export signature using inline table format for maximum email client compatibility
+   */
+  async exportInlineTableSignature(signature: Signature): Promise<{
+    html: string;
+    validation: { valid: boolean; issues: string[] };
+    success: boolean;
+    format: string;
+  }> {
+    try {
+      // Use the inline table exporter for maximum compatibility
+      const inlineHtml = await this.inlineTableExporter.exportInlineTable(signature);
+      
+      // Validate the output meets email client requirements
+      const validation = this.inlineTableExporter.validateOutput(inlineHtml);
+      
+      return {
+        html: inlineHtml,
+        validation,
+        success: true,
+        format: 'inline-table'
+      };
+    } catch (error) {
+      console.error('Inline table export failed:', error);
+      throw new Error('Failed to export inline table signature');
     }
   }
 
