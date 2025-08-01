@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function MySignatures() {
   const [, navigate] = useLocation();
@@ -235,51 +236,96 @@ export default function MySignatures() {
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between">
                       <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => copySignatureHtml(signature)}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setExportingSignature(signature.id)}
-                        >
-                          <FileCode className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            // TODO: Implement preview functionality
-                            toast({
-                              title: "Preview",
-                              description: "Preview functionality coming soon!",
-                            });
-                          }}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => copySignatureHtml(signature)}
+                              >
+                                <Copy className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Copy signature HTML</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setExportingSignature(signature.id)}
+                              >
+                                <FileCode className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Export signature</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  // TODO: Implement preview functionality
+                                  toast({
+                                    title: "Preview",
+                                    description: "Preview functionality coming soon!",
+                                  });
+                                }}
+                              >
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Preview signature</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                       
                       <div className="flex space-x-2">
-                        <Link href={`/builder?signature=${signature.id}`}>
-                          <Button size="sm" variant="outline">
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                        </Link>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link href={`/builder?signature=${signature.id}`}>
+                                <Button size="sm" variant="outline">
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Edit signature</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Delete signature</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
