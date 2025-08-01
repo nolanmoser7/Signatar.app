@@ -537,15 +537,7 @@ export default function SignatureBuilder() {
                 Login
               </Button>
             )}
-            <Button 
-              variant="ghost" 
-              className="text-gray-600"
-              onClick={handleSaveTemplate}
-              disabled={isLoading || saveSignatureMutation.isPending}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {saveSignatureMutation.isPending ? "Saving..." : "Save Signature"}
-            </Button>
+            
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
               Export
