@@ -30,6 +30,18 @@ import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
   const [location] = useLocation();
+  
+  // Parse signature ID from URL using useMemo to prevent hook order issues
+  const signatureId = React.useMemo(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('signature');
+    console.log("=== SIGNATURE BUILDER INIT ===");
+    console.log("Current location:", location);
+    console.log("Window search:", window.location.search);
+    console.log("Parsed signature ID:", id);
+    return id;
+  }, [location]);
+  
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
@@ -79,16 +91,6 @@ export default function SignatureBuilder() {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading, logout, isLoggingOut } = useAuth();
   const queryClient = useQueryClient();
-
-  // Parse signature ID from URL after all hooks are declared
-  const urlFromWindow = window.location.search.substring(1);
-  const urlParams = new URLSearchParams(urlFromWindow);
-  const signatureId = urlParams.get('signature');
-  
-  console.log("=== SIGNATURE BUILDER INIT ===");
-  console.log("Current location:", location);
-  console.log("Window search:", window.location.search);
-  console.log("Signature ID:", signatureId);
 
   // Load existing signature if editing
   const { data: existingSignature, isLoading: isLoadingSignature, error: signatureError } = useQuery({
