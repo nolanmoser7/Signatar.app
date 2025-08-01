@@ -101,9 +101,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
   };
 
+  // Debug form states
+  console.log("Register form values:", registerForm.watch());
+  console.log("Register form errors:", registerForm.formState.errors);
+  console.log("IsLogin state:", isLogin);
+
   return (
     <Dialog open={isOpen} onOpenChange={handleModalChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] z-50">
         <DialogHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <img src={signatarLogo} alt="Signatar" className="w-8 h-8 mr-2" />
@@ -193,15 +198,30 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <FormField
                   control={registerForm.control}
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    console.log("Email field render:", field);
+                    return (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter your email" 
+                            type="email"
+                            autoComplete="email"
+                            value={field.value || ""}
+                            onChange={(e) => {
+                              console.log("Email input change:", e.target.value);
+                              field.onChange(e);
+                            }}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
 
                 <FormField
