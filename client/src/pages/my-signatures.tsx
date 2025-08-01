@@ -318,10 +318,10 @@ export default function MySignatures() {
                           </Tooltip>
                         </TooltipProvider>
                         
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <TooltipProvider>
-                              <Tooltip>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
                                 <TooltipTrigger asChild>
                                   <Button
                                     size="sm"
@@ -331,30 +331,30 @@ export default function MySignatures() {
                                     <Trash2 className="w-4 h-4" />
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Delete signature</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Signature</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to delete "{personalInfo.name}"? This action cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => deleteSignatureMutation.mutate(signature.id)}
-                                className="bg-red-600 hover:bg-red-700"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Signature</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete "{signature.name}"? This action cannot be undone.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => deleteSignatureMutation.mutate(signature.id)}
+                                    className="bg-red-600 hover:bg-red-700"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                            <TooltipContent>
+                              <p>Delete signature</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                     </div>
 
