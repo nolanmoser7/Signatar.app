@@ -28,7 +28,7 @@ Preferred communication style: Simple, everyday language.
     - **Authentication System**: Cookie-based session management, bcrypt password hashing, secure API routes.
     - **Data Persistence**: Signatures and templates stored in PostgreSQL, replacing in-memory storage.
     - **Signature Management**: Full CRUD operations with naming, complete state saving (personal info, images, social media, animations, element positions, custom layouts), tagging (static/dynamic), and secure deletion with confirmation dialogs.
-    - **Export Logic**: Comprehensive static signature export pipeline with proper image URL conversion, SVG icon rendering, and template preservation.
+    - **Gmail-Optimized Export Pipeline**: Professional email signature export with Gmail-specific table-based layouts, eliminating flexbox and clip-path for maximum compatibility. Features 550px max-width, emoji icons, professional styling preservation, and comprehensive email client optimization.
     - **Image Handling**: Support for both uploaded files (/api/files/) and attached assets (/attached_assets/) with automatic URL conversion for email compatibility.
 
 ### System Design Choices

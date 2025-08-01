@@ -480,8 +480,8 @@ export class SignatureExportService {
     // Convert relative URLs to absolute URLs for static export
     const processedSignature = await this.processImageUrlsForStatic(signature);
     
-    // Generate clean static template HTML (not the animated version)
-    const templateHtml = await this.generateStaticTemplateHtml(processedSignature);
+    // Generate clean static template HTML (not the animated version) - pass emailClient parameter
+    const templateHtml = this.generateStaticTemplateHtml(processedSignature, emailClient);
     
     // Get template-specific CSS with email client optimizations
     const templateCSS = this.getTemplateSpecificCSS(templateId || 'sales-professional');
@@ -1087,7 +1087,7 @@ export class SignatureExportService {
   /**
    * Generate clean static template HTML without animations
    */
-  private async generateStaticTemplateHtml(signature: Signature): Promise<string> {
+  private generateStaticTemplateHtml(signature: Signature, emailClient: string = 'gmail'): string {
     const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
     const personalInfoTyped = personalInfo as PersonalInfo;
     const imagesTyped = images as any;
