@@ -20,13 +20,18 @@ import AuthModal from "@/components/auth-modal";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations, InsertSignature } from "@shared/schema";
+import { useLocation } from "wouter";
+import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations, InsertSignature, Signature } from "@shared/schema";
+import React from "react";
 
 import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
+  const [location] = useLocation();
+  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const signatureId = urlParams.get('signature');
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
@@ -76,6 +81,37 @@ export default function SignatureBuilder() {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading, logout, isLoggingOut } = useAuth();
   const queryClient = useQueryClient();
+
+  // Load existing signature if editing
+  const { data: existingSignature, isLoading: isLoadingSignature } = useQuery({
+    queryKey: ["/api/signatures", signatureId],
+    enabled: !!signatureId,
+  });
+  
+  // Initialize state with existing signature data if available
+  React.useEffect(() => {
+    if (existingSignature) {
+      const sig = existingSignature as Signature;
+      setSignatureName(sig.name);
+      setSelectedTemplate(sig.templateId);
+      setPersonalInfo(sig.personalInfo as PersonalInfo);
+      setImages(sig.images as Images);
+      setAnimationType(sig.animationType as AnimationType);
+      setSocialMedia(sig.socialMedia as SocialMedia || {
+        linkedin: "",
+        twitter: "",
+        instagram: "",
+        youtube: "",
+        tiktok: "",
+      });
+      if (sig.elementPositions) {
+        setElementPositions(sig.elementPositions as any);
+      }
+      if (sig.elementAnimations) {
+        setElementAnimations(sig.elementAnimations as ElementAnimations);
+      }
+    }
+  }, [existingSignature]);
 
   const handlePlayAnimation = () => {
     setIsAnimating(true);
@@ -143,9 +179,36 @@ export default function SignatureBuilder() {
         elementAnimations,
       };
       
-      saveSignatureMutation.mutate(signatureData);
+      // If editing existing signature, update instead of create
+      if (signatureId && existingSignature) {
+        updateSignatureMutation.mutate({ id: signatureId, data: signatureData });
+      } else {
+        saveSignatureMutation.mutate(signatureData);
+      }
     }
   };
+
+  // Update signature mutation for editing existing signatures
+  const updateSignatureMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: InsertSignature }) => {
+      return await apiRequest("PATCH", `/api/signatures/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/signatures/user", user?.id] });
+      queryClient.invalidateQueries({ queryKey: ["/api/signatures", signatureId] });
+      toast({
+        title: "Signature Updated",
+        description: "Your signature has been updated successfully.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update signature. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   // Save signature mutation
   const saveSignatureMutation = useMutation({
@@ -220,7 +283,12 @@ export default function SignatureBuilder() {
         elementAnimations,
       };
       
-      saveSignatureMutation.mutate(signatureData);
+      // If editing existing signature, update instead of create
+      if (signatureId && existingSignature) {
+        updateSignatureMutation.mutate({ id: signatureId, data: signatureData });
+      } else {
+        saveSignatureMutation.mutate(signatureData);
+      }
     }
   };
 

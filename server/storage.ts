@@ -100,6 +100,8 @@ export class MemStorage implements IStorage {
       userId: insertSignature.userId || null,
       images: insertSignature.images || null,
       socialMedia: insertSignature.socialMedia || null,
+      elementPositions: insertSignature.elementPositions || null,
+      elementAnimations: insertSignature.elementAnimations || null,
       createdAt: now,
       updatedAt: now,
     };
@@ -261,6 +263,8 @@ export class DatabaseStorage implements IStorage {
       userId: insertSignature.userId || null,
       images: insertSignature.images || null,
       socialMedia: insertSignature.socialMedia || null,
+      elementPositions: insertSignature.elementPositions || null,
+      elementAnimations: insertSignature.elementAnimations || null,
     };
     
     const [signature] = await db
