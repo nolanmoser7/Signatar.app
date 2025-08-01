@@ -901,11 +901,11 @@ export class SignatureExportService {
       const headshotSizePercent = imagesTyped?.headshotSize || 100;
       const logoSizePercent = imagesTyped?.logoSize || 100;
       
-      // Optimized headshot dimensions for better content space (max 160px)
-      const headshotWidthPx = Math.min(Math.round(headshotSizePercent * 1.5), 160);
+      // Increased headshot dimensions to match saved design (max 200px)
+      const headshotWidthPx = Math.min(Math.round(headshotSizePercent * 2.0), 200);
       const logoWidthPx = Math.round(logoSizePercent * 0.6);
       
-      // Optimized content width calculation - more space for content
+      // Adjusted content width calculation - balanced with larger headshot
       const contentWidth = `calc(100% - 80px - ${headshotWidthPx + 24}px)`;
       
       return `
