@@ -485,8 +485,7 @@ export class SignatureExportService {
     const headshotSize = processedImages?.headshotSize || 110;
     const logoSize = processedImages?.logoSize || 160;
     
-    // Create social media icons HTML matching the original vertical layout
-    const socialIconsHtml = this.generateSimpleGmailSocialIcons(socialMedia);
+    // Social icons are now handled directly in the HTML template
     
     // Calculate proper widths based on original template proportions
     const headshotColumnWidth = headshotSize * 2.56; // Match original scaling
