@@ -20,6 +20,7 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isLogin, setIsLogin] = useState(true);
+  const [testEmail, setTestEmail] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -95,15 +96,25 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const handleModalChange = (open: boolean) => {
     if (!open) {
       onClose();
-      loginForm.reset();
-      registerForm.reset();
+      // Reset forms with fresh default values
+      loginForm.reset({
+        email: "",
+        password: "",
+      });
+      registerForm.reset({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        firstName: "",
+        lastName: "",
+      });
       setIsLogin(true);
     }
   };
 
-  // Debug form states
-  console.log("Register form values:", registerForm.watch());
-  console.log("Register form errors:", registerForm.formState.errors);
+  // Debug form states - remove after fixing
+  const formValues = registerForm.watch();
+  console.log("Register form watch:", formValues);
   console.log("IsLogin state:", isLogin);
 
   return (
@@ -195,33 +206,36 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   />
                 </div>
 
+                {/* Test email input - remove after debugging */}
+                <div>
+                  <Label>Test Email (outside form)</Label>
+                  <Input 
+                    placeholder="Test email input" 
+                    value={testEmail}
+                    onChange={(e) => {
+                      console.log("Test email change:", e.target.value);
+                      setTestEmail(e.target.value);
+                    }}
+                  />
+                  <p className="text-xs text-gray-500">Test value: {testEmail}</p>
+                </div>
+
                 <FormField
                   control={registerForm.control}
                   name="email"
-                  render={({ field }) => {
-                    console.log("Email field render:", field);
-                    return (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Enter your email" 
-                            type="email"
-                            autoComplete="email"
-                            value={field.value || ""}
-                            onChange={(e) => {
-                              console.log("Email input change:", e.target.value);
-                              field.onChange(e);
-                            }}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            ref={field.ref}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    );
-                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter your email" 
+                          type="email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
                 <FormField
