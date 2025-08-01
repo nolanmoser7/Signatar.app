@@ -66,14 +66,29 @@ export class SignatureExportService {
    * Main export function - handles both animated and static signatures
    */
   async exportSignature(signature: Signature): Promise<ExportResult> {
-    // Use signature tag to determine export pipeline
-    if (signature.tag === 'static') {
+    // Check if signature has any actual animations
+    const hasAnimations = this.hasActiveAnimations(signature);
+    
+    if (!hasAnimations || signature.tag === 'static') {
       // Simple export for static signatures
       return await this.exportStaticSignature(signature);
     } else {
       // Complex export with GIF baking for dynamic signatures
       return await this.bakeSignatureAnimations(signature);
     }
+  }
+
+  /**
+   * Check if signature has any actual animations enabled
+   */
+  private hasActiveAnimations(signature: Signature): boolean {
+    const elementAnimations = signature.elementAnimations as any;
+    if (!elementAnimations) return false;
+    
+    // Check if any element has animation other than 'none'
+    return Object.values(elementAnimations).some(animation => 
+      animation && animation !== 'none'
+    );
   }
 
   /**
