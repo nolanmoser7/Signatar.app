@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut, FileText, Settings } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import TemplateSelector from "@/components/template-selector";
@@ -58,6 +60,7 @@ export default function SignatureBuilder() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isElementAnimating, setIsElementAnimating] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [signatureName, setSignatureName] = useState("");
 
   const [activeTab, setActiveTab] = useState("template");
   const [layoutMode, setLayoutMode] = useState(false);
@@ -99,8 +102,18 @@ export default function SignatureBuilder() {
       });
     } else if (user) {
       // User is signed in, save the signature
+      if (!signatureName.trim()) {
+        toast({
+          title: "Name Required",
+          description: "Please enter a name for your signature.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const signatureData: InsertSignature = {
         userId: user.id,
+        name: signatureName.trim(),
         templateId: selectedTemplate,
         personalInfo,
         images,
@@ -144,8 +157,18 @@ export default function SignatureBuilder() {
       });
     } else if (user) {
       // User is signed in, save the signature
+      if (!signatureName.trim()) {
+        toast({
+          title: "Name Required",
+          description: "Please enter a name for your signature.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const signatureData: InsertSignature = {
         userId: user.id,
+        name: signatureName.trim(),
         templateId: selectedTemplate,
         personalInfo,
         images,
@@ -700,16 +723,29 @@ export default function SignatureBuilder() {
                   <span className="w-2 h-2 bg-success rounded-full"></span>
                   <span>Live Preview</span>
                 </div>
-                <Button 
-                  variant="default" 
-                  size="sm" 
-                  className="bg-primary text-white hover:bg-primary/90"
-                  onClick={handleFinishedCreating}
-                  disabled={isLoading || saveSignatureMutation.isPending}
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  {saveSignatureMutation.isPending ? "Saving..." : "Finished Creating!"}
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    placeholder="Enter signature name..."
+                    value={signatureName}
+                    onChange={(e) => setSignatureName(e.target.value)}
+                    className="w-48"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && signatureName.trim()) {
+                        handleFinishedCreating();
+                      }
+                    }}
+                  />
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="bg-primary text-white hover:bg-primary/90"
+                    onClick={handleFinishedCreating}
+                    disabled={isLoading || saveSignatureMutation.isPending || !signatureName.trim()}
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    {saveSignatureMutation.isPending ? "Saving..." : "Save"}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

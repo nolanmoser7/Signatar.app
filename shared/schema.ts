@@ -6,6 +6,7 @@ import { z } from "zod";
 export const signatures = pgTable("signatures", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: varchar("user_id"),
+  name: text("name").notNull(),
   templateId: text("template_id").notNull(),
   personalInfo: json("personal_info").notNull(),
   images: json("images"),
@@ -65,6 +66,7 @@ export const insertSignatureSchema = createInsertSchema(signatures).omit({
   createdAt: true,
   updatedAt: true,
 }).extend({
+  name: z.string().min(1, "Signature name is required"),
   personalInfo: personalInfoSchema,
   socialMedia: socialMediaSchema.optional(),
   images: imagesSchema.optional(),

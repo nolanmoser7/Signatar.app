@@ -205,9 +205,9 @@ export default function MySignatures() {
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-lg">{personalInfo.name}</CardTitle>
+                        <CardTitle className="text-lg">{signature.name}</CardTitle>
                         <CardDescription>
-                          {personalInfo.title} at {personalInfo.company}
+                          {personalInfo.name} • {personalInfo.title} at {personalInfo.company}
                         </CardDescription>
                       </div>
                       <Badge variant="secondary" className="ml-2">
