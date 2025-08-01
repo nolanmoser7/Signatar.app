@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import SignatureBuilder from "@/pages/signature-builder";
 import MySignatures from "@/pages/my-signatures";
+import AccountSettings from "@/pages/account-settings";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/builder" component={SignatureBuilder} />
       <Route path="/my-signatures" component={MySignatures} />
+      <Route path="/account-settings" component={AccountSettings} />
       <Route component={NotFound} />
     </Switch>
   );

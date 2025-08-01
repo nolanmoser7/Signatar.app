@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, CheckCircle, Star, Users, Zap, User, LogOut, FileText } from "lucide-react";
+import { ArrowRight, CheckCircle, Star, Users, Zap, User, LogOut, FileText, Settings } from "lucide-react";
 import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import AuthModal from "@/components/auth-modal";
@@ -44,6 +44,12 @@ export default function Home() {
                     <DropdownMenuItem>
                       <FileText className="w-4 h-4 mr-2" />
                       My Signatures
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/account-settings">
+                    <DropdownMenuItem>
+                      <Settings className="w-4 h-4 mr-2" />
+                      Account Settings
                     </DropdownMenuItem>
                   </Link>
                   <DropdownMenuItem
