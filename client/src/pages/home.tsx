@@ -73,7 +73,6 @@ export default function Home() {
           </div>
         </div>
       </header>
-
       {/* Hero Section */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
@@ -117,12 +116,11 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-500" />
-              <span>Always free</span>
+              <span>Always design for free</span>
             </div>
           </div>
         </div>
       </section>
-
       {/* Feature Preview */}
       <section className="py-16 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -191,7 +189,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 px-6 bg-primary text-white">
         <div className="max-w-4xl mx-auto text-center">
@@ -215,7 +212,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto">
@@ -238,7 +234,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
