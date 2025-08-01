@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Download, FileCode, X, Copy, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Download, FileCode, X, Copy, CheckCircle, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -22,7 +24,14 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
   const [exportResult, setExportResult] = useState<ExportResult | null>(null);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("");
+  const [selectedEmailClient, setSelectedEmailClient] = useState<string>("gmail");
   const { toast } = useToast();
+
+  const emailClientOptions = [
+    { value: "gmail", label: "Gmail", description: "Google Gmail web and mobile app" },
+    { value: "outlook", label: "Outlook", description: "Microsoft Outlook (desktop and web)" },
+    { value: "apple-mail", label: "Apple Mail", description: "macOS and iOS Mail app" },
+  ];
 
   const exportSignature = async () => {
     setIsExporting(true);
@@ -147,9 +156,38 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
                   <li>• Generate clean HTML with embedded GIF URLs</li>
                   <li>• Preserve all social media links and styling</li>
                 </ul>
+                
+                {/* Email Client Selection */}
+                <div className="mb-6 text-left">
+                  <Label htmlFor="email-client" className="text-sm font-medium text-gray-700 mb-2 block">
+                    Select Email Client
+                  </Label>
+                  <Select value={selectedEmailClient} onValueChange={setSelectedEmailClient}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Choose your email client" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {emailClientOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          <div className="flex items-center space-x-3">
+                            <Mail className="w-4 h-4 text-gray-500" />
+                            <div>
+                              <div className="font-medium">{option.label}</div>
+                              <div className="text-xs text-gray-500">{option.description}</div>
+                            </div>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-gray-500 mt-1">
+                    The signature will be optimized for your selected email client
+                  </p>
+                </div>
+                
                 <Button onClick={exportSignature} className="w-full">
                   <FileCode className="w-4 h-4 mr-2" />
-                  Export Signature
+                  Export for {emailClientOptions.find(option => option.value === selectedEmailClient)?.label}
                 </Button>
               </>
             ) : (
@@ -222,12 +260,35 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
             
             {/* Usage Instructions */}
             <div className="mt-6 p-4 bg-blue-50 rounded-lg text-left">
-              <h6 className="font-semibold text-blue-900 mb-2">How to Use Your Export:</h6>
+              <h6 className="font-semibold text-blue-900 mb-2">
+                How to Use in {emailClientOptions.find(option => option.value === selectedEmailClient)?.label}:
+              </h6>
               <ul className="text-sm text-blue-800 space-y-1">
-                <li>1. Download the HTML file or copy the HTML code</li>
-                <li>2. Paste the HTML into your email client's signature editor</li>
-                <li>3. The animated GIFs will automatically loop in email clients</li>
-                <li>4. All social media links are preserved and clickable</li>
+                {selectedEmailClient === 'gmail' && (
+                  <>
+                    <li>1. Open Gmail Settings → General → Signature</li>
+                    <li>2. Paste the HTML code into the signature editor</li>
+                    <li>3. Save changes - GIFs will animate automatically</li>
+                  </>
+                )}
+                {selectedEmailClient === 'outlook' && (
+                  <>
+                    <li>1. Open Outlook → File → Options → Mail → Signatures</li>
+                    <li>2. Create new or edit existing signature</li>
+                    <li>3. Paste HTML code in the editor</li>
+                    <li>4. Save and apply to new messages</li>
+                  </>
+                )}
+                {selectedEmailClient === 'apple-mail' && (
+                  <>
+                    <li>1. Open Mail → Preferences → Signatures</li>
+                    <li>2. Create new signature or select existing one</li>
+                    <li>3. Paste HTML code into the signature field</li>
+                    <li>4. Close preferences to save</li>
+                  </>
+                )}
+                <li>• All social media links are preserved and clickable</li>
+                <li>• Animated elements will loop automatically</li>
               </ul>
             </div>
           </div>
