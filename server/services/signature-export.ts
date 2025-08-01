@@ -472,6 +472,115 @@ export class SignatureExportService {
   }
 
   /**
+   * Generate Gmail-compatible HTML for signatures
+   */
+  private async generateGmailCompatibleHtml(signature: Signature): Promise<string> {
+    const { personalInfo, images, socialMedia } = signature;
+    
+    // Convert relative URLs to absolute URLs for static export
+    const processedSignature = await this.processImageUrlsForStatic(signature);
+    const processedImages = processedSignature.images as any;
+    
+    // Generate social media icons using web-safe methods
+    const socialIconsHtml = this.generateGmailSocialIcons(socialMedia);
+    
+    return `
+<table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.4; color: #333333; max-width: 600px;">
+  <tr>
+    <td style="padding: 20px; background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); border-radius: 12px;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+        <tr>
+          <!-- Logo Section -->
+          ${processedImages?.logo ? `
+          <td style="width: 140px; padding-right: 20px; vertical-align: top;">
+            <img src="${processedImages.logo}" alt="Company Logo" style="width: 120px; height: auto; max-height: 60px; display: block;" width="120" />
+          </td>
+          ` : ''}
+          
+          <!-- Main Content -->
+          <td style="vertical-align: top;">
+            <table cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <!-- Headshot -->
+                ${processedImages?.headshot ? `
+                <td style="width: 90px; padding-right: 20px; vertical-align: top;">
+                  <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); display: block;" width="80" height="80" />
+                </td>
+                ` : ''}
+                
+                <!-- Text Content -->
+                <td style="vertical-align: top; color: white;">
+                  <div style="font-size: 24px; font-weight: bold; margin-bottom: 4px; color: white;">${personalInfo.name}</div>
+                  <div style="font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 16px;">${personalInfo.title} at ${personalInfo.company}</div>
+                  
+                  <!-- Contact Info -->
+                  <table cellpadding="0" cellspacing="0" border="0">
+                    ${personalInfo.email ? `
+                    <tr>
+                      <td style="padding-bottom: 4px; font-size: 14px; color: rgba(255,255,255,0.8);">
+                        📧 <a href="mailto:${personalInfo.email}" style="color: white; text-decoration: none;">${personalInfo.email}</a>
+                      </td>
+                    </tr>
+                    ` : ''}
+                    ${personalInfo.phone ? `
+                    <tr>
+                      <td style="padding-bottom: 4px; font-size: 14px; color: rgba(255,255,255,0.8);">
+                        📞 <a href="tel:${personalInfo.phone}" style="color: white; text-decoration: none;">${personalInfo.phone}</a>
+                      </td>
+                    </tr>
+                    ` : ''}
+                    ${personalInfo.website ? `
+                    <tr>
+                      <td style="padding-bottom: 4px; font-size: 14px; color: rgba(255,255,255,0.8);">
+                        🌐 <a href="${personalInfo.website}" style="color: white; text-decoration: none;">${personalInfo.website}</a>
+                      </td>
+                    </tr>
+                    ` : ''}
+                  </table>
+                  
+                  <!-- Social Media Icons -->
+                  ${socialIconsHtml ? `
+                  <div style="margin-top: 12px;">
+                    ${socialIconsHtml}
+                  </div>
+                  ` : ''}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+  }
+
+  /**
+   * Generate Gmail-compatible social media icons
+   */
+  private generateGmailSocialIcons(socialMedia: SocialMedia | null): string {
+    if (!socialMedia) return '';
+    
+    const socialLinks = [
+      { key: 'linkedin', url: socialMedia.linkedin, emoji: '💼', text: 'LinkedIn' },
+      { key: 'twitter', url: socialMedia.twitter, emoji: '🐦', text: 'Twitter' },
+      { key: 'instagram', url: socialMedia.instagram, emoji: '📷', text: 'Instagram' },
+      { key: 'youtube', url: socialMedia.youtube, emoji: '▶️', text: 'YouTube' },
+      { key: 'tiktok', url: socialMedia.tiktok, emoji: '🎵', text: 'TikTok' },
+    ];
+
+    const validLinks = socialLinks.filter(link => link.url);
+    
+    if (validLinks.length === 0) return '';
+
+    return validLinks.map(link => `
+      <a href="${link.url}" style="display: inline-block; margin-right: 8px; padding: 4px 8px; background-color: rgba(255,255,255,0.2); border-radius: 4px; color: white; text-decoration: none; font-size: 12px;" target="_blank">
+        ${link.emoji} ${link.text}
+      </a>
+    `).join('');
+  }
+
+  /**
    * Generate static HTML for signatures without animations
    */
   private async generateStaticSignatureHtml(signature: Signature): Promise<string> {
@@ -480,11 +589,8 @@ export class SignatureExportService {
     // Convert relative URLs to absolute URLs for static export
     const processedSignature = await this.processImageUrlsForStatic(signature);
     
-    // Generate clean static template HTML (not the animated version)
-    const templateHtml = await this.generateStaticTemplateHtml(processedSignature);
-    
-    // Get template-specific CSS
-    const templateCSS = this.getTemplateSpecificCSS(templateId || 'sales-professional');
+    // Generate Gmail-compatible HTML for better email client support
+    const gmailHtml = await this.generateGmailCompatibleHtml(processedSignature);
     
     return `
 <!DOCTYPE html>
@@ -493,82 +599,38 @@ export class SignatureExportService {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Signature</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
-      /* Force font preload for better reliability */
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-    </style>
-    <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
             margin: 0;
             padding: 20px;
-            font-family: 'Playfair Display', serif;
+            font-family: Arial, Helvetica, sans-serif;
             background: #f8f9fa;
-            line-height: 1.4;
         }
         
-        /* Email client compatibility */
+        /* Gmail compatibility styles */
         table { 
             border-collapse: collapse; 
-            width: 100%;
         }
         
         img { 
             border: 0; 
-            outline: none; 
-            text-decoration: none;
-            max-width: 100%;
-            height: auto;
+            outline: none;
+            display: block; 
         }
         
-        a { 
-            text-decoration: none;
+        a {
             color: inherit;
+            text-decoration: none;
         }
-        
-        /* Static signature styles - no animations */
-        .signature-element {
-            opacity: 1 !important;
-            transform: none !important;
-            animation: none !important;
-        }
-        
-        /* Remove any animation classes */
-        .animate-fade-in,
-        .animate-pulse,
-        .animate-zoom-in,
-        .animate-rotate {
-            animation: none !important;
-            opacity: 1 !important;
-            transform: none !important;
-        }
-        
-        ${templateCSS}
-        
-        /* Ensure all elements are visible */
-        .logo-element,
-        .headshot-element,
-        .social-icons-element,
-        .name-element,
-        .title-element,
-        .contact-element {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
     </style>
 </head>
 <body>
-    ${templateHtml}
+    <div style="margin: 0; padding: 0;">
+        ${gmailHtml}
+    </div>
 </body>
-</html>`;
+</html>
+    `.trim();
   }
 
   /**
