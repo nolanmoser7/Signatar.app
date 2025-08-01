@@ -1139,18 +1139,19 @@ export class SignatureExportService {
     if (templateId === 'sales-professional') {
       const headshotUrl = getImageUrl(imagesTyped?.headshot);
       const logoUrl = getImageUrl(imagesTyped?.logo);
-      const headshotSize = getImageSize('headshot');
-      const logoSize = getImageSize('logo');
       
-      // Calculate responsive dimensions with better scaling
+      // Gmail-optimized dimensions for better email client compatibility
       const headshotSizePercent = imagesTyped?.headshotSize || 100;
       const logoSizePercent = imagesTyped?.logoSize || 100;
       
-      // Increased headshot dimensions to match saved design (max 200px)
+      // Use Gmail-optimized table layout for maximum compatibility
+      if (emailClient === 'gmail') {
+        return this.generateGmailOptimizedTemplate(personalInfoTyped, imagesTyped, socialMediaTyped, headshotUrl, logoUrl, headshotSizePercent, logoSizePercent);
+      }
+      
+      // Original flex-based layout for other clients
       const headshotWidthPx = Math.min(Math.round(headshotSizePercent * 2.0), 200);
       const logoWidthPx = Math.round(logoSizePercent * 0.6);
-      
-      // Adjusted content width calculation - balanced with larger headshot
       const contentWidth = `calc(100% - 80px - ${headshotWidthPx + 24}px)`;
       
       return `
@@ -1259,6 +1260,163 @@ export class SignatureExportService {
     }
 
     return '<div>Template not found</div>';
+  }
+
+  /**
+   * Generate Gmail-optimized Sales Professional template using table layout
+   */
+  private generateGmailOptimizedTemplate(
+    personalInfo: any,
+    images: any,
+    socialMedia: any,
+    headshotUrl: string | null,
+    logoUrl: string | null,
+    headshotSizePercent: number,
+    logoSizePercent: number
+  ): string {
+    // Gmail-friendly dimensions (max 120px headshot for better compatibility)
+    const headshotWidthPx = Math.min(Math.round(headshotSizePercent * 1.2), 120);
+    const logoWidthPx = Math.min(Math.round(logoSizePercent * 0.8), 100);
+    
+    return `
+      <!-- Gmail-Optimized Sales Professional Signature -->
+      <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; font-family: Arial, sans-serif; max-width: 550px; width: 100%; background-color: white; border-radius: 8px; overflow: hidden;">
+        <tr>
+          <td style="width: 60px; background: linear-gradient(to bottom, #22d3ee, #2563eb); vertical-align: top; text-align: center; padding: 16px 8px;">
+            <!-- Social Icons Column -->
+            ${this.generateGmailSocialIconsHtml(socialMedia)}
+          </td>
+          <td style="padding: 24px; vertical-align: top; width: auto;">
+            <!-- Main Content Column -->
+            <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse; width: 100%;">
+              ${logoUrl ? `
+                <tr>
+                  <td style="padding-bottom: 12px;">
+                    <img src="${logoUrl}" alt="${personalInfo.company}" style="max-width: ${logoWidthPx}px; max-height: 36px; display: block;" />
+                  </td>
+                </tr>
+              ` : ''}
+              <tr>
+                <td>
+                  <h2 style="margin: 0 0 6px 0; color: #1f2937; font-size: 24px; font-weight: bold; line-height: 1.2; font-family: Arial, sans-serif;">
+                    ${personalInfo.name}
+                  </h2>
+                  <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 16px; font-weight: normal;">
+                    ${personalInfo.title}
+                  </p>
+                  <p style="margin: 0 0 16px 0; color: #374151; font-size: 14px; font-weight: normal;">
+                    ${personalInfo.company}
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
+                    ${personalInfo.email ? `
+                      <tr>
+                        <td style="padding-bottom: 4px;">
+                          <a href="mailto:${personalInfo.email}" style="color: #0891b2; text-decoration: none; font-size: 14px;">
+                            📧 ${personalInfo.email}
+                          </a>
+                        </td>
+                      </tr>
+                    ` : ''}
+                    ${personalInfo.phone ? `
+                      <tr>
+                        <td style="padding-bottom: 4px;">
+                          <a href="tel:${personalInfo.phone}" style="color: #0891b2; text-decoration: none; font-size: 14px;">
+                            📞 ${personalInfo.phone}
+                          </a>
+                        </td>
+                      </tr>
+                    ` : ''}
+                    ${personalInfo.website ? `
+                      <tr>
+                        <td style="padding-bottom: 4px;">
+                          <a href="${personalInfo.website}" style="color: #0891b2; text-decoration: none; font-size: 14px;">
+                            🌐 ${personalInfo.website}
+                          </a>
+                        </td>
+                      </tr>
+                    ` : ''}
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+          ${headshotUrl ? `
+            <td style="width: ${headshotWidthPx}px; vertical-align: top; text-align: right; padding: 0;">
+              <!-- Headshot Column -->
+              <img src="${headshotUrl}" alt="${personalInfo.name}" style="width: ${headshotWidthPx}px; height: 140px; object-fit: cover; display: block; border-radius: 0 8px 8px 0;" />
+            </td>
+          ` : ''}
+        </tr>
+      </table>
+      
+      <!-- Gmail-specific reset styles -->
+      <div style="clear: both; height: 1px; line-height: 1px; font-size: 1px;">&nbsp;</div>
+    `;
+  }
+
+  /**
+   * Generate Gmail-compatible social media icons
+   */
+  private generateGmailSocialIconsHtml(socialMedia: any): string {
+    if (!socialMedia) return '';
+    
+    const icons = [];
+    
+    if (socialMedia.linkedin) {
+      icons.push(`
+        <div style="margin-bottom: 12px;">
+          <a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 16px;" target="_blank" rel="noopener">
+            in
+          </a>
+        </div>
+      `);
+    }
+    
+    if (socialMedia.twitter) {
+      icons.push(`
+        <div style="margin-bottom: 12px;">
+          <a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 16px;" target="_blank" rel="noopener">
+            𝕏
+          </a>
+        </div>
+      `);
+    }
+    
+    if (socialMedia.instagram) {
+      icons.push(`
+        <div style="margin-bottom: 12px;">
+          <a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 16px;" target="_blank" rel="noopener">
+            📷
+          </a>
+        </div>
+      `);
+    }
+    
+    if (socialMedia.youtube) {
+      icons.push(`
+        <div style="margin-bottom: 12px;">
+          <a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 16px;" target="_blank" rel="noopener">
+            ▶
+          </a>
+        </div>
+      `);
+    }
+    
+    if (socialMedia.tiktok) {
+      icons.push(`
+        <div style="margin-bottom: 12px;">
+          <a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 16px;" target="_blank" rel="noopener">
+            🎵
+          </a>
+        </div>
+      `);
+    }
+    
+    return icons.join('');
   }
 
   /**
