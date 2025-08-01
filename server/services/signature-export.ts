@@ -492,65 +492,70 @@ export class SignatureExportService {
     const headshotColumnWidth = headshotSize * 2.56; // Match original scaling
     const mainContentWidth = `calc(100% - 80px - ${headshotColumnWidth}px)`;
     
+    // Gmail-optimized dimensions (60% scale of original)
+    const gmailScale = 0.6;
+    const gmailHeadshotColumnWidth = headshotColumnWidth * gmailScale;
+    const gmailMainContentWidth = `calc(100% - ${48}px - ${gmailHeadshotColumnWidth}px)`; // 80px * 0.6 = 48px
+    
     return `
-<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; max-width: 650px; height: 200px; position: relative;">
+<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 7px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; max-width: 390px; height: 120px; position: relative;">
   <tr>
     <td style="position: relative; height: 100%;">
-      <!-- Background geometric elements positioned like original -->
-      <div style="position: absolute; top: 54px; right: ${headshotColumnWidth - 11}px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1; z-index: 1;"></div>
-      <div style="position: absolute; top: 118px; right: ${headshotColumnWidth - 3}px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #374151, #1f2937); opacity: 0.2; z-index: 1;"></div>
-      <div style="position: absolute; bottom: 74px; right: ${headshotColumnWidth - 7}px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15; z-index: 1;"></div>
+      <!-- Background geometric elements scaled for Gmail -->
+      <div style="position: absolute; top: ${32 * gmailScale}px; right: ${(headshotColumnWidth - 11) * gmailScale}px; width: ${77 * gmailScale}px; height: ${77 * gmailScale}px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1; z-index: 1;"></div>
+      <div style="position: absolute; top: ${71 * gmailScale}px; right: ${(headshotColumnWidth - 3) * gmailScale}px; width: ${58 * gmailScale}px; height: ${58 * gmailScale}px; transform: rotate(-12deg); background: linear-gradient(135deg, #374151, #1f2937); opacity: 0.2; z-index: 1;"></div>
+      <div style="position: absolute; bottom: ${44 * gmailScale}px; right: ${(headshotColumnWidth - 7) * gmailScale}px; width: ${48 * gmailScale}px; height: ${48 * gmailScale}px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15; z-index: 1;"></div>
       
       <!-- Main layout table -->
       <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%; position: relative; z-index: 10;">
         <tr style="height: 100%;">
           <!-- Left sidebar with social media icons -->
-          <td style="width: 80px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; border-radius: 12px 0 0 12px; height: 100%;">
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;">
-              ${socialIconsHtml}
+          <td style="width: 48px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; border-radius: 7px 0 0 7px; height: 100%;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: ${12 * gmailScale}px;">
+              ${this.generateGmailSocialIcons(socialMedia, gmailScale)}
             </div>
           </td>
           
           <!-- Main content area -->
-          <td style="padding: 32px; vertical-align: top; width: ${mainContentWidth}; height: 100%;">
+          <td style="padding: ${19 * gmailScale}px; vertical-align: top; width: ${gmailMainContentWidth}; height: 100%;">
             <!-- Company Logo -->
             ${processedImages?.logo ? `
-            <div style="margin-bottom: 16px;">
-              <img src="${processedImages.logo}" alt="Company Logo" style="width: ${Math.min(logoSize * 0.48, 77)}px; height: ${Math.min(logoSize * 0.48, 77)}px; object-fit: contain; display: block;" width="${Math.min(logoSize * 0.48, 77)}" height="${Math.min(logoSize * 0.48, 77)}" />
+            <div style="margin-bottom: ${10 * gmailScale}px;">
+              <img src="${processedImages.logo}" alt="Company Logo" style="width: ${Math.min(logoSize * 0.48, 77) * gmailScale}px; height: ${Math.min(logoSize * 0.48, 77) * gmailScale}px; object-fit: contain; display: block;" width="${Math.min(logoSize * 0.48, 77) * gmailScale}" height="${Math.min(logoSize * 0.48, 77) * gmailScale}" />
             </div>
             ` : ''}
             
             <!-- Company Name -->
-            <div style="margin-bottom: 24px;">
-              <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; font-weight: bold; letter-spacing: 0.1em; color: #111827; margin: 0; text-transform: uppercase;">${personalInfo.company || "COMPANY"}</h2>
+            <div style="margin-bottom: ${14 * gmailScale}px;">
+              <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: ${14 * gmailScale}px; font-weight: bold; letter-spacing: 0.1em; color: #111827; margin: 0; text-transform: uppercase;">${personalInfo.company || "COMPANY"}</h2>
             </div>
             
             <!-- Name and Title -->
-            <div style="margin-bottom: 24px;">
-              <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: bold; color: #111827; margin: 0 0 8px 0; line-height: 1.2;">${personalInfo.name || "Your Name"}<span style="color: #22d3ee; margin-left: 8px;">✓</span></h1>
-              <p style="font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 500; color: #374151; margin: 0;">${personalInfo.title || "Your Title"}</p>
+            <div style="margin-bottom: ${14 * gmailScale}px;">
+              <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: ${18 * gmailScale}px; font-weight: bold; color: #111827; margin: 0 0 ${5 * gmailScale}px 0; line-height: 1.2;">${personalInfo.name || "Your Name"}<span style="color: #22d3ee; margin-left: ${5 * gmailScale}px;">✓</span></h1>
+              <p style="font-family: 'Playfair Display', Georgia, serif; font-size: ${12 * gmailScale}px; font-weight: 500; color: #374151; margin: 0;">${personalInfo.title || "Your Title"}</p>
             </div>
             
             <!-- Contact Information -->
             <div>
-              <div style="margin-bottom: 8px; display: flex; align-items: center;">
-                <span style="width: 20px; height: 16px; margin-right: 8px; color: #6b7280;">📞</span>
-                <a href="tel:${personalInfo.phone || ''}" style="color: #374151; text-decoration: none; font-size: 16px;">${personalInfo.phone || ''}</a>
+              <div style="margin-bottom: ${5 * gmailScale}px; display: flex; align-items: center;">
+                <span style="width: ${12 * gmailScale}px; height: ${10 * gmailScale}px; margin-right: ${5 * gmailScale}px; color: #6b7280; font-size: ${10 * gmailScale}px;">📞</span>
+                <a href="tel:${personalInfo.phone || ''}" style="color: #374151; text-decoration: none; font-size: ${10 * gmailScale}px;">${personalInfo.phone || ''}</a>
               </div>
-              <div style="margin-bottom: 8px; display: flex; align-items: center;">
-                <span style="width: 20px; height: 16px; margin-right: 8px; color: #6b7280;">📧</span>
-                <a href="mailto:${personalInfo.email || ''}" style="color: #374151; text-decoration: none; font-size: 16px;">${personalInfo.email || ''}</a>
+              <div style="margin-bottom: ${5 * gmailScale}px; display: flex; align-items: center;">
+                <span style="width: ${12 * gmailScale}px; height: ${10 * gmailScale}px; margin-right: ${5 * gmailScale}px; color: #6b7280; font-size: ${10 * gmailScale}px;">📧</span>
+                <a href="mailto:${personalInfo.email || ''}" style="color: #374151; text-decoration: none; font-size: ${10 * gmailScale}px;">${personalInfo.email || ''}</a>
               </div>
-              <div style="margin-bottom: 8px; display: flex; align-items: center;">
-                <span style="width: 20px; height: 16px; margin-right: 8px; color: #6b7280;">🌐</span>
-                <a href="${personalInfo.website || ''}" style="color: #374151; text-decoration: none; font-size: 16px;">${personalInfo.website || ''}</a>
+              <div style="margin-bottom: ${5 * gmailScale}px; display: flex; align-items: center;">
+                <span style="width: ${12 * gmailScale}px; height: ${10 * gmailScale}px; margin-right: ${5 * gmailScale}px; color: #6b7280; font-size: ${10 * gmailScale}px;">🌐</span>
+                <a href="${personalInfo.website || ''}" style="color: #374151; text-decoration: none; font-size: ${10 * gmailScale}px;">${personalInfo.website || ''}</a>
               </div>
             </div>
           </td>
           
-          <!-- Right section with headshot matching original template exactly -->
+          <!-- Right section with headshot -->
           ${processedImages?.headshot ? `
-          <td style="width: ${headshotColumnWidth}px; height: 100%; position: relative; overflow: hidden;">
+          <td style="width: ${gmailHeadshotColumnWidth}px; height: 100%; position: relative; overflow: hidden;">
             <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: 100%; height: 100%; object-fit: cover; display: block; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
           </td>
           ` : ''}
@@ -564,7 +569,7 @@ export class SignatureExportService {
   /**
    * Generate Gmail-compatible social media icons exactly matching the original template design
    */
-  private generateGmailSocialIcons(socialMedia: SocialMedia | null): string {
+  private generateGmailSocialIcons(socialMedia: SocialMedia | null, scale: number = 1): string {
     if (!socialMedia) return '';
     
     const socialLinks = [
@@ -580,8 +585,8 @@ export class SignatureExportService {
     if (validLinks.length === 0) return '';
 
     return validLinks.map(link => `
-      <a href="${link.url}" style="display: block; width: 24px; height: 24px; color: white; text-decoration: none; opacity: 0.9; transition: opacity 0.2s;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
-        ${link.svg}
+      <a href="${link.url}" style="display: block; width: ${24 * scale}px; height: ${24 * scale}px; color: white; text-decoration: none; opacity: 0.9; transition: opacity 0.2s;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
+        ${link.svg.replace(/width="24" height="24"/g, `width="${24 * scale}" height="${24 * scale}"`)}
       </a>
     `).join('');
   }
