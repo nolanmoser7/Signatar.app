@@ -102,17 +102,37 @@ export default function SignatureBuilder() {
   
   // Initialize state with existing signature data if available
   React.useEffect(() => {
-    if (existingSignature) {
-      console.log("Loading existing signature:", existingSignature);
+    if (existingSignature && signatureId) {
+      console.log("=== LOADING EXISTING SIGNATURE ===");
+      console.log("Raw signature data:", existingSignature);
+      
       const sig = existingSignature as Signature;
       
+      console.log("Signature object parsed:", {
+        id: sig.id,
+        name: sig.name,
+        templateId: sig.templateId,
+        personalInfo: sig.personalInfo,
+        images: sig.images,
+        socialMedia: sig.socialMedia,
+        animationType: sig.animationType
+      });
+      
       // Set basic info
-      setSignatureName(sig.name || "");
-      setSelectedTemplate(sig.templateId || "sales-professional");
+      if (sig.name) {
+        console.log("Setting signature name to:", sig.name);
+        setSignatureName(sig.name);
+      }
+      
+      if (sig.templateId) {
+        console.log("Setting template to:", sig.templateId);
+        setSelectedTemplate(sig.templateId);
+      }
       
       // Set personal info with fallbacks
-      const personalData = sig.personalInfo as any;
-      if (personalData) {
+      if (sig.personalInfo && typeof sig.personalInfo === 'object') {
+        const personalData = sig.personalInfo as any;
+        console.log("Setting personal info:", personalData);
         setPersonalInfo({
           name: personalData.name || "",
           title: personalData.title || "",
@@ -124,8 +144,9 @@ export default function SignatureBuilder() {
       }
       
       // Set images with fallbacks
-      const imageData = sig.images as any;
-      if (imageData) {
+      if (sig.images && typeof sig.images === 'object') {
+        const imageData = sig.images as any;
+        console.log("Setting images:", imageData);
         setImages({
           headshot: imageData.headshot || "",
           logo: imageData.logo || "",
@@ -137,21 +158,28 @@ export default function SignatureBuilder() {
       }
       
       // Set animation type
-      setAnimationType(sig.animationType as AnimationType || "fade-in");
+      if (sig.animationType) {
+        console.log("Setting animation type:", sig.animationType);
+        setAnimationType(sig.animationType as AnimationType);
+      }
       
       // Set social media with fallbacks
-      const socialData = sig.socialMedia as any;
-      setSocialMedia({
-        linkedin: socialData?.linkedin || "",
-        twitter: socialData?.twitter || "",
-        instagram: socialData?.instagram || "",
-        youtube: socialData?.youtube || "",
-        tiktok: socialData?.tiktok || "",
-      });
+      if (sig.socialMedia && typeof sig.socialMedia === 'object') {
+        const socialData = sig.socialMedia as any;
+        console.log("Setting social media:", socialData);
+        setSocialMedia({
+          linkedin: socialData.linkedin || "",
+          twitter: socialData.twitter || "",
+          instagram: socialData.instagram || "",
+          youtube: socialData.youtube || "",
+          tiktok: socialData.tiktok || "",
+        });
+      }
       
       // Set element positions if available
-      if (sig.elementPositions) {
+      if (sig.elementPositions && typeof sig.elementPositions === 'object') {
         const positions = sig.elementPositions as any;
+        console.log("Setting element positions:", positions);
         setElementPositions({
           logo: positions.logo || { x: 0, y: 0, scale: 1 },
           headshot: positions.headshot || { x: 0, y: 0, scale: 1 },
@@ -163,15 +191,14 @@ export default function SignatureBuilder() {
       }
       
       // Set element animations if available
-      if (sig.elementAnimations) {
+      if (sig.elementAnimations && typeof sig.elementAnimations === 'object') {
+        console.log("Setting element animations:", sig.elementAnimations);
         setElementAnimations(sig.elementAnimations as ElementAnimations);
       }
       
-      console.log("Signature loaded successfully with personal info:", personalData);
-      console.log("Signature name set to:", sig.name);
-      console.log("Current signatureName state:", signatureName);
+      console.log("=== SIGNATURE LOADING COMPLETE ===");
     }
-  }, [existingSignature]);
+  }, [existingSignature, signatureId]);
 
   const handlePlayAnimation = () => {
     setIsAnimating(true);
