@@ -472,7 +472,7 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate Gmail-compatible HTML for signatures
+   * Generate Gmail-compatible HTML that matches the original signature design
    */
   private async generateGmailCompatibleHtml(signature: Signature): Promise<string> {
     const { personalInfo, images, socialMedia } = signature;
@@ -481,72 +481,89 @@ export class SignatureExportService {
     const processedSignature = await this.processImageUrlsForStatic(signature);
     const processedImages = processedSignature.images as any;
     
-    // Generate social media icons using web-safe methods
+    // Generate social media icons using Gmail-safe methods
     const socialIconsHtml = this.generateGmailSocialIcons(socialMedia);
     
+    // Get headshot and logo sizes from signature settings
+    const headshotSize = processedImages?.headshotSize || 110;
+    const logoSize = processedImages?.logoSize || 160;
+    
     return `
-<table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.4; color: #333333; max-width: 600px;">
+<table cellpadding="0" cellspacing="0" border="0" style="font-family: 'Playfair Display', Georgia, serif; max-width: 650px; background: linear-gradient(135deg, #22d3ee, #0891b2); border-radius: 16px; position: relative; overflow: hidden;">
+  <!-- Background geometric elements -->
   <tr>
-    <td style="padding: 20px; background: linear-gradient(135deg, #22d3ee 0%, #0891b2 100%); border-radius: 12px;">
-      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+    <td style="position: relative;">
+      <!-- Main signature content -->
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; position: relative; z-index: 10;">
         <tr>
-          <!-- Logo Section -->
-          ${processedImages?.logo ? `
-          <td style="width: 140px; padding-right: 20px; vertical-align: top;">
-            <img src="${processedImages.logo}" alt="Company Logo" style="width: 120px; height: auto; max-height: 60px; display: block;" width="120" />
+          <!-- Left sidebar with gradient and geometric elements -->
+          <td style="width: 200px; background: linear-gradient(180deg, rgba(34, 211, 238, 0.9), rgba(8, 145, 178, 0.9)); padding: 32px 24px; vertical-align: top; position: relative;">
+            <!-- Geometric background blocks -->
+            <div style="position: absolute; top: -20px; left: -20px; width: 80px; height: 80px; background: linear-gradient(135deg, #22d3ee, #0891b2); transform: rotate(45deg); opacity: 0.1;"></div>
+            <div style="position: absolute; bottom: -30px; right: -30px; width: 100px; height: 100px; background: linear-gradient(135deg, #0891b2, #0e7490); transform: rotate(45deg); opacity: 0.15;"></div>
+            
+            <!-- Logo -->
+            ${processedImages?.logo ? `
+            <div style="margin-bottom: 24px; text-align: center;">
+              <img src="${processedImages.logo}" alt="Company Logo" style="width: ${Math.min(logoSize, 140)}px; height: auto; max-height: 80px; display: block; margin: 0 auto;" width="${Math.min(logoSize, 140)}" />
+            </div>
+            ` : ''}
+            
+            <!-- Headshot with diagonal styling -->
+            ${processedImages?.headshot ? `
+            <div style="margin-bottom: 24px; text-align: center; position: relative;">
+              <div style="width: ${headshotSize}px; height: ${headshotSize}px; margin: 0 auto; position: relative; transform: rotate(-5deg);">
+                <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
+              </div>
+            </div>
+            ` : ''}
+            
+            <!-- Social Media Icons -->
+            ${socialIconsHtml ? `
+            <div style="text-align: center;">
+              ${socialIconsHtml}
+            </div>
+            ` : ''}
           </td>
-          ` : ''}
           
-          <!-- Main Content -->
-          <td style="vertical-align: top;">
-            <table cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <!-- Headshot -->
-                ${processedImages?.headshot ? `
-                <td style="width: 90px; padding-right: 20px; vertical-align: top;">
-                  <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); display: block;" width="80" height="80" />
-                </td>
+          <!-- Main content area -->
+          <td style="padding: 32px; vertical-align: top; color: white; background: rgba(255,255,255,0.05);">
+            <!-- Name and Title -->
+            <div style="margin-bottom: 24px;">
+              <h1 style="font-size: 32px; font-weight: 700; margin: 0 0 8px 0; color: white; font-family: 'Playfair Display', Georgia, serif; line-height: 1.2;">${personalInfo.name}</h1>
+              <p style="font-size: 18px; font-weight: 500; margin: 0 0 4px 0; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">${personalInfo.title}</p>
+              <p style="font-size: 16px; font-weight: 400; margin: 0; color: rgba(255,255,255,0.8); font-family: 'Playfair Display', Georgia, serif;">${personalInfo.company}</p>
+            </div>
+            
+            <!-- Contact Information -->
+            <div style="margin-bottom: 20px;">
+              <table cellpadding="0" cellspacing="0" border="0">
+                ${personalInfo.email ? `
+                <tr>
+                  <td style="padding-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">
+                    <span style="display: inline-block; width: 20px; text-align: center; margin-right: 8px;">📧</span>
+                    <a href="mailto:${personalInfo.email}" style="color: white; text-decoration: none;">${personalInfo.email}</a>
+                  </td>
+                </tr>
                 ` : ''}
-                
-                <!-- Text Content -->
-                <td style="vertical-align: top; color: white;">
-                  <div style="font-size: 24px; font-weight: bold; margin-bottom: 4px; color: white;">${personalInfo.name}</div>
-                  <div style="font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 16px;">${personalInfo.title} at ${personalInfo.company}</div>
-                  
-                  <!-- Contact Info -->
-                  <table cellpadding="0" cellspacing="0" border="0">
-                    ${personalInfo.email ? `
-                    <tr>
-                      <td style="padding-bottom: 4px; font-size: 14px; color: rgba(255,255,255,0.8);">
-                        📧 <a href="mailto:${personalInfo.email}" style="color: white; text-decoration: none;">${personalInfo.email}</a>
-                      </td>
-                    </tr>
-                    ` : ''}
-                    ${personalInfo.phone ? `
-                    <tr>
-                      <td style="padding-bottom: 4px; font-size: 14px; color: rgba(255,255,255,0.8);">
-                        📞 <a href="tel:${personalInfo.phone}" style="color: white; text-decoration: none;">${personalInfo.phone}</a>
-                      </td>
-                    </tr>
-                    ` : ''}
-                    ${personalInfo.website ? `
-                    <tr>
-                      <td style="padding-bottom: 4px; font-size: 14px; color: rgba(255,255,255,0.8);">
-                        🌐 <a href="${personalInfo.website}" style="color: white; text-decoration: none;">${personalInfo.website}</a>
-                      </td>
-                    </tr>
-                    ` : ''}
-                  </table>
-                  
-                  <!-- Social Media Icons -->
-                  ${socialIconsHtml ? `
-                  <div style="margin-top: 12px;">
-                    ${socialIconsHtml}
-                  </div>
-                  ` : ''}
-                </td>
-              </tr>
-            </table>
+                ${personalInfo.phone ? `
+                <tr>
+                  <td style="padding-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">
+                    <span style="display: inline-block; width: 20px; text-align: center; margin-right: 8px;">📞</span>
+                    <a href="tel:${personalInfo.phone}" style="color: white; text-decoration: none;">${personalInfo.phone}</a>
+                  </td>
+                </tr>
+                ` : ''}
+                ${personalInfo.website ? `
+                <tr>
+                  <td style="padding-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.9); font-family: 'Playfair Display', Georgia, serif;">
+                    <span style="display: inline-block; width: 20px; text-align: center; margin-right: 8px;">🌐</span>
+                    <a href="${personalInfo.website}" style="color: white; text-decoration: none;">${personalInfo.website}</a>
+                  </td>
+                </tr>
+                ` : ''}
+              </table>
+            </div>
           </td>
         </tr>
       </table>
@@ -556,17 +573,17 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate Gmail-compatible social media icons
+   * Generate Gmail-compatible social media icons that match the original design
    */
   private generateGmailSocialIcons(socialMedia: SocialMedia | null): string {
     if (!socialMedia) return '';
     
     const socialLinks = [
-      { key: 'linkedin', url: socialMedia.linkedin, emoji: '💼', text: 'LinkedIn' },
-      { key: 'twitter', url: socialMedia.twitter, emoji: '🐦', text: 'Twitter' },
-      { key: 'instagram', url: socialMedia.instagram, emoji: '📷', text: 'Instagram' },
-      { key: 'youtube', url: socialMedia.youtube, emoji: '▶️', text: 'YouTube' },
-      { key: 'tiktok', url: socialMedia.tiktok, emoji: '🎵', text: 'TikTok' },
+      { key: 'linkedin', url: socialMedia.linkedin, emoji: '💼', bgColor: '#0077b5' },
+      { key: 'twitter', url: socialMedia.twitter, emoji: '🐦', bgColor: '#1da1f2' },
+      { key: 'instagram', url: socialMedia.instagram, emoji: '📷', bgColor: '#e4405f' },
+      { key: 'youtube', url: socialMedia.youtube, emoji: '▶️', bgColor: '#ff0000' },
+      { key: 'tiktok', url: socialMedia.tiktok, emoji: '🎵', bgColor: '#000000' },
     ];
 
     const validLinks = socialLinks.filter(link => link.url);
@@ -574,8 +591,8 @@ export class SignatureExportService {
     if (validLinks.length === 0) return '';
 
     return validLinks.map(link => `
-      <a href="${link.url}" style="display: inline-block; margin-right: 8px; padding: 4px 8px; background-color: rgba(255,255,255,0.2); border-radius: 4px; color: white; text-decoration: none; font-size: 12px;" target="_blank">
-        ${link.emoji} ${link.text}
+      <a href="${link.url}" style="display: inline-block; width: 32px; height: 32px; background-color: ${link.bgColor}; border-radius: 50%; text-align: center; line-height: 32px; color: white; text-decoration: none; font-size: 16px; margin: 4px 2px;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
+        ${link.emoji}
       </a>
     `).join('');
   }
