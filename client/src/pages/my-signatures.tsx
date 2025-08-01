@@ -296,11 +296,13 @@ export default function MySignatures() {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Link href={`/builder?signature=${signature.id}`}>
-                                <Button size="sm" variant="outline">
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                              </Link>
+                              <div>
+                                <Link href={`/builder?signature=${signature.id}`}>
+                                  <Button size="sm" variant="outline">
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                </Link>
+                              </div>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>Edit signature</p>

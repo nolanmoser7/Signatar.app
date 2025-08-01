@@ -38,9 +38,7 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
       setProgress(40);
       setCurrentStep("Capturing animated elements...");
       
-      const response = await apiRequest(`/api/signatures/${signatureId}/export`, {
-        method: "POST",
-      });
+      const response = await apiRequest("POST", `/api/signatures/${signatureId}/export`);
 
       if (!response.ok) {
         throw new Error("Failed to export signature");
