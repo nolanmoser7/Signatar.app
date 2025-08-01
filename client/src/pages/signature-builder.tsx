@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, Download, Dock, Smartphone, Play, CheckCircle } from "lucide-react";
+import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import TemplateSelector from "@/components/template-selector";
 import PersonalInfoForm from "@/components/personal-info-form";
@@ -384,10 +385,12 @@ export default function SignatureBuilder() {
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <img src={signatarLogo} alt="Signatar" className="w-8 h-8 object-contain" />
-              <h1 className="text-xl font-semibold text-neutral">Signatar</h1>
-            </div>
+            <Link href="/">
+              <div className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
+                <img src={signatarLogo} alt="Signatar" className="w-8 h-8 object-contain" />
+                <h1 className="text-xl font-semibold text-neutral">Signatar</h1>
+              </div>
+            </Link>
           </div>
           <div className="flex items-center space-x-3">
             <Button 
