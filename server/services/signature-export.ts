@@ -552,7 +552,7 @@ export class SignatureExportService {
           ${processedImages?.headshot ? `
           <td style="width: ${headshotColumnWidth}px; vertical-align: top; text-align: center; position: relative; padding: 32px 20px;">
             <div style="width: ${headshotSize}px; height: ${headshotSize}px; margin: 0 auto; transform: rotate(-5deg); position: relative; z-index: 5;">
-              <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(34, 211, 238, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
+              <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; object-fit: cover; border: 3px solid rgba(34, 211, 238, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
             </div>
           </td>
           ` : ''}
