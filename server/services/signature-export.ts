@@ -472,145 +472,103 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate Gmail-compatible HTML that exactly matches the Sales Professional template structure
-   */
-  private async generateGmailCompatibleHtml(signature: Signature): Promise<string> {
-    const { personalInfo, images, socialMedia } = signature;
-    
-    // Convert relative URLs to absolute URLs for static export
-    const processedSignature = await this.processImageUrlsForStatic(signature);
-    const processedImages = processedSignature.images as any;
-    
-    // Get image sizes from signature settings
-    const headshotSize = processedImages?.headshotSize || 110;
-    const logoSize = processedImages?.logoSize || 160;
-    
-    // Social icons are now handled directly in the HTML template
-    
-    // Calculate proper widths based on original template proportions
-    const headshotColumnWidth = headshotSize * 2.56; // Match original scaling
-    const mainContentWidth = `calc(100% - 80px - ${headshotColumnWidth}px)`;
-    
-    // Gmail-specific simplified version - no advanced CSS
-    const gmailHeadshotSize = Math.round(headshotSize * 0.8); // 88px for Gmail
-    const gmailLogoSize = Math.round((Math.min(logoSize * 0.48, 77)) * 0.7); // Smaller logo
-    
-    return `
-<table cellpadding="0" cellspacing="0" border="0" style="background: white; overflow: hidden; max-width: 390px; height: 120px; font-family: Arial, sans-serif;">
-  <tr>
-    <!-- Left sidebar with gradient effect using table cells -->
-    <td style="width: 48px; background-color: #22d3ee; text-align: center; vertical-align: middle; height: 120px;">
-      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%;">
-        <tr><td style="background-color: #22d3ee; height: 20%; text-align: center;"></td></tr>
-        <tr><td style="background-color: #1cb4d1; height: 20%; text-align: center;">${this.getFirstSocialIcon(socialMedia)}</td></tr>
-        <tr><td style="background-color: #16a5be; height: 20%; text-align: center;">${this.getSecondSocialIcon(socialMedia)}</td></tr>
-        <tr><td style="background-color: #1196ab; height: 20%; text-align: center;">${this.getThirdSocialIcon(socialMedia)}</td></tr>
-        <tr><td style="background-color: #0891b2; height: 20%; text-align: center;"></td></tr>
-      </table>
-    </td>
-    
-    <!-- Main content area matching original proportions -->
-    <td style="padding: 12px 16px; vertical-align: top; background-color: white; width: ${238}px;">
-      <!-- Company Logo -->
-      ${processedImages?.logo ? `
-      <div style="margin-bottom: 6px;">
-        <img src="${processedImages.logo}" alt="Company Logo" style="width: ${gmailLogoSize}px; height: ${gmailLogoSize}px; display: block;" width="${gmailLogoSize}" height="${gmailLogoSize}" />
-      </div>
-      ` : ''}
-      
-      <!-- Company Name -->
-      <div style="margin-bottom: 8px;">
-        <span style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; color: #111827; text-transform: uppercase; letter-spacing: 1px;">${personalInfo.company || "COMPANY"}</span>
-      </div>
-      
-      <!-- Name and Title -->
-      <div style="margin-bottom: 8px;">
-        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: bold; color: #111827; margin-bottom: 3px; line-height: 1.2;">${personalInfo.name || "Your Name"} <span style="color: #22d3ee;">✓</span></div>
-        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; color: #374151; font-weight: 500;">${personalInfo.title || "Your Title"}</div>
-      </div>
-      
-      <!-- Contact Information with icons -->
-      <table cellpadding="0" cellspacing="0" border="0">
-        ${personalInfo.phone ? `
-        <tr>
-          <td style="font-size: 10px; color: #6b7280; padding-right: 6px; vertical-align: middle; width: 16px;">📞</td>
-          <td style="font-family: 'Playfair Display', Georgia, serif; font-size: 10px; color: #374151; padding-bottom: 3px;"><a href="tel:${personalInfo.phone}" style="color: #374151; text-decoration: none;">${personalInfo.phone}</a></td>
-        </tr>
-        ` : ''}
-        ${personalInfo.email ? `
-        <tr>
-          <td style="font-size: 10px; color: #6b7280; padding-right: 6px; vertical-align: middle; width: 16px;">📧</td>
-          <td style="font-family: 'Playfair Display', Georgia, serif; font-size: 10px; color: #374151; padding-bottom: 3px;"><a href="mailto:${personalInfo.email}" style="color: #374151; text-decoration: none;">${personalInfo.email}</a></td>
-        </tr>
-        ` : ''}
-        ${personalInfo.website ? `
-        <tr>
-          <td style="font-size: 10px; color: #6b7280; padding-right: 6px; vertical-align: middle; width: 16px;">🌐</td>
-          <td style="font-family: 'Playfair Display', Georgia, serif; font-size: 10px; color: #374151; padding-bottom: 3px;"><a href="${personalInfo.website}" style="color: #374151; text-decoration: none;">${personalInfo.website}</a></td>
-        </tr>
-        ` : ''}
-      </table>
-    </td>
-    
-    <!-- Right section with diagonal headshot using nested table for clip effect -->
-    ${processedImages?.headshot ? `
-    <td style="width: 104px; height: 120px; vertical-align: top; padding: 0; background-color: white;">
-      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%;">
-        <tr>
-          <td style="width: 26px; height: 120px; background-color: white;"></td>
-          <td style="width: 78px; height: 120px; padding: 0; background-image: url(${processedImages.headshot}); background-size: cover; background-position: center;"></td>
-        </tr>
-      </table>
-    </td>
-    ` : ''}
-  </tr>
-</table>`;
-  }
-
-  /**
-   * Get individual social media icons for gradient sidebar layout
-   */
-  private getFirstSocialIcon(socialMedia: SocialMedia | null): string {
-    if (!socialMedia) return '';
-    if (socialMedia.twitter) return `<a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 11px; font-weight: bold;" target="_blank">X</a>`;
-    if (socialMedia.linkedin) return `<a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 9px; font-weight: bold;" target="_blank">in</a>`;
-    if (socialMedia.instagram) return `<a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">📷</a>`;
-    if (socialMedia.youtube) return `<a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">▶</a>`;
-    if (socialMedia.tiktok) return `<a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">♫</a>`;
-    return '';
-  }
-
-  private getSecondSocialIcon(socialMedia: SocialMedia | null): string {
-    if (!socialMedia) return '';
-    const icons = [];
-    if (socialMedia.twitter) icons.push(`<a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 11px; font-weight: bold;" target="_blank">X</a>`);
-    if (socialMedia.linkedin) icons.push(`<a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 9px; font-weight: bold;" target="_blank">in</a>`);
-    if (socialMedia.instagram) icons.push(`<a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">📷</a>`);
-    if (socialMedia.youtube) icons.push(`<a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">▶</a>`);
-    if (socialMedia.tiktok) icons.push(`<a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">♫</a>`);
-    return icons[1] || '';
-  }
-
-  private getThirdSocialIcon(socialMedia: SocialMedia | null): string {
-    if (!socialMedia) return '';
-    const icons = [];
-    if (socialMedia.twitter) icons.push(`<a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 11px; font-weight: bold;" target="_blank">X</a>`);
-    if (socialMedia.linkedin) icons.push(`<a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 9px; font-weight: bold;" target="_blank">in</a>`);
-    if (socialMedia.instagram) icons.push(`<a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">📷</a>`);
-    if (socialMedia.youtube) icons.push(`<a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">▶</a>`);
-    if (socialMedia.tiktok) icons.push(`<a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">♫</a>`);
-    return icons[2] || '';
-  }
-
-  /**
-   * Generate static HTML for signatures without animations - optimized for Gmail copy/paste
+   * Generate static HTML for signatures without animations
    */
   private async generateStaticSignatureHtml(signature: Signature): Promise<string> {
+    const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
+    
     // Convert relative URLs to absolute URLs for static export
     const processedSignature = await this.processImageUrlsForStatic(signature);
     
-    // Generate Gmail-compatible HTML that can be directly copy/pasted
-    return await this.generateGmailCompatibleHtml(processedSignature);
+    // Generate clean static template HTML (not the animated version)
+    const templateHtml = await this.generateStaticTemplateHtml(processedSignature);
+    
+    // Get template-specific CSS
+    const templateCSS = this.getTemplateSpecificCSS(templateId || 'sales-professional');
+    
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Signature</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+      /* Force font preload for better reliability */
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Playfair Display', serif;
+            background: #f8f9fa;
+            line-height: 1.4;
+        }
+        
+        /* Email client compatibility */
+        table { 
+            border-collapse: collapse; 
+            width: 100%;
+        }
+        
+        img { 
+            border: 0; 
+            outline: none; 
+            text-decoration: none;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        a { 
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Static signature styles - no animations */
+        .signature-element {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+        }
+        
+        /* Remove any animation classes */
+        .animate-fade-in,
+        .animate-pulse,
+        .animate-zoom-in,
+        .animate-rotate {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        ${templateCSS}
+        
+        /* Ensure all elements are visible */
+        .logo-element,
+        .headshot-element,
+        .social-icons-element,
+        .name-element,
+        .title-element,
+        .contact-element {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+    </style>
+</head>
+<body>
+    ${templateHtml}
+</body>
+</html>`;
   }
 
   /**
