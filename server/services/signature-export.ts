@@ -798,8 +798,9 @@ export class SignatureExportService {
     const images = signature.images as any;
     if (!images) return signature;
 
-    const baseUrl = process.env.REPL_SLUG 
-      ? `https://${process.env.REPL_ID}.replit.app`
+    // Use current server domain for image URLs
+    const baseUrl = process.env.REPLIT_DOMAINS 
+      ? `https://${process.env.REPLIT_DOMAINS.split(',')[0]}`
       : 'http://localhost:5000';
 
     const processedImages = { ...images };
@@ -810,10 +811,10 @@ export class SignatureExportService {
     if (images.headshot) {
       const headshotUrl = typeof images.headshot === 'string' ? images.headshot : images.headshot.url;
       if (headshotUrl && headshotUrl.startsWith('/api/files/')) {
+        const newUrl = `${baseUrl}${headshotUrl}`;
         processedImages.headshot = typeof images.headshot === 'string' 
-          ? `${baseUrl}${headshotUrl}`
-          : { ...images.headshot, url: `${baseUrl}${headshotUrl}` };
-
+          ? newUrl
+          : { ...images.headshot, url: newUrl };
       }
     }
 
@@ -821,10 +822,10 @@ export class SignatureExportService {
     if (images.logo) {
       const logoUrl = typeof images.logo === 'string' ? images.logo : images.logo.url;
       if (logoUrl && logoUrl.startsWith('/api/files/')) {
+        const newUrl = `${baseUrl}${logoUrl}`;
         processedImages.logo = typeof images.logo === 'string' 
-          ? `${baseUrl}${logoUrl}`
-          : { ...images.logo, url: `${baseUrl}${logoUrl}` };
-
+          ? newUrl
+          : { ...images.logo, url: newUrl };
       }
     }
 
@@ -856,16 +857,20 @@ export class SignatureExportService {
       if (!pos) return baseStyle;
       
       const transform = [];
-      if (pos.x && pos.x !== 0 || pos.y && pos.y !== 0) {
+      // Check for any positioning values
+      if ((pos.x !== undefined && pos.x !== 0) || (pos.y !== undefined && pos.y !== 0)) {
         transform.push(`translate(${pos.x || 0}px, ${pos.y || 0}px)`);
       }
-      if (pos.scale && pos.scale !== 1) {
+      if (pos.scale !== undefined && pos.scale !== 1) {
         transform.push(`scale(${pos.scale})`);
       }
       
-      const transformStyle = transform.length > 0 ? `transform: ${transform.join(' ')};` : '';
-      const fullStyle = baseStyle + (transformStyle ? ` ${transformStyle}` : '');
-      return fullStyle.trim();
+      if (transform.length > 0) {
+        const transformStyle = `transform: ${transform.join(' ')};`;
+        return baseStyle ? `${baseStyle} ${transformStyle}` : transformStyle;
+      }
+      
+      return baseStyle;
     };
 
     // Helper function to get image size from saved settings
