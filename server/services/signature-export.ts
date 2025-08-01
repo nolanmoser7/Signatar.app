@@ -921,7 +921,7 @@ export class SignatureExportService {
           <div style="display: flex; position: relative; z-index: 10;">
             
             <!-- Left Sidebar with Social Icons -->
-            <div style="${getElementStyle('social', 'width: 80px; height: 280px; background: linear-gradient(180deg, #22d3ee, #2563eb); border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;')}">
+            <div style="${getElementStyle('social', 'width: 80px; min-height: 100%; background: linear-gradient(180deg, #22d3ee, #2563eb); border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;')}">
               ${this.generateSalesProSocialIconsHtml(socialMediaTyped)}
             </div>
             
@@ -986,8 +986,8 @@ export class SignatureExportService {
             
             <!-- Profile Photo -->
             ${headshotUrl ? `
-              <div style="${getElementStyle('headshot', `position: absolute; top: 32px; right: 32px; width: ${headshotWidthPx}px; height: ${headshotWidthPx}px;`)}">
-                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="width: 100%; height: 100%; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />
+              <div style="${getElementStyle('headshot', `position: absolute; top: 0; right: 0; bottom: 0; width: ${headshotWidthPx}px; border-radius: 0 12px 12px 0; overflow: hidden;`)}">
+                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="width: 100%; height: 100%; object-fit: cover;" />
               </div>
             ` : ''}
             
