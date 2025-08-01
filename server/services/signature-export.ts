@@ -493,26 +493,26 @@ export class SignatureExportService {
     const mainContentWidth = `calc(100% - 80px - ${headshotColumnWidth}px)`;
     
     return `
-<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; max-width: 650px; position: relative;">
+<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; max-width: 650px; height: 200px; position: relative;">
   <tr>
-    <td style="position: relative;">
+    <td style="position: relative; height: 100%;">
       <!-- Background geometric elements positioned like original -->
       <div style="position: absolute; top: 54px; right: ${headshotColumnWidth - 11}px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1; z-index: 1;"></div>
       <div style="position: absolute; top: 118px; right: ${headshotColumnWidth - 3}px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #374151, #1f2937); opacity: 0.2; z-index: 1;"></div>
       <div style="position: absolute; bottom: 74px; right: ${headshotColumnWidth - 7}px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15; z-index: 1;"></div>
       
       <!-- Main layout table -->
-      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; position: relative; z-index: 10;">
-        <tr>
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%; position: relative; z-index: 10;">
+        <tr style="height: 100%;">
           <!-- Left sidebar with social media icons -->
-          <td style="width: 80px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; border-radius: 12px 0 0 12px; padding: 32px 0;">
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+          <td style="width: 80px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; border-radius: 12px 0 0 12px; height: 100%;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;">
               ${socialIconsHtml}
             </div>
           </td>
           
           <!-- Main content area -->
-          <td style="padding: 32px; vertical-align: top; width: ${mainContentWidth};">
+          <td style="padding: 32px; vertical-align: top; width: ${mainContentWidth}; height: 100%;">
             <!-- Company Logo -->
             ${processedImages?.logo ? `
             <div style="margin-bottom: 16px;">
@@ -548,12 +548,10 @@ export class SignatureExportService {
             </div>
           </td>
           
-          <!-- Right section with properly positioned headshot -->
+          <!-- Right section with headshot matching original template exactly -->
           ${processedImages?.headshot ? `
-          <td style="width: ${headshotColumnWidth}px; vertical-align: top; text-align: center; position: relative; padding: 32px 20px;">
-            <div style="width: ${headshotSize}px; height: ${headshotSize}px; margin: 0 auto; transform: rotate(-5deg); position: relative; z-index: 5;">
-              <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; object-fit: cover; border: 3px solid rgba(34, 211, 238, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
-            </div>
+          <td style="width: ${headshotColumnWidth}px; height: 100%; position: relative; overflow: hidden;">
+            <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: 100%; height: 100%; object-fit: cover; display: block; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
           </td>
           ` : ''}
         </tr>
