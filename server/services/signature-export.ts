@@ -68,7 +68,6 @@ export class SignatureExportService {
   async exportSignature(signature: Signature): Promise<ExportResult> {
     // Check if signature has any animations
     const hasAnimations = this.hasAnimatedElements(signature);
-    
     if (!hasAnimations) {
       // Simple export for non-animated signatures
       return await this.exportStaticSignature(signature);
@@ -91,7 +90,7 @@ export class SignatureExportService {
         gifUrls: {}, // No GIFs needed for static signatures
       };
     } catch (error) {
-      console.error('Error exporting static signature:', error);
+      console.error('❌ Error exporting static signature:', error);
       throw new Error('Failed to export static signature');
     }
   }
@@ -417,6 +416,26 @@ export class SignatureExportService {
       .animate-pulse { animation-fill-mode: both; }
       .animate-zoom-in { animation-fill-mode: both; }  
       .animate-rotate { animation-fill-mode: both; }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.05); }
+      }
+      
+      @keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
     `;
   }
 
@@ -427,14 +446,10 @@ export class SignatureExportService {
    * Check if signature has any animated elements
    */
   private hasAnimatedElements(signature: Signature): boolean {
-    const { animationType, elementAnimations } = signature;
+    const { elementAnimations } = signature;
     
-    // Check if global animation is set and not "none"
-    if (animationType && animationType !== "none") {
-      return true;
-    }
-    
-    // Check if any element-specific animations are set
+    // Only check element-specific animations, ignore global animationType
+    // since we only support element-specific animations in the current system
     if (elementAnimations) {
       return Object.values(elementAnimations).some(animation => animation && animation !== "none");
     }
@@ -451,8 +466,8 @@ export class SignatureExportService {
     // Convert relative URLs to absolute URLs for static export
     const processedSignature = await this.processImageUrlsForStatic(signature);
     
-    // Generate template-specific HTML with proper styling
-    const templateHtml = await this.generateTemplateHtml(processedSignature);
+    // Generate clean static template HTML (not the animated version)
+    const templateHtml = await this.generateStaticTemplateHtml(processedSignature);
     
     // Get template-specific CSS
     const templateCSS = this.getTemplateSpecificCSS(templateId || 'sales-professional');
@@ -781,7 +796,7 @@ export class SignatureExportService {
    * Convert relative image URLs to absolute URLs for static export
    */
   private async processImageUrlsForStatic(signature: Signature): Promise<Signature> {
-    const images = signature.images as { headshot?: { url: string }; logo?: { url: string } } | null;
+    const images = signature.images as any;
     if (!images) return signature;
 
     const baseUrl = process.env.REPL_SLUG 
@@ -790,26 +805,183 @@ export class SignatureExportService {
 
     const processedImages = { ...images };
 
-    // Convert headshot URL
-    if (images.headshot?.url && images.headshot.url.startsWith('/api/files/')) {
-      processedImages.headshot = {
-        ...images.headshot,
-        url: `${baseUrl}${images.headshot.url}`
-      };
+
+
+    // Convert headshot URL - handle both string and object formats
+    if (images.headshot) {
+      const headshotUrl = typeof images.headshot === 'string' ? images.headshot : images.headshot.url;
+      if (headshotUrl && headshotUrl.startsWith('/api/files/')) {
+        processedImages.headshot = typeof images.headshot === 'string' 
+          ? `${baseUrl}${headshotUrl}`
+          : { ...images.headshot, url: `${baseUrl}${headshotUrl}` };
+
+      }
     }
 
-    // Convert logo URL
-    if (images.logo?.url && images.logo.url.startsWith('/api/files/')) {
-      processedImages.logo = {
-        ...images.logo,
-        url: `${baseUrl}${images.logo.url}`
-      };
+    // Convert logo URL - handle both string and object formats
+    if (images.logo) {
+      const logoUrl = typeof images.logo === 'string' ? images.logo : images.logo.url;
+      if (logoUrl && logoUrl.startsWith('/api/files/')) {
+        processedImages.logo = typeof images.logo === 'string' 
+          ? `${baseUrl}${logoUrl}`
+          : { ...images.logo, url: `${baseUrl}${logoUrl}` };
+
+      }
     }
 
     return {
       ...signature,
       images: processedImages
     };
+  }
+
+  /**
+   * Generate clean static template HTML without animations
+   */
+  private async generateStaticTemplateHtml(signature: Signature): Promise<string> {
+    const { personalInfo, images, socialMedia, templateId } = signature;
+    const personalInfoTyped = personalInfo as PersonalInfo;
+    const imagesTyped = images as any;
+    const socialMediaTyped = socialMedia as SocialMedia | null;
+
+    // Helper function to get image URL regardless of format
+    const getImageUrl = (image: any): string | null => {
+      if (!image) return null;
+      return typeof image === 'string' ? image : image.url;
+    };
+
+    if (templateId === 'sales-professional') {
+      const headshotUrl = getImageUrl(imagesTyped?.headshot);
+      const logoUrl = getImageUrl(imagesTyped?.logo);
+      
+      return `
+        <div class="sales-professional">
+          <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
+            <tr>
+              <td style="vertical-align: top; padding-right: 20px;">
+                ${headshotUrl ? `
+                  <div class="headshot-element">
+                    <img src="${headshotUrl}" alt="${personalInfoTyped.name}" />
+                  </div>
+                ` : ''}
+              </td>
+              <td style="vertical-align: top; flex: 1;">
+                ${logoUrl ? `
+                  <div class="logo-element" style="margin-bottom: 12px;">
+                    <img src="${logoUrl}" alt="${personalInfoTyped.company}" />
+                  </div>
+                ` : ''}
+                
+                <h2 style="margin: 0 0 4px 0; color: #1a1a1a; font-size: 24px; font-weight: bold;">
+                  ${personalInfoTyped.name}
+                </h2>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 16px;">
+                  ${personalInfoTyped.title}
+                </p>
+                <p style="margin: 0 0 16px 0; color: #333; font-size: 14px; font-weight: 500;">
+                  ${personalInfoTyped.company || ''}
+                </p>
+                
+                <div style="font-size: 14px; line-height: 1.6; color: #555;">
+                  ${personalInfoTyped.email ? `
+                    <div style="margin-bottom: 4px;">
+                      <a href="mailto:${personalInfoTyped.email}" style="color: #0077b5; text-decoration: none;">
+                        📧 ${personalInfoTyped.email}
+                      </a>
+                    </div>
+                  ` : ''}
+                  ${personalInfoTyped.phone ? `
+                    <div style="margin-bottom: 4px;">
+                      <a href="tel:${personalInfoTyped.phone}" style="color: #0077b5; text-decoration: none;">
+                        📞 ${personalInfoTyped.phone}
+                      </a>
+                    </div>
+                  ` : ''}
+                  ${personalInfoTyped.website ? `
+                    <div style="margin-bottom: 4px;">
+                      <a href="${personalInfoTyped.website}" style="color: #0077b5; text-decoration: none;">
+                        🌐 ${personalInfoTyped.website}
+                      </a>
+                    </div>
+                  ` : ''}
+                </div>
+                
+                ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+    }
+    
+    // Default static template for other template types
+    const headshotUrl = getImageUrl(imagesTyped?.headshot);
+    const logoUrl = getImageUrl(imagesTyped?.logo);
+    
+    return `
+      <div style="padding: 24px;">
+        <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
+          <tr>
+            <td style="vertical-align: top; padding-right: 20px;">
+              ${headshotUrl ? `
+                <div class="headshot-element">
+                  <img src="${headshotUrl}" alt="${personalInfoTyped.name}" />
+                </div>
+              ` : ''}
+            </td>
+            <td style="vertical-align: top;">
+              ${logoUrl ? `
+                <div class="logo-element" style="margin-bottom: 12px;">
+                  <img src="${logoUrl}" alt="${personalInfoTyped.company}" />
+                </div>
+              ` : ''}
+              
+              <h2 style="margin: 0 0 8px 0; color: #1a1a1a; font-size: 20px; font-weight: bold;">
+                ${personalInfoTyped.name}
+              </h2>
+              <p style="margin: 0 0 12px 0; color: #666; font-size: 16px;">
+                ${personalInfoTyped.title} at ${personalInfoTyped.company}
+              </p>
+              
+              <div style="font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 12px;">
+                ${personalInfoTyped.email ? `<div><a href="mailto:${personalInfoTyped.email}" style="color: #0077b5; text-decoration: none;">${personalInfoTyped.email}</a></div>` : ''}
+                ${personalInfoTyped.phone ? `<div><a href="tel:${personalInfoTyped.phone}" style="color: #0077b5; text-decoration: none;">${personalInfoTyped.phone}</a></div>` : ''}
+                ${personalInfoTyped.website ? `<div><a href="${personalInfoTyped.website}" style="color: #0077b5; text-decoration: none;">${personalInfoTyped.website}</a></div>` : ''}
+              </div>
+              
+              ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
+            </td>
+          </tr>
+        </table>
+      </div>
+    `;
+  }
+
+  /**
+   * Generate static social media icons HTML without animations
+   */
+  private generateStaticSocialIconsHtml(socialMedia: SocialMedia | null): string {
+    const socialLinks = [
+      { key: 'linkedin', url: socialMedia?.linkedin, icon: 'in', bgClass: 'social-linkedin' },
+      { key: 'twitter', url: socialMedia?.twitter, icon: '𝕏', bgClass: 'social-twitter' },
+      { key: 'instagram', url: socialMedia?.instagram, icon: '📷', bgClass: 'social-instagram' },
+      { key: 'youtube', url: socialMedia?.youtube, icon: '▶', bgClass: 'social-youtube' },
+      { key: 'tiktok', url: socialMedia?.tiktok, icon: '🎵', bgClass: 'social-tiktok' },
+    ];
+
+    const validLinks = socialLinks.filter(link => link.url);
+    
+    if (validLinks.length === 0) return '';
+
+    return `
+      <div class="social-icons">
+        ${validLinks.map(link => `
+          <a href="${link.url}" class="social-icon ${link.bgClass}" target="_blank" rel="noopener">
+            ${link.icon}
+          </a>
+        `).join('')}
+      </div>
+    `;
   }
 
   private identifyAnimatedElements(signature: Signature): string[] {
