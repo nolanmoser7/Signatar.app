@@ -179,7 +179,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Signature not found" });
       }
 
-      const exportResult = await signatureExportService.bakeSignatureAnimations(signature);
+      const exportResult = await signatureExportService.exportSignature(signature);
       
       res.json({
         html: exportResult.finalHtml,

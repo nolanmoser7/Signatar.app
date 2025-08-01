@@ -50,7 +50,7 @@ export class SignatureExportService {
           '--single-process'
         ],
         executablePath: process.env.CHROME_BIN || '/nix/store/zi4f80l169xlmivz8vja8wlphq74qqk0-chromium-125.0.6422.141/bin/chromium',
-        ignoreHTTPSErrors: true,
+
       });
     }
   }
@@ -63,7 +63,41 @@ export class SignatureExportService {
   }
 
   /**
-   * Main export function - converts a signature to HTML with animated GIFs
+   * Main export function - handles both animated and static signatures
+   */
+  async exportSignature(signature: Signature): Promise<ExportResult> {
+    // Check if signature has any animations
+    const hasAnimations = this.hasAnimatedElements(signature);
+    
+    if (!hasAnimations) {
+      // Simple export for non-animated signatures
+      return await this.exportStaticSignature(signature);
+    } else {
+      // Complex export with GIF baking for animated signatures
+      return await this.bakeSignatureAnimations(signature);
+    }
+  }
+
+  /**
+   * Export function for static signatures (no animations)
+   */
+  async exportStaticSignature(signature: Signature): Promise<ExportResult> {
+    try {
+      // Generate clean HTML without any animation classes or scripts
+      const staticHtml = await this.generateStaticSignatureHtml(signature);
+      
+      return {
+        finalHtml: staticHtml,
+        gifUrls: {}, // No GIFs needed for static signatures
+      };
+    } catch (error) {
+      console.error('Error exporting static signature:', error);
+      throw new Error('Failed to export static signature');
+    }
+  }
+
+  /**
+   * Export function for animated signatures - converts animations to GIFs
    */
   async bakeSignatureAnimations(signature: Signature): Promise<ExportResult> {
     await this.initialize();
@@ -104,7 +138,7 @@ export class SignatureExportService {
     const { personalInfo, images, socialMedia, templateId, animationType, elementAnimations } = signature;
     
     // Generate CSS keyframes for animations
-    const animationCSS = this.generateAnimationCSS(elementAnimations || {});
+    const animationCSS = this.generateAnimationCSS(elementAnimations);
     
     // Generate template-specific HTML
     const templateHtml = await this.generateTemplateHtml(signature);
@@ -389,6 +423,75 @@ export class SignatureExportService {
   /**
    * Identify which elements have animations enabled
    */
+  /**
+   * Check if signature has any animated elements
+   */
+  private hasAnimatedElements(signature: Signature): boolean {
+    const { animationType, elementAnimations } = signature;
+    
+    // Check if global animation is set and not "none"
+    if (animationType && animationType !== "none") {
+      return true;
+    }
+    
+    // Check if any element-specific animations are set
+    if (elementAnimations) {
+      return Object.values(elementAnimations).some(animation => animation && animation !== "none");
+    }
+    
+    return false;
+  }
+
+  /**
+   * Generate static HTML for signatures without animations
+   */
+  private async generateStaticSignatureHtml(signature: Signature): Promise<string> {
+    const templateHtml = await this.generateTemplateHtml(signature);
+    
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Signature</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        /* Static signature styles - no animations */
+        .signature-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .signature-element {
+            opacity: 1;
+            transform: none;
+        }
+        
+        /* Email client compatibility */
+        table { border-collapse: collapse; }
+        img { border: 0; outline: none; text-decoration: none; }
+        a { text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="signature-container">
+        ${templateHtml}
+    </div>
+</body>
+</html>`;
+  }
+
   private identifyAnimatedElements(signature: Signature): string[] {
     const animated: string[] = [];
     const elementAnimations = signature.elementAnimations as ElementAnimations | null;
