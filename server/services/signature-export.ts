@@ -138,7 +138,7 @@ export class SignatureExportService {
     const { personalInfo, images, socialMedia, templateId, animationType, elementAnimations } = signature;
     
     // Generate CSS keyframes for animations
-    const animationCSS = this.generateAnimationCSS(elementAnimations);
+    const animationCSS = this.generateAnimationCSS(elementAnimations || null);
     
     // Generate template-specific HTML
     const templateHtml = await this.generateTemplateHtml(signature);
@@ -283,14 +283,14 @@ export class SignatureExportService {
               <td style="vertical-align: top; padding-right: 20px;">
                 ${images?.headshot ? `
                   <div id="headshot-element" class="headshot-element ${headshotClass}">
-                    <img src="${images.headshot}" alt="${personalInfo.name}" />
+                    <img src="${images.headshot.url}" alt="${personalInfo.name}" />
                   </div>
                 ` : ''}
               </td>
               <td style="vertical-align: top; flex: 1;">
                 ${images?.logo ? `
                   <div id="logo-element" class="logo-element ${logoClass}" style="margin-bottom: 12px;">
-                    <img src="${images.logo}" alt="${personalInfo.company}" />
+                    <img src="${images.logo.url}" alt="${personalInfo.company}" />
                   </div>
                 ` : ''}
                 
@@ -344,14 +344,14 @@ export class SignatureExportService {
             <td style="vertical-align: top; padding-right: 20px;">
               ${images?.headshot ? `
                 <div id="headshot-element" class="headshot-element ${headshotClass}">
-                  <img src="${images.headshot}" alt="${personalInfo.name}" />
+                  <img src="${images.headshot.url}" alt="${personalInfo.name}" />
                 </div>
               ` : ''}
             </td>
             <td style="vertical-align: top;">
               ${images?.logo ? `
                 <div id="logo-element" class="logo-element ${logoClass}" style="margin-bottom: 12px;">
-                  <img src="${images.logo}" alt="${personalInfo.company}" />
+                  <img src="${images.logo.url}" alt="${personalInfo.company}" />
                 </div>
               ` : ''}
               
@@ -446,7 +446,16 @@ export class SignatureExportService {
    * Generate static HTML for signatures without animations
    */
   private async generateStaticSignatureHtml(signature: Signature): Promise<string> {
-    const templateHtml = await this.generateTemplateHtml(signature);
+    const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
+    
+    // Convert relative URLs to absolute URLs for static export
+    const processedSignature = await this.processImageUrlsForStatic(signature);
+    
+    // Generate template-specific HTML with proper styling
+    const templateHtml = await this.generateTemplateHtml(processedSignature);
+    
+    // Get template-specific CSS
+    const templateCSS = this.getTemplateSpecificCSS(templateId || 'sales-professional');
     
     return `
 <!DOCTYPE html>
@@ -455,41 +464,352 @@ export class SignatureExportService {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Signature</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             margin: 0;
             padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #f5f5f5;
-        }
-        
-        /* Static signature styles - no animations */
-        .signature-container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .signature-element {
-            opacity: 1;
-            transform: none;
+            font-family: 'Playfair Display', serif;
+            background: #f8f9fa;
+            line-height: 1.4;
         }
         
         /* Email client compatibility */
-        table { border-collapse: collapse; }
-        img { border: 0; outline: none; text-decoration: none; }
-        a { text-decoration: none; }
+        table { 
+            border-collapse: collapse; 
+            width: 100%;
+        }
+        
+        img { 
+            border: 0; 
+            outline: none; 
+            text-decoration: none;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        a { 
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        /* Static signature styles - no animations */
+        .signature-element {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+        }
+        
+        /* Remove any animation classes */
+        .animate-fade-in,
+        .animate-pulse,
+        .animate-zoom-in,
+        .animate-rotate {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        ${templateCSS}
+        
+        /* Ensure all elements are visible */
+        .logo-element,
+        .headshot-element,
+        .social-icons-element,
+        .name-element,
+        .title-element,
+        .contact-element {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
     </style>
 </head>
 <body>
-    <div class="signature-container">
-        ${templateHtml}
-    </div>
+    ${templateHtml}
 </body>
 </html>`;
+  }
+
+  /**
+   * Get template-specific CSS for static rendering
+   */
+  private getTemplateSpecificCSS(templateId: string): string {
+    switch (templateId) {
+      case 'sales-professional':
+        return `
+          .sales-professional {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 600px;
+            margin: 0 auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .sales-professional::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+          }
+          
+          .sales-template-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+          }
+          
+          .sales-left-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            min-width: 120px;
+          }
+          
+          .sales-headshot {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+          }
+          
+          .sales-social-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+          }
+          
+          .sales-social-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transition: all 0.3s ease;
+          }
+          
+          .sales-main-content {
+            flex: 1;
+          }
+          
+          .sales-company-logo {
+            width: auto;
+            height: 32px;
+            margin-bottom: 12px;
+          }
+          
+          .sales-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+          
+          .sales-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 16px;
+          }
+          
+          .sales-contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          }
+          
+          .sales-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+          }
+          
+          .sales-contact-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+          }
+        `;
+        
+      case 'modern':
+        return `
+          .modern-template {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .modern-template::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+              radial-gradient(circle at 20% 20%, rgba(0,255,255,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(0,255,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+          }
+          
+          .modern-content {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            position: relative;
+            z-index: 1;
+          }
+          
+          .modern-left {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+          }
+          
+          .modern-headshot {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+          }
+          
+          .modern-right {
+            flex: 1;
+          }
+          
+          .modern-company {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00ffff;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+          }
+          
+          .modern-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #00ffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+          
+          .modern-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 20px;
+          }
+          
+          .modern-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+          
+          .modern-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            color: rgba(255,255,255,0.9);
+          }
+          
+          .modern-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+          }
+          
+          .modern-social-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(0,255,255,0.1);
+            border: 1px solid rgba(0,255,255,0.3);
+            color: #00ffff;
+          }
+        `;
+        
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Convert relative image URLs to absolute URLs for static export
+   */
+  private async processImageUrlsForStatic(signature: Signature): Promise<Signature> {
+    const images = signature.images as { headshot?: { url: string }; logo?: { url: string } } | null;
+    if (!images) return signature;
+
+    const baseUrl = process.env.REPL_SLUG 
+      ? `https://${process.env.REPL_ID}.replit.app`
+      : 'http://localhost:5000';
+
+    const processedImages = { ...images };
+
+    // Convert headshot URL
+    if (images.headshot?.url && images.headshot.url.startsWith('/api/files/')) {
+      processedImages.headshot = {
+        ...images.headshot,
+        url: `${baseUrl}${images.headshot.url}`
+      };
+    }
+
+    // Convert logo URL
+    if (images.logo?.url && images.logo.url.startsWith('/api/files/')) {
+      processedImages.logo = {
+        ...images.logo,
+        url: `${baseUrl}${images.logo.url}`
+      };
+    }
+
+    return {
+      ...signature,
+      images: processedImages
+    };
   }
 
   private identifyAnimatedElements(signature: Signature): string[] {
