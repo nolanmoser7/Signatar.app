@@ -30,13 +30,29 @@ import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
   const [location] = useLocation();
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
-  const signatureId = urlParams.get('signature');
   
+  // Enhanced URL parsing with debugging
   console.log("=== SIGNATURE BUILDER INIT ===");
   console.log("Current location:", location);
-  console.log("Search params:", location.split('?')[1] || '');
-  console.log("Signature ID from URL:", signatureId);
+  console.log("Window location href:", window.location.href);
+  console.log("Window search:", window.location.search);
+  
+  // Try multiple approaches to get the signature ID
+  const urlFromLocation = location.split('?')[1] || '';
+  const urlFromWindow = window.location.search.substring(1);
+  const urlParams1 = new URLSearchParams(urlFromLocation);
+  const urlParams2 = new URLSearchParams(urlFromWindow);
+  const signatureIdFromLocation = urlParams1.get('signature');
+  const signatureIdFromWindow = urlParams2.get('signature');
+  
+  console.log("URL params from location:", urlFromLocation);
+  console.log("URL params from window:", urlFromWindow);
+  console.log("Signature ID from location:", signatureIdFromLocation);
+  console.log("Signature ID from window:", signatureIdFromWindow);
+  
+  // Use whichever approach successfully gets the signature ID
+  const signatureId = signatureIdFromLocation || signatureIdFromWindow;
+  console.log("Final signature ID:", signatureId);
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
