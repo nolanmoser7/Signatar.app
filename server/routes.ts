@@ -171,6 +171,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve attached assets
+  app.get("/attached_assets/:filename", async (req, res) => {
+    try {
+      const filePath = path.join("attached_assets", req.params.filename);
+      
+      // Check if file exists
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ message: "Attached asset not found" });
+      }
+
+      res.sendFile(path.resolve(filePath));
+    } catch (error) {
+      res.status(500).json({ message: "Failed to serve attached asset" });
+    }
+  });
+
   // Export signature as HTML with animated GIFs
   app.post("/api/signatures/:id/export", async (req, res) => {
     try {

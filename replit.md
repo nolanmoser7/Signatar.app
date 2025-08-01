@@ -28,7 +28,8 @@ Preferred communication style: Simple, everyday language.
     - **Authentication System**: Cookie-based session management, bcrypt password hashing, secure API routes.
     - **Data Persistence**: Signatures and templates stored in PostgreSQL, replacing in-memory storage.
     - **Signature Management**: Naming, complete state saving (personal info, images, social media, animations, element positions, custom layouts), and tagging (static/dynamic).
-    - **Export Logic**: Ensures exported HTML preserves all custom element positions and image sizes.
+    - **Export Logic**: Comprehensive static signature export pipeline with proper image URL conversion, SVG icon rendering, and template preservation.
+    - **Image Handling**: Support for both uploaded files (/api/files/) and attached assets (/attached_assets/) with automatic URL conversion for email compatibility.
 
 ### System Design Choices
 - **Monorepo Architecture**: Clear separation of client and server code.

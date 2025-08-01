@@ -824,13 +824,34 @@ export class SignatureExportService {
 
     const processedImages = { ...images };
 
-
+    // Helper function to convert various image URL formats
+    const convertImageUrl = (imageUrl: string): string => {
+      // Handle uploaded files
+      if (imageUrl.startsWith('/api/files/')) {
+        return `${baseUrl}${imageUrl}`;
+      }
+      // Handle attached assets
+      if (imageUrl.startsWith('/@fs/home/runner/workspace/attached_assets/')) {
+        const filename = imageUrl.split('/').pop();
+        return `${baseUrl}/attached_assets/${filename}`;
+      }
+      // Handle relative attached assets
+      if (imageUrl.startsWith('/attached_assets/')) {
+        return `${baseUrl}${imageUrl}`;
+      }
+      // Already absolute URL
+      if (imageUrl.startsWith('http')) {
+        return imageUrl;
+      }
+      // Default fallback - treat as relative URL
+      return `${baseUrl}${imageUrl}`;
+    };
 
     // Convert headshot URL - handle both string and object formats
     if (images.headshot) {
       const headshotUrl = typeof images.headshot === 'string' ? images.headshot : images.headshot.url;
-      if (headshotUrl && headshotUrl.startsWith('/api/files/')) {
-        const newUrl = `${baseUrl}${headshotUrl}`;
+      if (headshotUrl) {
+        const newUrl = convertImageUrl(headshotUrl);
         processedImages.headshot = typeof images.headshot === 'string' 
           ? newUrl
           : { ...images.headshot, url: newUrl };
@@ -840,8 +861,8 @@ export class SignatureExportService {
     // Convert logo URL - handle both string and object formats
     if (images.logo) {
       const logoUrl = typeof images.logo === 'string' ? images.logo : images.logo.url;
-      if (logoUrl && logoUrl.startsWith('/api/files/')) {
-        const newUrl = `${baseUrl}${logoUrl}`;
+      if (logoUrl) {
+        const newUrl = convertImageUrl(logoUrl);
         processedImages.logo = typeof images.logo === 'string' 
           ? newUrl
           : { ...images.logo, url: newUrl };
