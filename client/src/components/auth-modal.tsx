@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { loginSchema, registerSchema, type LoginData, type RegisterData } from "@shared/schema";
-import signatarLogo from "@assets/signatar-logo.png";
+import signatarLogo from "@assets/signatar-logo-new.png";
 
 interface AuthModalProps {
   isOpen: boolean;
