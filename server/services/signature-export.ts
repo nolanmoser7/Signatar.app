@@ -888,69 +888,97 @@ export class SignatureExportService {
       const headshotSize = getImageSize('headshot');
       const logoSize = getImageSize('logo');
       
+      // Calculate responsive dimensions like the React template
+      const headshotSizePercent = imagesTyped?.headshotSize || 100;
+      const logoSizePercent = imagesTyped?.logoSize || 100;
+      const headshotWidthPx = Math.round(headshotSizePercent * 2.56);
+      const logoWidthPx = Math.round(logoSizePercent * 0.48);
+      const contentWidth = `calc(100% - 80px - ${headshotWidthPx}px)`;
+      
       return `
-        <div class="sales-professional">
-          <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
-            <tr>
-              <td style="vertical-align: top; padding-right: 20px;">
-                ${headshotUrl ? `
-                  <div class="headshot-element" style="${getElementStyle('headshot')}">
-                    <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="border-radius: 50%; object-fit: cover; ${headshotSize.width ? `width: ${headshotSize.width}; height: ${headshotSize.height};` : 'width: 80px; height: 80px;'}" />
+        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 512px; margin: 0 auto; font-family: 'Playfair Display', serif;">
+          
+          <!-- Background geometric patterns -->
+          <div style="position: absolute; top: 0; right: ${headshotWidthPx + 20}px; width: calc(50% - ${Math.round(headshotWidthPx / 2)}px); height: 100%; overflow: hidden; pointer-events: none;">
+            <div style="position: absolute; right: -11px; top: 54px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #4fd1c7, #0891b2); opacity: 0.1;"></div>
+            <div style="position: absolute; right: -3px; top: 118px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #4b5563, #1f2937); opacity: 0.2;"></div>
+            <div style="position: absolute; right: -7px; bottom: 74px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15;"></div>
+          </div>
+          
+          <div style="display: flex; position: relative; z-index: 10;">
+            
+            <!-- Left Sidebar with Social Icons -->
+            <div style="${getElementStyle('social', 'width: 80px; height: 280px; background: linear-gradient(180deg, #22d3ee, #2563eb); border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;')}">
+              ${this.generateSalesProSocialIconsHtml(socialMediaTyped)}
+            </div>
+            
+            <!-- Main Content Area -->
+            <div style="padding: 32px; width: ${contentWidth};">
+              
+              <!-- Company Logo -->
+              ${logoUrl ? `
+                <div style="${getElementStyle('logo', 'margin-bottom: 16px;')}">
+                  <div style="display: flex; align-items: center; justify-content: center; width: ${logoWidthPx}px; height: 48px;">
+                    <img src="${logoUrl}" alt="${personalInfoTyped.company}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+                  </div>
+                </div>
+              ` : ''}
+              
+              <!-- Name and Title -->
+              <div style="${getElementStyle('name')}">
+                <h2 style="margin: 0 0 8px 0; color: #1f2937; font-size: 32px; font-weight: bold; line-height: 1.2;">
+                  ${personalInfoTyped.name}
+                </h2>
+                <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 18px; font-weight: 500;">
+                  ${personalInfoTyped.title}
+                </p>
+              </div>
+              
+              <!-- Company -->
+              <div style="${getElementStyle('company')}">
+                <p style="margin: 0 0 24px 0; color: #374151; font-size: 16px; font-weight: 500;">
+                  ${personalInfoTyped.company || ''}
+                </p>
+              </div>
+              
+              <!-- Contact Information -->
+              <div style="${getElementStyle('contact', 'font-size: 14px; line-height: 1.6; color: #4b5563;')}">
+                ${personalInfoTyped.email ? `
+                  <div style="margin-bottom: 8px;">
+                    <a href="mailto:${personalInfoTyped.email}" style="color: #0891b2; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 16px;">✉</span>
+                      ${personalInfoTyped.email}
+                    </a>
                   </div>
                 ` : ''}
-              </td>
-              <td style="vertical-align: top; flex: 1;">
-                ${logoUrl ? `
-                  <div class="logo-element" style="${getElementStyle('logo', 'margin-bottom: 12px;')}">
-                    <img src="${logoUrl}" alt="${personalInfoTyped.company}" style="object-fit: contain; ${logoSize.maxWidth ? `max-width: ${logoSize.maxWidth}; max-height: 60px;` : 'max-width: 120px; max-height: 60px;'}" />
+                ${personalInfoTyped.phone ? `
+                  <div style="margin-bottom: 8px;">
+                    <a href="tel:${personalInfoTyped.phone}" style="color: #0891b2; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 16px;">📞</span>
+                      ${personalInfoTyped.phone}
+                    </a>
                   </div>
                 ` : ''}
-                
-                <div style="${getElementStyle('name')}">
-                  <h2 style="margin: 0 0 4px 0; color: #1a1a1a; font-size: 24px; font-weight: bold; font-family: 'Playfair Display', serif;">
-                    ${personalInfoTyped.name}
-                  </h2>
-                  <p style="margin: 0 0 8px 0; color: #666; font-size: 16px; font-family: 'Playfair Display', serif;">
-                    ${personalInfoTyped.title}
-                  </p>
-                </div>
-                
-                <div style="${getElementStyle('company')}">
-                  <p style="margin: 0 0 16px 0; color: #333; font-size: 14px; font-weight: 500; font-family: 'Playfair Display', serif;">
-                    ${personalInfoTyped.company || ''}
-                  </p>
-                </div>
-                
-                <div style="${getElementStyle('contact', 'font-size: 14px; line-height: 1.6; color: #555; font-family: \'Playfair Display\', serif;')}">
-                  ${personalInfoTyped.email ? `
-                    <div style="margin-bottom: 4px;">
-                      <a href="mailto:${personalInfoTyped.email}" style="color: #0077b5; text-decoration: none;">
-                        📧 ${personalInfoTyped.email}
-                      </a>
-                    </div>
-                  ` : ''}
-                  ${personalInfoTyped.phone ? `
-                    <div style="margin-bottom: 4px;">
-                      <a href="tel:${personalInfoTyped.phone}" style="color: #0077b5; text-decoration: none;">
-                        📞 ${personalInfoTyped.phone}
-                      </a>
-                    </div>
-                  ` : ''}
-                  ${personalInfoTyped.website ? `
-                    <div style="margin-bottom: 4px;">
-                      <a href="${personalInfoTyped.website}" style="color: #0077b5; text-decoration: none;">
-                        🌐 ${personalInfoTyped.website}
-                      </a>
-                    </div>
-                  ` : ''}
-                </div>
-                
-                <div style="${getElementStyle('social')}">
-                  ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
-                </div>
-              </td>
-            </tr>
-          </table>
+                ${personalInfoTyped.website ? `
+                  <div style="margin-bottom: 8px;">
+                    <a href="${personalInfoTyped.website}" style="color: #0891b2; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size: 16px;">🌐</span>
+                      ${personalInfoTyped.website}
+                    </a>
+                  </div>
+                ` : ''}
+              </div>
+              
+            </div>
+            
+            <!-- Profile Photo -->
+            ${headshotUrl ? `
+              <div style="${getElementStyle('headshot', `position: absolute; top: 32px; right: 32px; width: ${headshotWidthPx}px; height: ${headshotWidthPx}px;`)}">
+                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="width: 100%; height: 100%; border-radius: 8px; object-fit: cover; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);" />
+              </div>
+            ` : ''}
+            
+          </div>
         </div>
       `;
     }
@@ -996,6 +1024,34 @@ export class SignatureExportService {
         </table>
       </div>
     `;
+  }
+
+  /**
+   * Generate social icons for Sales Professional template sidebar
+   */
+  private generateSalesProSocialIconsHtml(socialMedia: SocialMedia | null): string {
+    if (!socialMedia) return '';
+    
+    const iconStyle = "color: white; font-size: 24px; text-decoration: none; display: inline-block;";
+    const icons = [];
+    
+    if (socialMedia.twitter) {
+      icons.push(`<a href="${socialMedia.twitter}" style="${iconStyle}">𝕏</a>`);
+    }
+    if (socialMedia.linkedin) {
+      icons.push(`<a href="${socialMedia.linkedin}" style="${iconStyle}">in</a>`);
+    }
+    if (socialMedia.instagram) {
+      icons.push(`<a href="${socialMedia.instagram}" style="${iconStyle}">📷</a>`);
+    }
+    if (socialMedia.youtube) {
+      icons.push(`<a href="${socialMedia.youtube}" style="${iconStyle}">▶</a>`);
+    }
+    if (socialMedia.tiktok) {
+      icons.push(`<a href="${socialMedia.tiktok}" style="${iconStyle}">🎵</a>`);
+    }
+    
+    return icons.join('');
   }
 
   /**
