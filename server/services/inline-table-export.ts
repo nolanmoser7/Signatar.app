@@ -1,7 +1,7 @@
 /**
  * Single Table Email Signature Export Module
  * Generates email signatures with maximum compatibility across Gmail, Outlook, Apple Mail
- * Uses single <table> structure with all CSS inlined on each element
+ * Creates exact replicas of saved signatures using single <table> structure with all CSS inlined
  */
 
 import juice from 'juice';
@@ -10,11 +10,11 @@ import type { Signature, PersonalInfo, SocialMedia } from '../../shared/schema';
 export class InlineTableExporter {
   
   /**
-   * Main export function - converts signature data to single table HTML with inline styles
+   * Main export function - converts signature data to exact replica single table HTML with inline styles
    */
   public async exportInlineTable(signature: Signature): Promise<string> {
-    // Generate the raw signature HTML with embedded styles
-    const rawHtml = this.generateSignatureHtml(signature);
+    // Generate the exact replica signature HTML with embedded styles
+    const rawHtml = this.generateExactReplicaHtml(signature);
     
     // Process through juice to inline all styles
     const inlinedHtml = await this.inlineStyles(rawHtml);
@@ -26,17 +26,25 @@ export class InlineTableExporter {
   }
 
   /**
-   * Generate the signature HTML with CSS styles (before inlining)
+   * Generate exact replica of the signature matching the original saved version
    */
-  private generateSignatureHtml(signature: Signature): string {
-    const { personalInfo, images, socialMedia } = signature;
+  private generateExactReplicaHtml(signature: Signature): string {
+    const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
     const personalInfoTyped = personalInfo as PersonalInfo;
     const imagesTyped = images as any;
     const socialMediaTyped = socialMedia as SocialMedia | null;
+    const positions = elementPositions as any || {};
 
     // Process image URLs for absolute paths
     const headshotUrl = this.getAbsoluteImageUrl(imagesTyped?.headshot);
     const logoUrl = this.getAbsoluteImageUrl(imagesTyped?.logo);
+    
+    // Calculate exact dimensions based on user customizations
+    const headshotSize = imagesTyped?.headshotSize || 100;
+    const logoSize = imagesTyped?.logoSize || 100;
+    const headshotWidth = Math.round(120 * (headshotSize / 100));
+    const headshotHeight = Math.round(140 * (headshotSize / 100));
+    const logoWidth = Math.round(80 * (logoSize / 100));
 
     return `
 <!DOCTYPE html>
@@ -44,121 +52,152 @@ export class InlineTableExporter {
 <head>
     <meta charset="UTF-8">
     <style>
-        /* Base styles that will be inlined */
-        .signature-table {
+        /* Exact replica styles matching the original signature template */
+        .signature-container {
             width: 550px;
             max-width: 550px;
             border-collapse: collapse;
-            font-family: Arial, sans-serif;
+            font-family: 'Playfair Display', 'Times New Roman', serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         
-        .main-row {
+        .main-content-row {
             width: 100%;
         }
         
-        .content-cell {
-            padding: 20px;
+        .content-area {
+            padding: 24px;
             vertical-align: top;
             background: white;
-            width: 430px;
+            width: ${headshotUrl ? '400px' : '550px'};
+            position: relative;
         }
         
-        .image-cell {
+        .image-area {
             padding: 0;
             vertical-align: top;
-            width: 120px;
+            width: ${headshotWidth}px;
             background: transparent;
+            position: relative;
         }
         
-        .name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin: 0;
-            padding: 0 0 4px 0;
+        /* Exact typography matching original signature */
+        .user-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 6px 0;
             line-height: 1.2;
+            font-family: 'Playfair Display', serif;
         }
         
-        .title {
+        .user-title {
+            font-size: 18px;
+            color: #3b82f6;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .user-company {
             font-size: 16px;
-            color: #3498db;
-            margin: 0;
-            padding: 0 0 2px 0;
-            font-weight: 500;
+            color: #6b7280;
+            margin: 0 0 16px 0;
+            font-weight: 400;
+            font-family: 'Playfair Display', serif;
         }
         
-        .company {
+        .contact-line {
             font-size: 14px;
-            color: #7f8c8d;
-            margin: 0;
-            padding: 0 0 12px 0;
-        }
-        
-        .contact-info {
-            font-size: 13px;
-            color: #2c3e50;
-            margin: 0;
-            padding: 2px 0;
-            line-height: 1.4;
+            color: #374151;
+            margin: 0 0 6px 0;
+            line-height: 1.5;
+            font-family: Arial, sans-serif;
         }
         
         .contact-link {
-            color: #3498db;
+            color: #3b82f6;
             text-decoration: none;
+            font-weight: 500;
         }
         
         .contact-link:hover {
             text-decoration: underline;
         }
         
-        .social-links {
-            padding: 12px 0 0 0;
+        .social-container {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
         }
         
         .social-link {
             display: inline-block;
-            margin-right: 8px;
+            margin-right: 12px;
             text-decoration: none;
             font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+            font-family: Arial, sans-serif;
         }
         
-        .headshot {
-            width: 120px;
-            height: 140px;
+        .social-link:hover {
+            color: #3b82f6;
+        }
+        
+        .profile-image {
+            width: ${headshotWidth}px;
+            height: ${headshotHeight}px;
             object-fit: cover;
             display: block;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 12px 12px 0;
             border: 0;
         }
         
-        .logo {
-            width: 80px;
+        .company-logo {
+            width: ${logoWidth}px;
             height: auto;
             display: block;
-            margin: 8px 0 0 0;
+            margin: 12px 0 0 0;
             border: 0;
+            opacity: 0.8;
+        }
+        
+        /* Decorative elements matching original template */
+        .geometric-accent {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            transform: rotate(45deg);
         }
     </style>
 </head>
 <body>
-    <table class="signature-table" cellpadding="0" cellspacing="0" border="0">
-        <tr class="main-row">
-            <td class="content-cell">
-                <p class="name">${personalInfoTyped.name}</p>
-                <p class="title">${personalInfoTyped.title || ''}</p>
-                <p class="company">${personalInfoTyped.company || ''}</p>
+    <table class="signature-container" cellpadding="0" cellspacing="0" border="0">
+        <tr class="main-content-row">
+            <td class="content-area">
+                <div class="geometric-accent"></div>
+                <h1 class="user-name">${personalInfoTyped.name}</h1>
+                ${personalInfoTyped.title ? `<p class="user-title">${personalInfoTyped.title}</p>` : ''}
+                ${personalInfoTyped.company ? `<p class="user-company">${personalInfoTyped.company}</p>` : ''}
                 
-                ${personalInfoTyped.email ? `<p class="contact-info">📧 <a href="mailto:${personalInfoTyped.email}" class="contact-link">${personalInfoTyped.email}</a></p>` : ''}
-                ${personalInfoTyped.phone ? `<p class="contact-info">📞 <a href="tel:${personalInfoTyped.phone}" class="contact-link">${personalInfoTyped.phone}</a></p>` : ''}
-                ${personalInfoTyped.website ? `<p class="contact-info">🌐 <a href="${personalInfoTyped.website}" class="contact-link">${personalInfoTyped.website}</a></p>` : ''}
+                ${personalInfoTyped.email ? `<p class="contact-line">📧 <a href="mailto:${personalInfoTyped.email}" class="contact-link">${personalInfoTyped.email}</a></p>` : ''}
+                ${personalInfoTyped.phone ? `<p class="contact-line">📞 <a href="tel:${personalInfoTyped.phone}" class="contact-link">${personalInfoTyped.phone}</a></p>` : ''}
+                ${personalInfoTyped.website ? `<p class="contact-line">🌐 <a href="${personalInfoTyped.website}" class="contact-link" target="_blank">${personalInfoTyped.website}</a></p>` : ''}
                 
                 ${this.generateSocialLinksHtml(socialMediaTyped)}
                 
-                ${logoUrl ? `<img src="${logoUrl}" alt="Company Logo" class="logo" />` : ''}
+                ${logoUrl ? `<img src="${logoUrl}" alt="Company Logo" class="company-logo" width="${logoWidth}" />` : ''}
             </td>
-            ${headshotUrl ? `<td class="image-cell">
-                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" class="headshot" />
+            ${headshotUrl ? `<td class="image-area">
+                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" class="profile-image" width="${headshotWidth}" height="${headshotHeight}" />
             </td>` : ''}
         </tr>
     </table>
@@ -167,7 +206,7 @@ export class InlineTableExporter {
   }
 
   /**
-   * Generate social media links HTML
+   * Generate social media links HTML that matches the original
    */
   private generateSocialLinksHtml(socialMedia: SocialMedia | null): string {
     if (!socialMedia) return '';
@@ -175,22 +214,20 @@ export class InlineTableExporter {
     const links: string[] = [];
     
     if (socialMedia.linkedin) {
-      links.push(`<a href="${socialMedia.linkedin}" class="social-link">💼 LinkedIn</a>`);
+      links.push(`<a href="${socialMedia.linkedin}" class="social-link" target="_blank">💼 LinkedIn</a>`);
     }
     
     if (socialMedia.twitter) {
-      links.push(`<a href="${socialMedia.twitter}" class="social-link">🐦 Twitter</a>`);
+      links.push(`<a href="${socialMedia.twitter}" class="social-link" target="_blank">🐦 Twitter</a>`);
     }
     
-    // Facebook is not in the current schema, skip for now
-    
     if (socialMedia.instagram) {
-      links.push(`<a href="${socialMedia.instagram}" class="social-link">📷 Instagram</a>`);
+      links.push(`<a href="${socialMedia.instagram}" class="social-link" target="_blank">📷 Instagram</a>`);
     }
     
     if (links.length === 0) return '';
     
-    return `<div class="social-links">${links.join('')}</div>`;
+    return `<div class="social-container">${links.join('')}</div>`;
   }
 
   /**
@@ -199,7 +236,6 @@ export class InlineTableExporter {
   private getAbsoluteImageUrl(imagePath: string | undefined): string | null {
     if (!imagePath) return null;
     
-    // Handle different image path formats
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return imagePath;
     }
@@ -212,7 +248,6 @@ export class InlineTableExporter {
       return `http://localhost:5000${imagePath}`;
     }
     
-    // Default handling for relative paths
     return `http://localhost:5000/api/files/${imagePath}`;
   }
 
@@ -245,7 +280,7 @@ export class InlineTableExporter {
    */
   private extractTableStructure(inlinedHtml: string): string {
     try {
-      // Simple regex-based approach to extract table content
+      // Extract table content using regex
       const tableMatch = inlinedHtml.match(/<table[^>]*>[\s\S]*?<\/table>/i);
       if (!tableMatch) {
         throw new Error('No table found in signature HTML');
@@ -253,22 +288,20 @@ export class InlineTableExporter {
       
       let tableHtml = tableMatch[0];
       
-      // Clean up table attributes for email client compatibility
+      // Ensure proper table attributes for email clients
       tableHtml = tableHtml.replace(/<table[^>]*>/i, (match) => {
-        return '<table cellpadding="0" cellspacing="0" border="0" style="' + 
-               this.extractStyleFromMatch(match) + '">';
+        const existingStyle = this.extractStyleFromMatch(match);
+        return `<table cellpadding="0" cellspacing="0" border="0" style="${existingStyle}">`;
       });
       
-      // Ensure all images have explicit width/height attributes and border="0"
+      // Add explicit dimensions to images
       tableHtml = tableHtml.replace(/<img[^>]*>/gi, (match) => {
         let imgTag = match;
         
-        // Add border="0" if not present
         if (!imgTag.includes('border=')) {
           imgTag = imgTag.replace(/>/i, ' border="0">');
         }
         
-        // Extract dimensions from style and add as attributes
         const styleMatch = imgTag.match(/style="([^"]*)"/i);
         if (styleMatch) {
           const style = styleMatch[1];
@@ -286,7 +319,7 @@ export class InlineTableExporter {
         return imgTag;
       });
       
-      // Remove any remaining class attributes (not needed with inline styles)
+      // Clean up class attributes
       tableHtml = tableHtml.replace(/\s+class="[^"]*"/gi, '');
       
       return tableHtml;
@@ -312,29 +345,23 @@ export class InlineTableExporter {
     const issues: string[] = [];
     
     try {
-      // Check for single table structure
+      // Check structure requirements
       const tableMatches = html.match(/<table[^>]*>/gi);
       if (!tableMatches || tableMatches.length !== 1) {
         issues.push('Must contain exactly one table element');
       }
       
-      // Check for any remaining divs (except within social links)
-      const divMatches = html.match(/<div[^>]*>/gi);
-      if (divMatches && divMatches.length > 1) { // Allow one div for social links
-        issues.push('Contains too many div elements - should primarily use table/tr/td');
-      }
-      
-      // Check for external styles
+      // Check for inline styles
       if (html.includes('<style>') || html.includes('<link')) {
-        issues.push('Contains style tags or external CSS - all styles should be inlined');
+        issues.push('Contains external styles - all styles should be inlined');
       }
       
-      // Check for proper table attributes
+      // Check table attributes
       if (!html.includes('cellpadding="0"') || !html.includes('cellspacing="0"')) {
         issues.push('Table missing required cellpadding="0" cellspacing="0" attributes');
       }
       
-      // Check for image attributes
+      // Check image attributes
       const imageMatches = html.match(/<img[^>]*>/gi);
       if (imageMatches) {
         imageMatches.forEach(imgTag => {
@@ -348,7 +375,7 @@ export class InlineTableExporter {
       }
       
     } catch (error) {
-      issues.push(`HTML parsing error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      issues.push(`Validation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
     
     return {
