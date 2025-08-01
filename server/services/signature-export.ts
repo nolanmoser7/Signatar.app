@@ -522,7 +522,9 @@ export class SignatureExportService {
         
         img { 
             border: 0; 
-            outline: none; 
+            outline: none;
+            max-width: 100%;
+            height: auto; 
             text-decoration: none;
             max-width: 100%;
             height: auto;
@@ -613,16 +615,17 @@ export class SignatureExportService {
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            min-width: 120px;
+            min-width: 150px;
           }
           
           .sales-headshot {
-            width: 80px;
-            height: 80px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.3);
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            flex-shrink: 0;
           }
           
           .sales-social-icons {
