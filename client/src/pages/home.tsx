@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, CheckCircle, Star, Users, Zap, User, LogOut } from "lucide-react";
+import { ArrowRight, CheckCircle, Star, Users, Zap, User, LogOut, FileText } from "lucide-react";
 import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import AuthModal from "@/components/auth-modal";
@@ -40,6 +40,12 @@ export default function Home() {
                   <DropdownMenuItem disabled className="text-xs text-muted-foreground">
                     {user?.email}
                   </DropdownMenuItem>
+                  <Link href="/my-signatures">
+                    <DropdownMenuItem>
+                      <FileText className="w-4 h-4 mr-2" />
+                      My Signatures
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem
                     onClick={() => logout()}
                     disabled={isLoggingOut}

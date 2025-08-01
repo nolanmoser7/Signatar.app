@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut } from "lucide-react";
+import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut, FileText } from "lucide-react";
 import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import TemplateSelector from "@/components/template-selector";
@@ -409,6 +409,12 @@ export default function SignatureBuilder() {
                   <DropdownMenuItem disabled className="text-xs text-muted-foreground">
                     {user?.email}
                   </DropdownMenuItem>
+                  <Link href="/my-signatures">
+                    <DropdownMenuItem>
+                      <FileText className="w-4 h-4 mr-2" />
+                      My Signatures
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem
                     onClick={() => logout()}
                     disabled={isLoggingOut}

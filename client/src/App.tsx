@@ -6,12 +6,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import SignatureBuilder from "@/pages/signature-builder";
+import MySignatures from "@/pages/my-signatures";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/builder" component={SignatureBuilder} />
+      <Route path="/my-signatures" component={MySignatures} />
       <Route component={NotFound} />
     </Switch>
   );
