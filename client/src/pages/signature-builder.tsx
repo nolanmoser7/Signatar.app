@@ -32,6 +32,11 @@ export default function SignatureBuilder() {
   const [location] = useLocation();
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
   const signatureId = urlParams.get('signature');
+  
+  console.log("=== SIGNATURE BUILDER INIT ===");
+  console.log("Current location:", location);
+  console.log("Search params:", location.split('?')[1] || '');
+  console.log("Signature ID from URL:", signatureId);
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
