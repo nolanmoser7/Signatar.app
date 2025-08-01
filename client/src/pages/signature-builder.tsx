@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, Download, Dock, Smartphone, Play, CheckCircle } from "lucide-react";
+import signatarLogo from "@assets/new-signatar-logo.png";
 import TemplateSelector from "@/components/template-selector";
 import PersonalInfoForm from "@/components/personal-info-form";
 import ImageUploader from "@/components/image-uploader";
@@ -16,7 +17,7 @@ import AuthModal from "@/components/auth-modal";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
-import signatarLogo from "@assets/signatar-logo.png";
+
 import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
@@ -384,9 +385,7 @@ export default function SignatureBuilder() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">S</span>
-              </div>
+              <img src={signatarLogo} alt="Signatar" className="w-8 h-8 object-contain" />
               <h1 className="text-xl font-semibold text-neutral">Signatar</h1>
             </div>
           </div>
