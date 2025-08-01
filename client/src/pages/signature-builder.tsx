@@ -30,29 +30,6 @@ import defaultHeadshot from "@assets/default-headshot.png";
 
 export default function SignatureBuilder() {
   const [location] = useLocation();
-  
-  // Enhanced URL parsing with debugging
-  console.log("=== SIGNATURE BUILDER INIT ===");
-  console.log("Current location:", location);
-  console.log("Window location href:", window.location.href);
-  console.log("Window search:", window.location.search);
-  
-  // Try multiple approaches to get the signature ID
-  const urlFromLocation = location.split('?')[1] || '';
-  const urlFromWindow = window.location.search.substring(1);
-  const urlParams1 = new URLSearchParams(urlFromLocation);
-  const urlParams2 = new URLSearchParams(urlFromWindow);
-  const signatureIdFromLocation = urlParams1.get('signature');
-  const signatureIdFromWindow = urlParams2.get('signature');
-  
-  console.log("URL params from location:", urlFromLocation);
-  console.log("URL params from window:", urlFromWindow);
-  console.log("Signature ID from location:", signatureIdFromLocation);
-  console.log("Signature ID from window:", signatureIdFromWindow);
-  
-  // Use whichever approach successfully gets the signature ID
-  const signatureId = signatureIdFromLocation || signatureIdFromWindow;
-  console.log("Final signature ID:", signatureId);
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
@@ -102,6 +79,16 @@ export default function SignatureBuilder() {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading, logout, isLoggingOut } = useAuth();
   const queryClient = useQueryClient();
+
+  // Parse signature ID from URL after all hooks are declared
+  const urlFromWindow = window.location.search.substring(1);
+  const urlParams = new URLSearchParams(urlFromWindow);
+  const signatureId = urlParams.get('signature');
+  
+  console.log("=== SIGNATURE BUILDER INIT ===");
+  console.log("Current location:", location);
+  console.log("Window search:", window.location.search);
+  console.log("Signature ID:", signatureId);
 
   // Load existing signature if editing
   const { data: existingSignature, isLoading: isLoadingSignature, error: signatureError } = useQuery({
