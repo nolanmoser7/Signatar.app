@@ -37,6 +37,9 @@ export default function SignatureBuilder() {
   console.log("Current location:", location);
   console.log("Search params:", location.split('?')[1] || '');
   console.log("Signature ID from URL:", signatureId);
+  console.log("Query enabled:", !!signatureId);
+  console.log("Query loading:", isLoadingSignature);
+  console.log("Existing signature data:", existingSignature);
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
@@ -88,10 +91,24 @@ export default function SignatureBuilder() {
   const queryClient = useQueryClient();
 
   // Load existing signature if editing
-  const { data: existingSignature, isLoading: isLoadingSignature } = useQuery({
+  const { data: existingSignature, isLoading: isLoadingSignature, error: signatureError } = useQuery({
     queryKey: ["/api/signatures", signatureId],
     enabled: !!signatureId,
+    retry: 1,
   });
+  
+  // Debug logging for query results
+  React.useEffect(() => {
+    if (signatureId) {
+      console.log("=== QUERY DEBUG INFO ===");
+      console.log("Signature ID:", signatureId);
+      console.log("Query enabled:", !!signatureId);
+      console.log("Loading state:", isLoadingSignature);
+      console.log("Error:", signatureError);
+      console.log("Data received:", existingSignature);
+      console.log("========================");
+    }
+  }, [signatureId, isLoadingSignature, signatureError, existingSignature]);
 
   // Show loading state while fetching existing signature
   if (signatureId && isLoadingSignature) {
