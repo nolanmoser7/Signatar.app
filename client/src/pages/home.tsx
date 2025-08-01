@@ -207,9 +207,7 @@ export default function Home() {
             </Button>
           </Link>
           
-          <p className="text-sm mt-4 opacity-75">
-            No credit card required • Free forever • Export ready
-          </p>
+          <p className="text-sm mt-4 opacity-75">No credit card required • Free to design • Customize away!</p>
         </div>
       </section>
       {/* Footer */}
