@@ -31,16 +31,12 @@ import defaultHeadshot from "@assets/default-headshot.png";
 export default function SignatureBuilder() {
   const [location] = useLocation();
   
-  // Parse signature ID from URL using useMemo to prevent hook order issues
-  const signatureId = React.useMemo(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('signature');
-    console.log("=== SIGNATURE BUILDER INIT ===");
-    console.log("Current location:", location);
-    console.log("Window search:", window.location.search);
-    console.log("Parsed signature ID:", id);
-    return id;
-  }, [location]);
+  // Simple URL parsing without useMemo to avoid hook issues
+  const urlParams = new URLSearchParams(window.location.search);
+  const signatureId = urlParams.get('signature');
+  
+  console.log("=== SIGNATURE BUILDER INIT ===");
+  console.log("Signature ID:", signatureId);
   
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
@@ -112,17 +108,8 @@ export default function SignatureBuilder() {
     }
   }, [signatureId, isLoadingSignature, signatureError, existingSignature]);
 
-  // Show loading state while fetching existing signature
-  if (signatureId && isLoadingSignature) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your signature...</p>
-        </div>
-      </div>
-    );
-  }
+  // Show loading state while fetching existing signature (moved to JSX to avoid early returns affecting hooks)
+  const isEditingAndLoading = signatureId && isLoadingSignature;
   
   // Initialize state with existing signature data if available
   React.useEffect(() => {
@@ -659,6 +646,18 @@ export default function SignatureBuilder() {
       </table>
     </div>`;
   };
+
+  // Render loading state if editing and loading
+  if (isEditingAndLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your signature...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
