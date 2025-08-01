@@ -911,11 +911,14 @@ export class SignatureExportService {
       return `
         <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 650px; width: 100%; margin: 0 auto; font-family: 'Playfair Display', 'Times New Roman', serif;">
           
-          <!-- Background geometric patterns -->
-          <div style="position: absolute; top: 0; right: ${headshotWidthPx + 20}px; width: calc(50% - ${Math.round(headshotWidthPx / 2)}px); height: 100%; overflow: hidden; pointer-events: none;">
-            <div style="position: absolute; right: -11px; top: 54px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #4fd1c7, #0891b2); opacity: 0.1;"></div>
-            <div style="position: absolute; right: -3px; top: 118px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #4b5563, #1f2937); opacity: 0.2;"></div>
-            <div style="position: absolute; right: -7px; bottom: 74px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15;"></div>
+          <!-- Background geometric patterns - matching saved signature positioning -->
+          <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none;">
+            <div style="position: absolute; top: 0; right: ${headshotWidthPx + 20}px; width: calc(50% - ${Math.round(headshotWidthPx / 2)}px); height: 100%;">
+              <!-- Adjusted positioning to match original template exactly -->
+              <div style="position: absolute; right: -11px; top: 54px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1;"></div>
+              <div style="position: absolute; right: -3px; top: 118px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #6b7280, #374151); opacity: 0.2;"></div>
+              <div style="position: absolute; right: -7px; bottom: 74px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0891b2); opacity: 0.15;"></div>
+            </div>
           </div>
           
           <div style="display: flex; position: relative; z-index: 10;">
