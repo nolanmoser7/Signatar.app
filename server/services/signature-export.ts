@@ -583,13 +583,15 @@ export class SignatureExportService {
           .sales-professional {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 16px;
-            padding: 32px;
-            max-width: 600px;
-            min-height: 180px;
+            padding: 20px;
+            max-width: 550px;
+            height: 120px;
             margin: 0 auto;
             color: white;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
           }
           
           .sales-professional::before {
@@ -606,29 +608,31 @@ export class SignatureExportService {
           .sales-template-content {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
             position: relative;
             z-index: 1;
+            width: 100%;
+            height: 100%;
           }
           
           .sales-left-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            min-width: 170px;
+            gap: 8px;
+            min-width: 100px;
+            height: 100%;
+            justify-content: center;
           }
           
           .sales-headshot {
-            width: 140px;
-            height: 140px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.3);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             flex-shrink: 0;
-            min-height: 140px;
-            min-width: 140px;
           }
           
           .sales-social-icons {
@@ -661,34 +665,34 @@ export class SignatureExportService {
           }
           
           .sales-name {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
-            margin-bottom: 4px;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 2px;
+            color: white;
+            line-height: 1.2;
           }
           
           .sales-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             color: rgba(255,255,255,0.9);
-            margin-bottom: 16px;
+            margin-bottom: 8px;
+            line-height: 1.2;
           }
           
           .sales-contact-info {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
           }
           
           .sales-contact-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 14px;
+            gap: 6px;
+            font-size: 12px;
             color: rgba(255,255,255,0.8);
+            line-height: 1.3;
           }
           
           .sales-contact-icon {
