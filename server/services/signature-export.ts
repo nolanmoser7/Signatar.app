@@ -834,32 +834,7 @@ export class SignatureExportService {
     };
   }
 
-  /**
-   * Generate social media icons HTML for static export
-   */
-  private generateSocialIconsHtml(socialMedia: SocialMedia | null): string {
-    if (!socialMedia) return '';
-    
-    const icons = [];
-    
-    if (socialMedia.linkedin) {
-      icons.push(`<a href="${socialMedia.linkedin}" style="display: inline-block; width: 32px; height: 32px; background: #0077b5; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">in</a>`);
-    }
-    if (socialMedia.twitter) {
-      icons.push(`<a href="${socialMedia.twitter}" style="display: inline-block; width: 32px; height: 32px; background: #1da1f2; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">𝕏</a>`);
-    }
-    if (socialMedia.instagram) {
-      icons.push(`<a href="${socialMedia.instagram}" style="display: inline-block; width: 32px; height: 32px; background: #e4405f; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">📷</a>`);
-    }
-    if (socialMedia.youtube) {
-      icons.push(`<a href="${socialMedia.youtube}" style="display: inline-block; width: 32px; height: 32px; background: #ff0000; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">▶</a>`);
-    }
-    if (socialMedia.tiktok) {
-      icons.push(`<a href="${socialMedia.tiktok}" style="display: inline-block; width: 32px; height: 32px; background: #000000; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">🎵</a>`);
-    }
-    
-    return icons.join('\n        ');
-  }
+
 
   /**
    * Generate clean static template HTML without animations - matches live preview design
