@@ -488,26 +488,31 @@ export class SignatureExportService {
     // Create social media icons HTML matching the original vertical layout
     const socialIconsHtml = this.generateGmailSocialIcons(socialMedia);
     
+    // Calculate proper widths based on original template proportions
+    const headshotColumnWidth = headshotSize * 2.56; // Match original scaling
+    const mainContentWidth = `calc(100% - 80px - ${headshotColumnWidth}px)`;
+    
     return `
-<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; max-width: 650px; position: relative;">
-  <!-- Background geometric elements -->
+<table cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); overflow: hidden; max-width: 650px; height: 250px; position: relative;">
   <tr>
-    <td style="position: relative;">
-      <!-- Background pattern overlay -->
-      <div style="position: absolute; top: 54px; right: 11px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1; z-index: 1;"></div>
-      <div style="position: absolute; top: 118px; right: 3px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #374151, #1f2937); opacity: 0.2; z-index: 1;"></div>
-      <div style="position: absolute; bottom: 74px; right: 7px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15; z-index: 1;"></div>
+    <td style="position: relative; height: 100%;">
+      <!-- Background geometric elements positioned like original -->
+      <div style="position: absolute; top: 54px; right: ${headshotColumnWidth - 11}px; width: 128px; height: 128px; transform: rotate(45deg); background: linear-gradient(135deg, #22d3ee, #0891b2); opacity: 0.1; z-index: 1;"></div>
+      <div style="position: absolute; top: 118px; right: ${headshotColumnWidth - 3}px; width: 96px; height: 96px; transform: rotate(-12deg); background: linear-gradient(135deg, #374151, #1f2937); opacity: 0.2; z-index: 1;"></div>
+      <div style="position: absolute; bottom: 74px; right: ${headshotColumnWidth - 7}px; width: 80px; height: 80px; transform: rotate(12deg); background: linear-gradient(135deg, #14b8a6, #0d9488); opacity: 0.15; z-index: 1;"></div>
       
       <!-- Main layout table -->
-      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; position: relative; z-index: 10;">
-        <tr>
-          <!-- Left sidebar with social media -->
-          <td style="width: 80px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; padding: 20px 0;">
-            ${socialIconsHtml}
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%; position: relative; z-index: 10;">
+        <tr style="height: 100%;">
+          <!-- Left sidebar with social media icons -->
+          <td style="width: 80px; background: linear-gradient(180deg, #22d3ee 0%, #0891b2 100%); vertical-align: middle; text-align: center; height: 100%; border-radius: 12px 0 0 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px;">
+              ${socialIconsHtml}
+            </div>
           </td>
           
           <!-- Main content area -->
-          <td style="padding: 32px; vertical-align: top; width: calc(100% - 80px - ${headshotSize * 2.56}px);">
+          <td style="padding: 32px; vertical-align: top; width: ${mainContentWidth}; height: 100%;">
             <!-- Company Logo -->
             ${processedImages?.logo ? `
             <div style="margin-bottom: 16px;">
@@ -528,44 +533,24 @@ export class SignatureExportService {
             
             <!-- Contact Information -->
             <div>
-              <table cellpadding="0" cellspacing="0" border="0">
-                ${personalInfo.phone ? `
-                <tr>
-                  <td style="padding-bottom: 8px; vertical-align: middle; width: 20px;">
-                    <span style="color: #6b7280; font-size: 16px;">📞</span>
-                  </td>
-                  <td style="padding-bottom: 8px; padding-left: 8px; font-size: 16px; color: #374151;">
-                    <a href="tel:${personalInfo.phone}" style="color: #374151; text-decoration: none;">${personalInfo.phone}</a>
-                  </td>
-                </tr>
-                ` : ''}
-                ${personalInfo.email ? `
-                <tr>
-                  <td style="padding-bottom: 8px; vertical-align: middle; width: 20px;">
-                    <span style="color: #6b7280; font-size: 16px;">📧</span>
-                  </td>
-                  <td style="padding-bottom: 8px; padding-left: 8px; font-size: 16px; color: #374151;">
-                    <a href="mailto:${personalInfo.email}" style="color: #374151; text-decoration: none;">${personalInfo.email}</a>
-                  </td>
-                </tr>
-                ` : ''}
-                ${personalInfo.website ? `
-                <tr>
-                  <td style="padding-bottom: 8px; vertical-align: middle; width: 20px;">
-                    <span style="color: #6b7280; font-size: 16px;">🌐</span>
-                  </td>
-                  <td style="padding-bottom: 8px; padding-left: 8px; font-size: 16px; color: #374151;">
-                    <a href="${personalInfo.website}" style="color: #374151; text-decoration: none;">${personalInfo.website}</a>
-                  </td>
-                </tr>
-                ` : ''}
-              </table>
+              <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                <span style="width: 20px; height: 16px; margin-right: 8px; color: #6b7280;">📞</span>
+                <a href="tel:${personalInfo.phone || ''}" style="color: #374151; text-decoration: none; font-size: 16px;">${personalInfo.phone || ''}</a>
+              </div>
+              <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                <span style="width: 20px; height: 16px; margin-right: 8px; color: #6b7280;">📧</span>
+                <a href="mailto:${personalInfo.email || ''}" style="color: #374151; text-decoration: none; font-size: 16px;">${personalInfo.email || ''}</a>
+              </div>
+              <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                <span style="width: 20px; height: 16px; margin-right: 8px; color: #6b7280;">🌐</span>
+                <a href="${personalInfo.website || ''}" style="color: #374151; text-decoration: none; font-size: 16px;">${personalInfo.website || ''}</a>
+              </div>
             </div>
           </td>
           
-          <!-- Right section with headshot -->
+          <!-- Right section with full-height headshot -->
           ${processedImages?.headshot ? `
-          <td style="width: ${headshotSize * 2.56}px; padding: 32px; vertical-align: top; text-align: center; position: relative;">
+          <td style="width: ${headshotColumnWidth}px; height: 100%; vertical-align: middle; text-align: center; position: relative; padding: 20px;">
             <div style="width: ${headshotSize}px; height: ${headshotSize}px; margin: 0 auto; transform: rotate(-5deg); position: relative; z-index: 5;">
               <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${headshotSize}px; height: ${headshotSize}px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(34, 211, 238, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: block;" width="${headshotSize}" height="${headshotSize}" />
             </div>
@@ -579,17 +564,17 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate Gmail-compatible social media icons in vertical layout like the original template
+   * Generate Gmail-compatible social media icons exactly matching the original template design
    */
   private generateGmailSocialIcons(socialMedia: SocialMedia | null): string {
     if (!socialMedia) return '';
     
     const socialLinks = [
-      { key: 'twitter', url: socialMedia.twitter, icon: '✕', bgColor: 'rgba(255,255,255,0.2)' },
-      { key: 'linkedin', url: socialMedia.linkedin, icon: 'in', bgColor: 'rgba(255,255,255,0.2)' },
-      { key: 'instagram', url: socialMedia.instagram, icon: '📷', bgColor: 'rgba(255,255,255,0.2)' },
-      { key: 'youtube', url: socialMedia.youtube, icon: '▶', bgColor: 'rgba(255,255,255,0.2)' },
-      { key: 'tiktok', url: socialMedia.tiktok, icon: '♫', bgColor: 'rgba(255,255,255,0.2)' },
+      { key: 'twitter', url: socialMedia.twitter, svg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` },
+      { key: 'linkedin', url: socialMedia.linkedin, svg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>` },
+      { key: 'instagram', url: socialMedia.instagram, svg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>` },
+      { key: 'youtube', url: socialMedia.youtube, svg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>` },
+      { key: 'tiktok', url: socialMedia.tiktok, svg: `<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>` }
     ];
 
     const validLinks = socialLinks.filter(link => link.url);
@@ -597,8 +582,8 @@ export class SignatureExportService {
     if (validLinks.length === 0) return '';
 
     return validLinks.map(link => `
-      <a href="${link.url}" style="display: block; width: 24px; height: 24px; color: white; text-decoration: none; font-size: 16px; text-align: center; line-height: 24px; margin-bottom: 20px; transition: opacity 0.2s;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
-        ${link.icon}
+      <a href="${link.url}" style="display: block; width: 24px; height: 24px; color: white; text-decoration: none; opacity: 0.9; transition: opacity 0.2s;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">
+        ${link.svg}
       </a>
     `).join('');
   }
