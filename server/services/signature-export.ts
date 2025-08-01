@@ -581,124 +581,203 @@ export class SignatureExportService {
       case 'sales-professional':
         return `
           .sales-professional {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px;
-            padding: 20px;
-            max-width: 550px;
-            height: 120px;
-            margin: 0 auto;
-            color: white;
-            position: relative;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             overflow: hidden;
+            max-width: 768px;
+            margin: 0 auto;
+            position: relative;
             display: flex;
-            align-items: center;
+            height: 300px;
           }
           
-          .sales-professional::before {
-            content: '';
+          /* Geometric background shapes */
+          .geometric-bg {
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            inset: 0;
+            overflow: hidden;
             pointer-events: none;
           }
           
-          .sales-template-content {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 100%;
+          .geometric-shape-1 {
+            position: absolute;
+            right: 150px;
+            top: 54px;
+            width: 128px;
+            height: 128px;
+            background: linear-gradient(135deg, #22d3ee, #0891b2);
+            opacity: 0.1;
+            transform: rotate(45deg);
           }
           
-          .sales-left-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            min-width: 100px;
-            height: 100%;
-            justify-content: center;
+          .geometric-shape-2 {
+            position: absolute;
+            right: 158px;
+            top: 118px;
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(135deg, #4b5563, #1f2937);
+            opacity: 0.2;
+            transform: rotate(-12deg);
           }
           
-          .sales-headshot {
+          .geometric-shape-3 {
+            position: absolute;
+            right: 154px;
+            bottom: 74px;
             width: 80px;
             height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.3);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            flex-shrink: 0;
+            background: linear-gradient(135deg, #0d9488, #065f46);
+            opacity: 0.15;
+            transform: rotate(12deg);
           }
           
-          .sales-social-icons {
+          /* Left sidebar with social icons */
+          .social-sidebar {
+            width: 80px;
+            height: 100%;
+            background: linear-gradient(180deg, #22d3ee 0%, #2563eb 100%);
+            border-radius: 12px 0 0 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
             align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
           }
           
-          .sales-social-icon {
+          .social-icon {
             width: 24px;
             height: 24px;
+            color: white;
+            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            color: white;
             transition: all 0.3s ease;
           }
           
-          .sales-main-content {
+          .social-icon:hover {
+            color: rgba(255,255,255,0.7);
+          }
+          
+          /* Main content area */
+          .main-content {
+            padding: 32px;
             flex: 1;
+            position: relative;
+            z-index: 2;
           }
           
-          .sales-company-logo {
-            width: auto;
-            height: 32px;
-            margin-bottom: 12px;
-          }
-          
-          .sales-name {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 2px;
-            color: white;
-            line-height: 1.2;
-          }
-          
-          .sales-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 8px;
-            line-height: 1.2;
-          }
-          
-          .sales-contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-          }
-          
-          .sales-contact-item {
+          .company-logo {
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.3;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
           }
           
-          .sales-contact-icon {
-            width: 16px;
-            height: 16px;
+          .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+          
+          .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #111827;
+            margin-bottom: 24px;
+            font-family: 'Playfair Display', serif;
+          }
+          
+          .person-name {
+            font-size: 30px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          
+          .person-title {
+            font-size: 20px;
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 24px;
+            font-family: 'Playfair Display', serif;
+          }
+          
+          .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+          
+          .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            color: #111827;
+            font-family: 'Playfair Display', serif;
+          }
+          
+          .contact-icon {
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
             flex-shrink: 0;
+          }
+          
+          /* Right side headshot area */
+          .headshot-area {
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            z-index: 2;
+          }
+          
+          .headshot-container {
+            position: absolute;
+            inset: 0;
+          }
+          
+          .headshot-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+          }
+          
+          .headshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(17, 24, 39, 0.2));
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+          }
+          
+          .headshot-placeholder {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+            clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 14px;
+          }
+          
+          .checkmark {
+            color: #06b6d4;
+            font-size: 24px;
           }
         `;
         
@@ -1151,32 +1230,77 @@ export class SignatureExportService {
                     <a href="${personalInfoTyped.website}" style="color: #0891b2; text-decoration: none; display: flex; align-items: center; gap: 8px;">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #6b7280;">
                         <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <line x1="2" x2="22" y1="12" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <line x1="2" y1="12" x2="22" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="m2 12 .87 2.61a7.94 7.94 0 0 0 .46 1.02 8 8 0 0 0 8.13 4.28 8 8 0 0 0 8-8c0-2.28-.94-4.34-2.46-5.83A8 8 0 0 0 12 4a8 8 0 0 0-7.74 6c0 .32.06.64.12.96L2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                       ${personalInfoTyped.website}
                     </a>
                   </div>
                 ` : ''}
               </div>
-              
             </div>
             
-            <!-- Profile Photo -->
-            ${headshotUrl ? `
-              <div style="${getElementStyle('headshot', `position: absolute; top: 0; right: 0; bottom: 0; width: ${headshotWidthPx}px; overflow: hidden; border-radius: 0 12px 12px 0;`)}">
-                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="width: 100%; height: 100%; object-fit: cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
-                <!-- Overlay for geometric effect -->
-                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(31, 41, 55, 0.2) 100%); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%); pointer-events: none;"></div>
-              </div>
-            ` : ''}
-            
+            <!-- Right Side Headshot Area -->
+            <div style="${getElementStyle('headshot', `position: relative; overflow: hidden; height: 100%; width: ${headshotWidthPx}px;`)}">
+              ${headshotUrl ? `
+                <div style="position: absolute; inset: 0;">
+                  <img src="${headshotUrl}" alt="${personalInfoTyped.name} headshot" style="width: 100%; height: 100%; object-fit: cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
+                  <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(20, 184, 166, 0.2), rgba(17, 24, 39, 0.2)); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);"></div>
+                </div>
+              ` : `
+                <div style="position: absolute; inset: 0; background: linear-gradient(135deg, #e5e7eb, #9ca3af); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%); display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 14px;">
+                  Portrait
+                </div>
+              `}
+            </div>
           </div>
         </div>
       `;
     }
+
+    return '<div>Template not found</div>';
+  }
+
+  /**
+   * Generate social media icons HTML for Sales Professional template
+   */
+  private generateSalesProSocialIconsHtml(socialMedia: SocialMedia | null): string {
+    if (!socialMedia) return '';
+
+    const socialLinks = [
+      { key: 'twitter', url: socialMedia.twitter, icon: '𝕏' },
+      { key: 'linkedin', url: socialMedia.linkedin, icon: 'in' },
+      { key: 'instagram', url: socialMedia.instagram, icon: '📷' },
+      { key: 'youtube', url: socialMedia.youtube, icon: '▶' },
+      { key: 'tiktok', url: socialMedia.tiktok, icon: '🎵' },
+    ];
+
+    const validLinks = socialLinks.filter(link => link.url);
     
-    // Default static template for other template types
+    if (validLinks.length === 0) return '';
+
+    return validLinks.map(link => `
+      <a href="${link.url}" style="width: 24px; height: 24px; color: white; text-decoration: none; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;" target="_blank" rel="noopener">
+        ${link.icon}
+      </a>
+    `).join('');
+  }
+
+  /**
+   * Generate default template HTML for other template types
+   */
+  private generateDefaultTemplateHtml(signature: Signature): string {
+    const { personalInfo, images, socialMedia } = signature;
+    const personalInfoTyped = personalInfo as PersonalInfo;
+    const imagesTyped = images as any;
+    const socialMediaTyped = socialMedia as SocialMedia | null;
+
+    // Helper function to get image URL regardless of format
+    const getImageUrl = (image: any): string | null => {
+      if (!image) return null;
+      return typeof image === 'string' ? image : image.url;
+    };
+
     const headshotUrl = getImageUrl(imagesTyped?.headshot);
     const logoUrl = getImageUrl(imagesTyped?.logo);
     
@@ -1217,59 +1341,6 @@ export class SignatureExportService {
         </table>
       </div>
     `;
-  }
-
-  /**
-   * Generate social icons for Sales Professional template sidebar
-   */
-  private generateSalesProSocialIconsHtml(socialMedia: SocialMedia | null): string {
-    if (!socialMedia) return '';
-    
-    const iconStyle = "color: white; text-decoration: none; display: inline-block; width: 24px; height: 24px;";
-    const icons = [];
-    
-    if (socialMedia.twitter) {
-      icons.push(`<a href="${socialMedia.twitter}" style="${iconStyle}">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"/>
-        </svg>
-      </a>`);
-    }
-    if (socialMedia.linkedin) {
-      icons.push(`<a href="${socialMedia.linkedin}" style="${iconStyle}">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <rect width="4" height="12" x="2" y="9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="4" cy="4" r="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>`);
-    }
-    if (socialMedia.instagram) {
-      icons.push(`<a href="${socialMedia.instagram}" style="${iconStyle}">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="20" height="20" x="2" y="2" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>`);
-    }
-    if (socialMedia.youtube) {
-      icons.push(`<a href="${socialMedia.youtube}" style="${iconStyle}">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0 2 2 0 0 1-1.4-1.4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <polygon points="10,8 16,12 10,16" fill="currentColor"/>
-        </svg>
-      </a>`);
-    }
-    if (socialMedia.tiktok) {
-      icons.push(`<a href="${socialMedia.tiktok}" style="${iconStyle}">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </a>`);
-    }
-    
-    return icons.join('');
   }
 
   /**
