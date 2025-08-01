@@ -838,10 +838,11 @@ export class SignatureExportService {
    * Generate clean static template HTML without animations
    */
   private async generateStaticTemplateHtml(signature: Signature): Promise<string> {
-    const { personalInfo, images, socialMedia, templateId } = signature;
+    const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
     const personalInfoTyped = personalInfo as PersonalInfo;
     const imagesTyped = images as any;
     const socialMediaTyped = socialMedia as SocialMedia | null;
+    const positions = elementPositions as any || {};
 
     // Helper function to get image URL regardless of format
     const getImageUrl = (image: any): string | null => {
@@ -849,9 +850,43 @@ export class SignatureExportService {
       return typeof image === 'string' ? image : image.url;
     };
 
+    // Helper function to apply element positioning and scaling
+    const getElementStyle = (elementKey: string, baseStyle: string = ''): string => {
+      const pos = positions[elementKey];
+      if (!pos) return baseStyle;
+      
+      const transform = [];
+      if (pos.x && pos.x !== 0 || pos.y && pos.y !== 0) {
+        transform.push(`translate(${pos.x || 0}px, ${pos.y || 0}px)`);
+      }
+      if (pos.scale && pos.scale !== 1) {
+        transform.push(`scale(${pos.scale})`);
+      }
+      
+      const transformStyle = transform.length > 0 ? `transform: ${transform.join(' ')};` : '';
+      const fullStyle = baseStyle + (transformStyle ? ` ${transformStyle}` : '');
+      return fullStyle.trim();
+    };
+
+    // Helper function to get image size from saved settings
+    const getImageSize = (type: 'headshot' | 'logo'): { width?: string; height?: string } => {
+      const size = type === 'headshot' ? imagesTyped?.headshotSize : imagesTyped?.logoSize;
+      if (!size || size === 100) return {}; // 100 is default, no need to set
+      
+      if (type === 'headshot') {
+        const dimension = `${Math.round(80 * (size / 100))}px`;
+        return { width: dimension, height: dimension };
+      } else {
+        const maxWidth = Math.round(120 * (size / 100));
+        return { maxWidth: `${maxWidth}px` };
+      }
+    };
+
     if (templateId === 'sales-professional') {
       const headshotUrl = getImageUrl(imagesTyped?.headshot);
       const logoUrl = getImageUrl(imagesTyped?.logo);
+      const headshotSize = getImageSize('headshot');
+      const logoSize = getImageSize('logo');
       
       return `
         <div class="sales-professional">
@@ -859,29 +894,34 @@ export class SignatureExportService {
             <tr>
               <td style="vertical-align: top; padding-right: 20px;">
                 ${headshotUrl ? `
-                  <div class="headshot-element">
-                    <img src="${headshotUrl}" alt="${personalInfoTyped.name}" />
+                  <div class="headshot-element" style="${getElementStyle('headshot')}">
+                    <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="border-radius: 50%; object-fit: cover; ${headshotSize.width ? `width: ${headshotSize.width}; height: ${headshotSize.height};` : 'width: 80px; height: 80px;'}" />
                   </div>
                 ` : ''}
               </td>
               <td style="vertical-align: top; flex: 1;">
                 ${logoUrl ? `
-                  <div class="logo-element" style="margin-bottom: 12px;">
-                    <img src="${logoUrl}" alt="${personalInfoTyped.company}" />
+                  <div class="logo-element" style="${getElementStyle('logo', 'margin-bottom: 12px;')}">
+                    <img src="${logoUrl}" alt="${personalInfoTyped.company}" style="object-fit: contain; ${logoSize.maxWidth ? `max-width: ${logoSize.maxWidth}; max-height: 60px;` : 'max-width: 120px; max-height: 60px;'}" />
                   </div>
                 ` : ''}
                 
-                <h2 style="margin: 0 0 4px 0; color: #1a1a1a; font-size: 24px; font-weight: bold;">
-                  ${personalInfoTyped.name}
-                </h2>
-                <p style="margin: 0 0 8px 0; color: #666; font-size: 16px;">
-                  ${personalInfoTyped.title}
-                </p>
-                <p style="margin: 0 0 16px 0; color: #333; font-size: 14px; font-weight: 500;">
-                  ${personalInfoTyped.company || ''}
-                </p>
+                <div style="${getElementStyle('name')}">
+                  <h2 style="margin: 0 0 4px 0; color: #1a1a1a; font-size: 24px; font-weight: bold; font-family: 'Playfair Display', serif;">
+                    ${personalInfoTyped.name}
+                  </h2>
+                  <p style="margin: 0 0 8px 0; color: #666; font-size: 16px; font-family: 'Playfair Display', serif;">
+                    ${personalInfoTyped.title}
+                  </p>
+                </div>
                 
-                <div style="font-size: 14px; line-height: 1.6; color: #555;">
+                <div style="${getElementStyle('company')}">
+                  <p style="margin: 0 0 16px 0; color: #333; font-size: 14px; font-weight: 500; font-family: 'Playfair Display', serif;">
+                    ${personalInfoTyped.company || ''}
+                  </p>
+                </div>
+                
+                <div style="${getElementStyle('contact', 'font-size: 14px; line-height: 1.6; color: #555; font-family: \'Playfair Display\', serif;')}">
                   ${personalInfoTyped.email ? `
                     <div style="margin-bottom: 4px;">
                       <a href="mailto:${personalInfoTyped.email}" style="color: #0077b5; text-decoration: none;">
@@ -905,7 +945,9 @@ export class SignatureExportService {
                   ` : ''}
                 </div>
                 
-                ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
+                <div style="${getElementStyle('social')}">
+                  ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
+                </div>
               </td>
             </tr>
           </table>

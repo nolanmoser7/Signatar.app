@@ -1,209 +1,57 @@
 # Email Signature Builder Application
 
 ## Overview
-
-This is a modern email signature builder application that allows users to create professional email signatures with customizable templates, animations, and visual elements. The application provides a user-friendly interface for designing signatures and generating them in multiple formats (HTML and GIF).
+This application enables users to create professional email signatures with customizable templates, animations, and visual elements. It provides a user-friendly interface for designing signatures and generating them in HTML and GIF formats. The project aims to offer a robust and intuitive solution for personal and business branding through email communication.
 
 ## User Preferences
-
 Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-The application follows a full-stack monorepo architecture with clear separation between client and server code:
-
-### Frontend Architecture
-- **Framework**: React with TypeScript using Vite as the build tool
-- **UI Library**: shadcn/ui components built on top of Radix UI primitives
-- **Styling**: Tailwind CSS with custom CSS variables for theming
-- **State Management**: React hooks for local state, TanStack Query for server state
-- **Routing**: Wouter for lightweight client-side routing
+### Frontend
+- **Framework**: React with TypeScript (Vite build tool)
+- **UI**: shadcn/ui (built on Radix UI)
+- **Styling**: Tailwind CSS
+- **State Management**: React hooks (local), TanStack Query (server)
+- **Routing**: Wouter
 - **Form Handling**: React Hook Form with Zod validation
+- **Core Features**: Template system, form builder, image management (upload/cropping), animation engine, live preview, HTML/GIF export.
+- **UI/UX Decisions**: Responsive design, vertical tab interface for workflow, toast notifications, modal dialogs, professional typography (Playfair Display), branded aesthetic (Signatar blue).
 
-### Backend Architecture
-- **Runtime**: Node.js with Express.js framework
-- **Language**: TypeScript with ES modules
-- **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Neon Database (serverless PostgreSQL)
-- **File Upload**: Multer middleware for image handling
+### Backend
+- **Runtime**: Node.js with Express.js
+- **Language**: TypeScript
+- **Database**: PostgreSQL (Neon Database) with Drizzle ORM
+- **File Upload**: Multer
 - **Session Management**: Express sessions with PostgreSQL store
+- **Key Components**:
+    - **Authentication System**: Cookie-based session management, bcrypt password hashing, secure API routes.
+    - **Data Persistence**: Signatures and templates stored in PostgreSQL, replacing in-memory storage.
+    - **Signature Management**: Naming, complete state saving (personal info, images, social media, animations, element positions, custom layouts), and tagging (static/dynamic).
+    - **Export Logic**: Ensures exported HTML preserves all custom element positions and image sizes.
 
-## Key Components
-
-### Core Features
-1. **Template System**: Multiple pre-built signature templates (Professional, Modern, Minimal, Creative, Sales Professional)
-2. **Form Builder**: Step-by-step form for personal information, contact details, and social media
-3. **Image Management**: Upload and manage headshots, logos, and background images
-4. **Animation Engine**: Custom animation system with fade-in, pulse, and cross-dissolve effects
-5. **Live Preview**: Real-time signature preview with device view switching (desktop/mobile)
-6. **Export Options**: HTML and animated GIF generation capabilities
-
-### Recent Changes (July 31, 2025)
-- **Authentication System Implementation**: Added complete authentication infrastructure while keeping it disabled for development
-  - Added users table to PostgreSQL schema with email, password hash, names, and timestamps
-  - Implemented AuthService with bcrypt password hashing for login/register operations
-  - Created comprehensive AuthModal component with branded Signatar design for login and registration
-  - Added authentication API routes (/api/auth/login, /api/auth/register, /api/auth/user, /api/auth/logout)
-  - Integrated cookie-based session management using httpOnly secure cookies
-  - Connected login button on homepage to open branded authentication modal
-  - Created useAuth hook for authentication state management throughout the application
-  - Added cookie-parser middleware and bcrypt dependency for secure authentication
-  - Database schema updated and synchronized with new users table structure
-- **Landing Page Implementation**: Created comprehensive home page with Signatar branding
-  - Professional hero section with sales copy and call-to-action buttons
-  - Feature preview cards with reference image placeholders for templates, animations, and social integration
-  - "Design for Free!" buttons that navigate users to the signature builder (/builder route)
-  - Complete marketing layout with header, stats, CTA sections, and footer
-  - Routing system updated: home page (/) now leads to signature builder (/builder)
-- **Button Interface Update**: Replaced "Copy HTML" and "Generate GIF" with "Finished Creating!" button
-  - Cleaned up preview interface by removing export functionality buttons
-  - Prepared "Finished Creating!" button for future workflow connection
-  - Maintained header "Export" button as placeholder for potential future features
-- **PostgreSQL Database Integration**: Successfully migrated from in-memory storage to PostgreSQL using Neon Database
-  - Implemented DatabaseStorage class to replace MemStorage while maintaining the same IStorage interface
-  - All signatures and templates are now persisted in the database with proper CRUD operations
-  - Automatic template initialization ensures default templates are available on first application startup
-  - Database schema created and synchronized using Drizzle ORM with `npm run db:push` command
-- **Modern Template Implementation**: Created new modern template with dark futuristic design
-  - Dark gradient background with cyan accent colors and decorative geometric patterns
-  - TECHSPACE branding with modern geometric logo design (three horizontal bars)
-  - Circular profile photo with cyan glow effect and animation support
-  - HTML export functionality for email client compatibility
-  - GIF animation support with element-specific micro-animations
-- **Social Media Icon Consistency**: Updated all templates to show social media icons only when corresponding URLs are provided
-  - Icons are completely transparent/invisible when input fields are left blank
-  - Removed default placeholder icons from minimal and sales professional templates
-  - Consistent behavior across modern, minimal, and sales professional templates
-- **Sales Professional Template**: Redesigned to match modern visual mockup with left sidebar for social media icons, geometric portrait clipping, and professional branding layout
-- **Template Components**: Created dedicated template components with responsive design and modern styling
-- **Minimal Template**: Added new minimal template component matching user's visual mockup with APEX Solutions branding, circular gradient portrait, and clean layout
-- **Individual Element Animations**: Updated animation system to apply micro-animations to specific elements (logo, headshot, social icons) rather than entire template containers
-- **HTML Export**: Updated HTML generation for all templates with email-client-compatible table structures
-- **GIF Generation**: Enhanced canvas rendering to support all template designs with element-specific animations and proper visual recreation
-- **Upload System Fix**: Resolved image upload issues by fixing multer TypeScript configuration and FormData handling in API requests
-- **Typography Update**: Changed all template fonts to "Playfair Display" serif font for enhanced visual appeal and professional appearance
-  - Updated Modern template with Playfair Display for company name, personal name, title, and contact information
-  - Updated Sales Professional template with Playfair Display throughout all text elements
-  - Updated Minimal template with Playfair Display for both mobile and desktop versions
-  - Added Google Fonts import for Playfair Display with full weight and style support (400-900, normal and italic)
-- **Default Image Settings**: Set optimized default sizes for better template previews
-  - Logo size default increased to 160% for better brand visibility
-  - Headshot size default set to 110% for optimal portrait presentation
-  - Added professional default headshot image for complete template previews
-- **Social Media Layout Improvements**: Enhanced icon positioning and sizing
-  - Sales Professional template: Centered social icons vertically and increased size to 24px
-  - Modern template: Repositioned social icons with 48px right margin for better alignment
-- **Advanced Image Cropping Feature**: Implemented comprehensive image editing capabilities
-  - Added ImageCropper component with interactive canvas for drag, scale, and rotate controls
-  - Headshot cropper enforces 1:1 aspect ratio for perfect circular portraits
-  - Logo cropper allows free-form cropping for flexible brand positioning
-  - "Crop & Position" and "Replace" buttons stacked vertically for optimal container fit
-  - Real-time preview with transform controls (50-200% scale, -180° to +180° rotation)
-  - Integrated @radix-ui/react-dialog for professional modal interface
-  - Fixed image stretching by preserving original aspect ratios in cropper
-- **MVP Template Strategy**: Prioritized Sales Professional template for launch
-  - Sales Professional template moved to top of template list
-  - Other templates marked as "Coming Soon" with disabled interaction
-  - Template selector shows availability status with visual indicators
-  - Focused user experience on the fully-featured template for initial launch
-- **Vertical Tab Interface**: Restructured entire interface from vertical stack to organized vertical tabs
-  - Template, Personal Information, Images, Layout, Animations, Link Social Media tabs
-  - Full-width descriptive labels for step-by-step workflow navigation
-  - Active tab styling uses Signatar blue (primary color) for brand consistency
-  - Improved user experience with clear section organization
-- **Advanced Layout Customization**: Added comprehensive drag-and-drop layout editor
-  - New "Layout" tab with toggle for entering layout mode
-  - Direct click-and-drag functionality in live preview window
-  - Shift+drag for scaling elements, regular drag for repositioning
-  - All signature elements are draggable: logo, headshot, name, title, contact info, social icons
-  - Visual indicators show draggable elements with blue borders and labels
-  - Fine-tune controls with X/Y position sliders and scale controls
-  - Reset layout button to restore default positions
-
-### Recent Changes (August 1, 2025)
-- **Signature Naming and Complete State Saving**: Enhanced signature management system
-  - Added signature name field to database schema and signature builder interface
-  - Replaced "Finished Creating!" button with signature name input field and Save button
-  - Updated save functionality to capture complete signature state including all form data
-  - Signatures now save personal info, images, social media, animations, element positions, and custom layouts
-  - Modified "My Signatures" page to display custom signature names instead of personal names
-  - Added input validation requiring signature names before saving
-  - Database schema updated with name, elementPositions, and elementAnimations columns
-  - Users can now create multiple signatures with descriptive names like "Work Email", "Personal", "Sales Template"
-- **Signature Tag System**: Implemented automatic signature classification for export pipeline selection
-  - Added 'tag' column to signatures table with 'static' or 'dynamic' values
-  - Automatic tag assignment based on element animation settings during signature creation and updates
-  - Static tags for signatures with all animations set to 'none'
-  - Dynamic tags for signatures with any animations other than 'none'
-  - Visual tag badges in My Signatures page showing signature type (📄 Static / 🎬 Dynamic)
-  - Export pipeline now uses signature tags instead of runtime animation detection for improved reliability
-  - Tag-based routing ensures consistent export behavior and better performance
-
-### Data Models
-- **Signatures**: User-created signatures with personal info, template selection, and customizations
-- **Templates**: Pre-defined signature layouts with metadata
-- **Images**: File storage for user-uploaded images
-- **Social Media**: Social platform links integration
-
-### UI Components
-- Responsive design with mobile-first approach
-- Comprehensive form validation using Zod schemas
-- Toast notifications for user feedback
-- Modal dialogs for advanced features
-- Progress indicators for multi-step processes
-
-## Data Flow
-
-1. **User Input**: Forms collect personal information, contact details, and preferences
-2. **Template Selection**: Users choose from available signature templates
-3. **Customization**: Users upload images and configure animations
-4. **Live Preview**: Real-time rendering of signature with applied customizations
-5. **Export**: Generation of HTML code or animated GIF files
-6. **Storage**: Signatures saved to PostgreSQL database with user associations
+### System Design Choices
+- **Monorepo Architecture**: Clear separation of client and server code.
+- **Data Models**: Signatures (user-created with customizations), Templates (pre-defined layouts), Images (uploaded files), Social Media (platform links).
+- **Data Flow**: User input -> Template selection -> Customization -> Live preview -> Export -> Storage.
 
 ## External Dependencies
 
 ### Database
-- **Neon Database**: Serverless PostgreSQL hosting
-- **Drizzle ORM**: Type-safe database queries and migrations
-- **Connection Pooling**: Built-in connection management
+- **Neon Database**: Serverless PostgreSQL hosting.
+- **Drizzle ORM**: Type-safe database queries and migrations.
 
 ### File Storage
-- **Local Storage**: Uploaded images stored in `/uploads` directory
-- **File Validation**: Size limits (5MB) and type restrictions (JPEG, PNG, SVG, WebP)
+- **Local Storage**: Uploaded images stored in `/uploads` directory (with size/type validation).
 
 ### Third-Party Libraries
-- **gif.js**: Client-side GIF generation from canvas frames
-- **TanStack Query**: Server state management and caching
-- **Radix UI**: Accessible component primitives
-- **Embla Carousel**: Carousel/slider functionality
-- **date-fns**: Date manipulation utilities
+- **gif.js**: Client-side GIF generation.
+- **TanStack Query**: Server state management.
+- **Radix UI**: Accessible component primitives.
+- **Embla Carousel**: Carousel functionality.
+- **date-fns**: Date manipulation.
 
 ### Development Tools
-- **Vite**: Fast development server and build tool
-- **ESBuild**: Bundle optimization for production
-- **TypeScript**: Type safety across the entire codebase
-- **Replit Integration**: Development environment optimizations
-
-## Deployment Strategy
-
-### Development Environment
-- **Vite Dev Server**: Hot module replacement for rapid development
-- **Express Middleware**: API routes served alongside frontend
-- **Environment Variables**: Database connection and configuration management
-
-### Production Build
-- **Frontend**: Vite builds optimized React application to `/dist/public`
-- **Backend**: ESBuild bundles Express server to `/dist/index.js`
-- **Static Assets**: Served directly by Express in production mode
-
-### Database Management
-- **Migrations**: Drizzle Kit for schema management
-- **Connection**: Environment-based database URL configuration
-- **Schema**: Shared TypeScript definitions between client and server
-
-### Scalability Considerations
-- **Serverless Ready**: Compatible with serverless deployment platforms
-- **Stateless Design**: Session data stored in database, not memory
-- **File Management**: Local file storage suitable for single-instance deployment
-- **Database Pooling**: Efficient connection management for high concurrency
+- **Vite**: Fast development server and build tool.
+- **ESBuild**: Production bundle optimization.
+- **TypeScript**: Type safety.
