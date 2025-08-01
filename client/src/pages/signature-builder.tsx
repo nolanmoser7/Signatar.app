@@ -18,7 +18,9 @@ import AuthModal from "@/components/auth-modal";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import type { PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations, InsertSignature } from "@shared/schema";
 
 import defaultHeadshot from "@assets/default-headshot.png";
 
@@ -70,6 +72,7 @@ export default function SignatureBuilder() {
   
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading, logout, isLoggingOut } = useAuth();
+  const queryClient = useQueryClient();
 
   const handlePlayAnimation = () => {
     setIsAnimating(true);
@@ -94,15 +97,41 @@ export default function SignatureBuilder() {
         description: "Please sign in or create an account to save your signature.",
         variant: "default",
       });
-    } else {
-      // User is signed in, proceed with save/next step
-      toast({
-        title: "Success",
-        description: "Your signature is ready! Saving to your account...",
-      });
-      // TODO: Add save signature logic here
+    } else if (user) {
+      // User is signed in, save the signature
+      const signatureData: InsertSignature = {
+        userId: user.id,
+        templateId: selectedTemplate,
+        personalInfo,
+        images,
+        animationType,
+        socialMedia,
+      };
+      
+      saveSignatureMutation.mutate(signatureData);
     }
   };
+
+  // Save signature mutation
+  const saveSignatureMutation = useMutation({
+    mutationFn: async (signatureData: InsertSignature) => {
+      return await apiRequest("POST", "/api/signatures", signatureData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/signatures/user", user?.id] });
+      toast({
+        title: "Signature Saved",
+        description: "Your signature has been saved to your account.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Save Failed",
+        description: error.message || "Failed to save signature. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleSaveTemplate = () => {
     if (!isAuthenticated && !isLoading) {
@@ -110,16 +139,21 @@ export default function SignatureBuilder() {
       setShowAuthModal(true);
       toast({
         title: "Account Required",
-        description: "Please sign in or create an account to save templates.",
+        description: "Please sign in or create an account to save signatures.",
         variant: "default",
       });
-    } else {
-      // User is signed in, proceed with save template
-      toast({
-        title: "Template Saved",
-        description: "Your custom template has been saved to your account.",
-      });
-      // TODO: Add save template logic here
+    } else if (user) {
+      // User is signed in, save the signature
+      const signatureData: InsertSignature = {
+        userId: user.id,
+        templateId: selectedTemplate,
+        personalInfo,
+        images,
+        animationType,
+        socialMedia,
+      };
+      
+      saveSignatureMutation.mutate(signatureData);
     }
   };
 
@@ -440,10 +474,10 @@ export default function SignatureBuilder() {
               variant="ghost" 
               className="text-gray-600"
               onClick={handleSaveTemplate}
-              disabled={isLoading}
+              disabled={isLoading || saveSignatureMutation.isPending}
             >
               <Save className="w-4 h-4 mr-2" />
-              Save Template
+              {saveSignatureMutation.isPending ? "Saving..." : "Save Signature"}
             </Button>
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
@@ -671,10 +705,10 @@ export default function SignatureBuilder() {
                   size="sm" 
                   className="bg-primary text-white hover:bg-primary/90"
                   onClick={handleFinishedCreating}
-                  disabled={isLoading}
+                  disabled={isLoading || saveSignatureMutation.isPending}
                 >
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  Finished Creating!
+                  {saveSignatureMutation.isPending ? "Saving..." : "Finished Creating!"}
                 </Button>
               </div>
             </div>
