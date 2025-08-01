@@ -986,8 +986,10 @@ export class SignatureExportService {
             
             <!-- Profile Photo -->
             ${headshotUrl ? `
-              <div style="${getElementStyle('headshot', `position: absolute; top: 0; right: 0; bottom: 0; width: ${headshotWidthPx}px; border-radius: 0 12px 12px 0; overflow: hidden;`)}">
-                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="width: 100%; height: 100%; object-fit: cover;" />
+              <div style="${getElementStyle('headshot', `position: absolute; top: 0; right: 0; bottom: 0; width: ${headshotWidthPx}px; overflow: hidden; border-radius: 0 12px 12px 0;`)}">
+                <img src="${headshotUrl}" alt="${personalInfoTyped.name}" style="width: 100%; height: 100%; object-fit: cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
+                <!-- Overlay for geometric effect -->
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(20, 184, 166, 0.2) 0%, rgba(31, 41, 55, 0.2) 100%); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%); pointer-events: none;"></div>
               </div>
             ` : ''}
             
