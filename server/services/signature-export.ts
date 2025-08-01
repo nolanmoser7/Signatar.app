@@ -835,7 +835,34 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate clean static template HTML without animations
+   * Generate social media icons HTML for static export
+   */
+  private generateSocialIconsHtml(socialMedia: SocialMedia | null): string {
+    if (!socialMedia) return '';
+    
+    const icons = [];
+    
+    if (socialMedia.linkedin) {
+      icons.push(`<a href="${socialMedia.linkedin}" style="display: inline-block; width: 32px; height: 32px; background: #0077b5; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">in</a>`);
+    }
+    if (socialMedia.twitter) {
+      icons.push(`<a href="${socialMedia.twitter}" style="display: inline-block; width: 32px; height: 32px; background: #1da1f2; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">𝕏</a>`);
+    }
+    if (socialMedia.instagram) {
+      icons.push(`<a href="${socialMedia.instagram}" style="display: inline-block; width: 32px; height: 32px; background: #e4405f; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">📷</a>`);
+    }
+    if (socialMedia.youtube) {
+      icons.push(`<a href="${socialMedia.youtube}" style="display: inline-block; width: 32px; height: 32px; background: #ff0000; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">▶</a>`);
+    }
+    if (socialMedia.tiktok) {
+      icons.push(`<a href="${socialMedia.tiktok}" style="display: inline-block; width: 32px; height: 32px; background: #000000; border-radius: 6px; color: white; text-align: center; line-height: 32px; text-decoration: none; margin-bottom: 4px; font-size: 14px;">🎵</a>`);
+    }
+    
+    return icons.join('\n        ');
+  }
+
+  /**
+   * Generate clean static template HTML without animations - matches live preview design
    */
   private async generateStaticTemplateHtml(signature: Signature): Promise<string> {
     const { personalInfo, images, socialMedia, templateId } = signature;
@@ -854,22 +881,102 @@ export class SignatureExportService {
       const logoUrl = getImageUrl(imagesTyped?.logo);
       
       return `
-        <div class="sales-professional">
-          <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
+        <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto;">
+          <table cellpadding="0" cellspacing="0" style="width: 100%; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; overflow: hidden;">
             <tr>
-              <td style="vertical-align: top; padding-right: 20px;">
-                ${headshotUrl ? `
-                  <div class="headshot-element">
-                    <img src="${headshotUrl}" alt="${personalInfoTyped.name}" />
-                  </div>
-                ` : ''}
+              <td style="padding: 32px;">
+                <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
+                  <tr>
+                    <td style="vertical-align: top; width: 120px; padding-right: 24px;">
+                      ${headshotUrl ? `
+                        <div style="position: relative;">
+                          <img src="${headshotUrl}" alt="${personalInfoTyped.name}" 
+                               style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.9); box-shadow: 0 8px 24px rgba(0,0,0,0.15);" />
+                        </div>
+                      ` : ''}
+                      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+                        ${this.generateSocialIconsHtml(socialMediaTyped)}
+                      </div>
+                    </td>
+                    <td style="vertical-align: top;">
+                      <div style="color: white;">
+                        ${logoUrl ? `
+                          <div style="margin-bottom: 20px;">
+                            <img src="${logoUrl}" alt="${personalInfoTyped.company}" 
+                                 style="max-width: 160px; max-height: 60px; object-fit: contain;" />
+                          </div>
+                        ` : ''}
+                        
+                        <h2 style="margin: 0 0 8px 0; color: white; font-size: 28px; font-weight: 700; font-family: 'Playfair Display', serif;">
+                          ${personalInfoTyped.name}
+                        </h2>
+                        <p style="margin: 0 0 6px 0; color: rgba(255,255,255,0.9); font-size: 18px; font-weight: 500;">
+                          ${personalInfoTyped.title}
+                        </p>
+                        <p style="margin: 0 0 20px 0; color: rgba(255,255,255,0.8); font-size: 16px; font-weight: 400;">
+                          ${personalInfoTyped.company}
+                        </p>
+                        
+                        <div style="color: rgba(255,255,255,0.95); font-size: 14px; line-height: 1.8;">
+                          ${personalInfoTyped.email ? `
+                            <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                              <span style="margin-right: 8px;">📧</span>
+                              <a href="mailto:${personalInfoTyped.email}" style="color: rgba(255,255,255,0.95); text-decoration: none; hover: text-decoration: underline;">
+                                ${personalInfoTyped.email}
+                              </a>
+                            </div>
+                          ` : ''}
+                          ${personalInfoTyped.phone ? `
+                            <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                              <span style="margin-right: 8px;">📞</span>
+                              <a href="tel:${personalInfoTyped.phone.replace(/\s/g, '')}" style="color: rgba(255,255,255,0.95); text-decoration: none;">
+                                ${personalInfoTyped.phone}
+                              </a>
+                            </div>
+                          ` : ''}
+                          ${personalInfoTyped.website ? `
+                            <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                              <span style="margin-right: 8px;">🌐</span>
+                              <a href="${personalInfoTyped.website}" style="color: rgba(255,255,255,0.95); text-decoration: none;">
+                                ${personalInfoTyped.website}
+                              </a>
+                            </div>
+                          ` : ''}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </td>
-              <td style="vertical-align: top; flex: 1;">
-                ${logoUrl ? `
-                  <div class="logo-element" style="margin-bottom: 12px;">
-                    <img src="${logoUrl}" alt="${personalInfoTyped.company}" />
-                  </div>
-                ` : ''}
+            </tr>
+          </table>
+        </div>
+      `;
+    }
+    
+    // Default static template for other template types
+    const headshotUrl = getImageUrl(imagesTyped?.headshot);
+    const logoUrl = getImageUrl(imagesTyped?.logo);
+    
+    return `
+      <div style="font-family: 'Playfair Display', serif; padding: 24px; max-width: 600px; margin: 0 auto;">
+        <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
+          <tr>
+            <td style="vertical-align: top; padding-right: 20px;">
+              ${headshotUrl ? `
+                <div style="margin-bottom: 16px;">
+                  <img src="${headshotUrl}" alt="${personalInfoTyped.name}" 
+                       style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" />
+                </div>
+              ` : ''}
+            </td>
+            <td style="vertical-align: top;">
+              ${logoUrl ? `
+                <div style="margin-bottom: 12px;">
+                  <img src="${logoUrl}" alt="${personalInfoTyped.company}" 
+                       style="max-width: 120px; max-height: 60px; object-fit: contain;" />
+                </div>
+              ` : ''}
                 
                 <h2 style="margin: 0 0 4px 0; color: #1a1a1a; font-size: 24px; font-weight: bold;">
                   ${personalInfoTyped.name}
@@ -904,8 +1011,6 @@ export class SignatureExportService {
                     </div>
                   ` : ''}
                 </div>
-                
-                ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
               </td>
             </tr>
           </table>
@@ -913,47 +1018,7 @@ export class SignatureExportService {
       `;
     }
     
-    // Default static template for other template types
-    const headshotUrl = getImageUrl(imagesTyped?.headshot);
-    const logoUrl = getImageUrl(imagesTyped?.logo);
-    
-    return `
-      <div style="padding: 24px;">
-        <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
-          <tr>
-            <td style="vertical-align: top; padding-right: 20px;">
-              ${headshotUrl ? `
-                <div class="headshot-element">
-                  <img src="${headshotUrl}" alt="${personalInfoTyped.name}" />
-                </div>
-              ` : ''}
-            </td>
-            <td style="vertical-align: top;">
-              ${logoUrl ? `
-                <div class="logo-element" style="margin-bottom: 12px;">
-                  <img src="${logoUrl}" alt="${personalInfoTyped.company}" />
-                </div>
-              ` : ''}
-              
-              <h2 style="margin: 0 0 8px 0; color: #1a1a1a; font-size: 20px; font-weight: bold;">
-                ${personalInfoTyped.name}
-              </h2>
-              <p style="margin: 0 0 12px 0; color: #666; font-size: 16px;">
-                ${personalInfoTyped.title} at ${personalInfoTyped.company}
-              </p>
-              
-              <div style="font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 12px;">
-                ${personalInfoTyped.email ? `<div><a href="mailto:${personalInfoTyped.email}" style="color: #0077b5; text-decoration: none;">${personalInfoTyped.email}</a></div>` : ''}
-                ${personalInfoTyped.phone ? `<div><a href="tel:${personalInfoTyped.phone}" style="color: #0077b5; text-decoration: none;">${personalInfoTyped.phone}</a></div>` : ''}
-                ${personalInfoTyped.website ? `<div><a href="${personalInfoTyped.website}" style="color: #0077b5; text-decoration: none;">${personalInfoTyped.website}</a></div>` : ''}
-              </div>
-              
-              ${this.generateStaticSocialIconsHtml(socialMediaTyped)}
-            </td>
-          </tr>
-        </table>
-      </div>
-    `;
+    return `<div>Template not found</div>`;
   }
 
   /**
