@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, CheckCircle, Star, Users, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle, Star, Users, Zap, User, LogOut } from "lucide-react";
 import { Link } from "wouter";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import AuthModal from "@/components/auth-modal";
+import { useAuth } from "@/hooks/useAuth";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function Home() {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user, isAuthenticated, logout, isLoggingOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -22,9 +25,36 @@ export default function Home() {
             </div>
           </Link>
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" onClick={() => setShowAuthModal(true)}>
-              Login
-            </Button>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <User className="w-4 h-4" />
+                    <span>Account</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem disabled className="text-sm text-muted-foreground">
+                    {user?.firstName} {user?.lastName}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled className="text-xs text-muted-foreground">
+                    {user?.email}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => logout()}
+                    disabled={isLoggingOut}
+                    className="text-red-600"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    {isLoggingOut ? "Signing out..." : "Sign out"}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="ghost" onClick={() => setShowAuthModal(true)}>
+                Login
+              </Button>
+            )}
             <Link href="/builder">
               <Button>Get Started</Button>
             </Link>
