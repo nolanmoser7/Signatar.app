@@ -897,15 +897,19 @@ export class SignatureExportService {
       const headshotSize = getImageSize('headshot');
       const logoSize = getImageSize('logo');
       
-      // Calculate responsive dimensions like the React template
+      // Calculate responsive dimensions with better scaling
       const headshotSizePercent = imagesTyped?.headshotSize || 100;
       const logoSizePercent = imagesTyped?.logoSize || 100;
-      const headshotWidthPx = Math.round(headshotSizePercent * 2.56);
-      const logoWidthPx = Math.round(logoSizePercent * 0.48);
-      const contentWidth = `calc(100% - 80px - ${headshotWidthPx}px)`;
+      
+      // Optimized headshot dimensions for better content space (max 160px)
+      const headshotWidthPx = Math.min(Math.round(headshotSizePercent * 1.5), 160);
+      const logoWidthPx = Math.round(logoSizePercent * 0.6);
+      
+      // Optimized content width calculation - more space for content
+      const contentWidth = `calc(100% - 80px - ${headshotWidthPx + 24}px)`;
       
       return `
-        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 512px; margin: 0 auto; font-family: 'Playfair Display', 'Times New Roman', serif;">
+        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 650px; width: 100%; margin: 0 auto; font-family: 'Playfair Display', 'Times New Roman', serif;">
           
           <!-- Background geometric patterns -->
           <div style="position: absolute; top: 0; right: ${headshotWidthPx + 20}px; width: calc(50% - ${Math.round(headshotWidthPx / 2)}px); height: 100%; overflow: hidden; pointer-events: none;">
