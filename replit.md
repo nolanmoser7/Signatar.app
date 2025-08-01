@@ -130,6 +130,14 @@ The application follows a full-stack monorepo architecture with clear separation
   - Added input validation requiring signature names before saving
   - Database schema updated with name, elementPositions, and elementAnimations columns
   - Users can now create multiple signatures with descriptive names like "Work Email", "Personal", "Sales Template"
+- **Signature Tag System**: Implemented automatic signature classification for export pipeline selection
+  - Added 'tag' column to signatures table with 'static' or 'dynamic' values
+  - Automatic tag assignment based on element animation settings during signature creation and updates
+  - Static tags for signatures with all animations set to 'none'
+  - Dynamic tags for signatures with any animations other than 'none'
+  - Visual tag badges in My Signatures page showing signature type (📄 Static / 🎬 Dynamic)
+  - Export pipeline now uses signature tags instead of runtime animation detection for improved reliability
+  - Tag-based routing ensures consistent export behavior and better performance
 
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations

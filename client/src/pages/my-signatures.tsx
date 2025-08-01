@@ -213,9 +213,17 @@ export default function MySignatures() {
                           {personalInfo.name} • {personalInfo.title} at {personalInfo.company}
                         </CardDescription>
                       </div>
-                      <Badge variant="secondary" className="ml-2">
-                        {templateName}
-                      </Badge>
+                      <div className="flex flex-col gap-1 ml-2">
+                        <Badge variant="secondary">
+                          {templateName}
+                        </Badge>
+                        <Badge 
+                          variant={signature.tag === 'dynamic' ? 'default' : 'outline'}
+                          className={signature.tag === 'dynamic' ? 'bg-purple-100 text-purple-800 hover:bg-purple-200' : 'text-gray-600'}
+                        >
+                          {signature.tag === 'dynamic' ? '🎬 Dynamic' : '📄 Static'}
+                        </Badge>
+                      </div>
                     </div>
                   </CardHeader>
 

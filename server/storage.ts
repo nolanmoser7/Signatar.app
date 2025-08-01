@@ -3,6 +3,18 @@ import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
+// Helper function to determine signature tag based on animations
+function determineSignatureTag(elementAnimations: any): 'static' | 'dynamic' {
+  if (!elementAnimations) return 'static';
+  
+  // Check if any element has animations other than 'none'
+  const hasAnimations = Object.values(elementAnimations).some(
+    (animation: any) => animation && animation !== 'none'
+  );
+  
+  return hasAnimations ? 'dynamic' : 'static';
+}
+
 export interface IStorage {
   // Signature operations
   getSignature(id: string): Promise<Signature | undefined>;
@@ -257,10 +269,15 @@ export class DatabaseStorage implements IStorage {
 
   async createSignature(insertSignature: InsertSignature): Promise<Signature> {
     const id = randomUUID();
+    
+    // Automatically determine tag based on animations
+    const tag = determineSignatureTag(insertSignature.elementAnimations);
+    
     const signatureData = {
       ...insertSignature,
       id,
       userId: insertSignature.userId || null,
+      tag,
       images: insertSignature.images || null,
       socialMedia: insertSignature.socialMedia || null,
       elementPositions: insertSignature.elementPositions || null,
@@ -275,9 +292,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateSignature(id: string, updateData: Partial<InsertSignature>): Promise<Signature | undefined> {
+    // If animations are being updated, recalculate the tag
+    const updateDataWithTag = { ...updateData };
+    if (updateData.elementAnimations !== undefined) {
+      updateDataWithTag.tag = determineSignatureTag(updateData.elementAnimations);
+    }
+    
     const [signature] = await db
       .update(signatures)
-      .set({ ...updateData, updatedAt: new Date() })
+      .set({ ...updateDataWithTag, updatedAt: new Date() })
       .where(eq(signatures.id, id))
       .returning();
     return signature || undefined;

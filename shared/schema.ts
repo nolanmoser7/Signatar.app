@@ -14,6 +14,7 @@ export const signatures = pgTable("signatures", {
   socialMedia: json("social_media"),
   elementPositions: json("element_positions"),
   elementAnimations: json("element_animations"),
+  tag: text("tag").notNull().default("static"), // 'static' or 'dynamic'
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
