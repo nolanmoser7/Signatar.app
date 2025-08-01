@@ -37,9 +37,6 @@ export default function SignatureBuilder() {
   console.log("Current location:", location);
   console.log("Search params:", location.split('?')[1] || '');
   console.log("Signature ID from URL:", signatureId);
-  console.log("Query enabled:", !!signatureId);
-  console.log("Query loading:", isLoadingSignature);
-  console.log("Existing signature data:", existingSignature);
   const [selectedTemplate, setSelectedTemplate] = useState("sales-professional");
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: "Sarah Johnson",
