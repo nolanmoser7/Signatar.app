@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle, Star, Users, Zap } from "lucide-react";
 import { Link } from "wouter";
-import signatarLogo from "@assets/new-signatar-logo.png";
+import signatarLogo from "@assets/signatar-logo-new.png";
 import AuthModal from "@/components/auth-modal";
 
 export default function Home() {

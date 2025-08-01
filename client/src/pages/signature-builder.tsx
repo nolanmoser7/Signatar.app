@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, Download, Dock, Smartphone, Play, CheckCircle } from "lucide-react";
-import signatarLogo from "@assets/new-signatar-logo.png";
+import signatarLogo from "@assets/signatar-logo-new.png";
 import TemplateSelector from "@/components/template-selector";
 import PersonalInfoForm from "@/components/personal-info-form";
 import ImageUploader from "@/components/image-uploader";
