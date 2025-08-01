@@ -65,16 +65,16 @@ export class SignatureExportService {
   /**
    * Main export function - handles both animated and static signatures
    */
-  async exportSignature(signature: Signature): Promise<ExportResult> {
+  async exportSignature(signature: Signature, emailClient: string = 'gmail'): Promise<ExportResult> {
     // Check if signature has any actual animations
     const hasAnimations = this.hasActiveAnimations(signature);
     
     if (!hasAnimations || signature.tag === 'static') {
-      // Simple export for static signatures
-      return await this.exportStaticSignature(signature);
+      // Simple export for static signatures with email client optimization
+      return await this.exportStaticSignature(signature, emailClient);
     } else {
       // Complex export with GIF baking for dynamic signatures
-      return await this.bakeSignatureAnimations(signature);
+      return await this.bakeSignatureAnimations(signature, emailClient);
     }
   }
 
@@ -94,10 +94,10 @@ export class SignatureExportService {
   /**
    * Export function for static signatures (no animations)
    */
-  async exportStaticSignature(signature: Signature): Promise<ExportResult> {
+  async exportStaticSignature(signature: Signature, emailClient: string = 'gmail'): Promise<ExportResult> {
     try {
       // Generate clean HTML without any animation classes or scripts
-      const staticHtml = await this.generateStaticSignatureHtml(signature);
+      const staticHtml = await this.generateStaticSignatureHtml(signature, emailClient);
       
       return {
         finalHtml: staticHtml,
@@ -112,7 +112,7 @@ export class SignatureExportService {
   /**
    * Export function for animated signatures - converts animations to GIFs
    */
-  async bakeSignatureAnimations(signature: Signature): Promise<ExportResult> {
+  async bakeSignatureAnimations(signature: Signature, emailClient: string = 'gmail'): Promise<ExportResult> {
     await this.initialize();
     
     try {
@@ -474,7 +474,7 @@ export class SignatureExportService {
   /**
    * Generate static HTML for signatures without animations
    */
-  private async generateStaticSignatureHtml(signature: Signature): Promise<string> {
+  private async generateStaticSignatureHtml(signature: Signature, emailClient: string = 'gmail'): Promise<string> {
     const { personalInfo, images, socialMedia, templateId, elementPositions } = signature;
     
     // Convert relative URLs to absolute URLs for static export
@@ -483,8 +483,9 @@ export class SignatureExportService {
     // Generate clean static template HTML (not the animated version)
     const templateHtml = await this.generateStaticTemplateHtml(processedSignature);
     
-    // Get template-specific CSS
+    // Get template-specific CSS with email client optimizations
     const templateCSS = this.getTemplateSpecificCSS(templateId || 'sales-professional');
+    const emailClientCSS = this.getEmailClientSpecificCSS(emailClient);
     
     return `
 <!DOCTYPE html>
@@ -493,10 +494,9 @@ export class SignatureExportService {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Signature</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    ${this.getEmailClientFontImports(emailClient)}
     <style>
-      /* Force font preload for better reliability */
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+      ${emailClientCSS}
     </style>
     <style>
         /* Reset and base styles */
@@ -807,6 +807,126 @@ export class SignatureExportService {
         
       default:
         return '';
+    }
+  }
+
+  /**
+   * Get email client specific CSS optimizations
+   */
+  private getEmailClientSpecificCSS(emailClient: string): string {
+    switch (emailClient) {
+      case 'gmail':
+        return `
+          /* Gmail-specific optimizations */
+          .gmail-font-fallback {
+            font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif !important;
+          }
+          
+          /* Gmail strips some CSS, inline critical styles */
+          table {
+            border-collapse: collapse !important;
+            border-spacing: 0 !important;
+            width: 100% !important;
+          }
+          
+          /* Force Gmail to respect font sizes */
+          * {
+            -webkit-text-size-adjust: 100% !important;
+            -ms-text-size-adjust: 100% !important;
+          }
+          
+          /* Gmail link color override */
+          a[href] {
+            color: inherit !important;
+            text-decoration: none !important;
+          }
+          
+          /* Gmail button styling */
+          .social-icon {
+            display: inline-block !important;
+            text-decoration: none !important;
+          }
+          
+          /* Gmail image display fix */
+          img {
+            display: block !important;
+            max-width: 100% !important;
+            height: auto !important;
+          }
+        `;
+        
+      case 'outlook':
+        return `
+          /* Outlook-specific optimizations */
+          table {
+            mso-table-lspace: 0pt !important;
+            mso-table-rspace: 0pt !important;
+          }
+          
+          /* Outlook font fallback */
+          .outlook-font-fallback {
+            font-family: 'Playfair Display', 'Cambria', 'Georgia', serif !important;
+          }
+          
+          /* Fix Outlook spacing issues */
+          td {
+            mso-line-height-rule: exactly !important;
+          }
+        `;
+        
+      case 'apple-mail':
+        return `
+          /* Apple Mail optimizations */
+          .apple-mail-font {
+            font-family: 'Playfair Display', 'Baskerville', 'Georgia', serif !important;
+          }
+          
+          /* Apple Mail link styling */
+          a {
+            color: inherit !important;
+            text-decoration: none !important;
+          }
+        `;
+        
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Get email client specific font imports
+   */
+  private getEmailClientFontImports(emailClient: string): string {
+    switch (emailClient) {
+      case 'gmail':
+        return `
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+          <style>
+            /* Gmail font import with fallbacks */
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+          </style>
+        `;
+        
+      case 'outlook':
+        return `
+          <!-- Outlook-specific font handling -->
+          <!--[if mso]>
+          <style>
+            * { font-family: 'Cambria', 'Georgia', serif !important; }
+          </style>
+          <![endif]-->
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        `;
+        
+      case 'apple-mail':
+        return `
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,899&display=swap" rel="stylesheet">
+        `;
+        
+      default:
+        return `
+          <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        `;
     }
   }
 

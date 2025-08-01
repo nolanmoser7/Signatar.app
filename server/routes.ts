@@ -197,12 +197,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Signature not found" });
       }
 
-      const exportResult = await signatureExportService.exportSignature(signature);
+      // Get email client from request body (defaults to gmail)
+      const emailClient = req.body?.emailClient || 'gmail';
+
+      const exportResult = await signatureExportService.exportSignature(signature, emailClient);
       
       res.json({
         html: exportResult.finalHtml,
         gifUrls: exportResult.gifUrls,
         success: true,
+        emailClient: emailClient,
       });
     } catch (error) {
       console.error("Export error:", error);

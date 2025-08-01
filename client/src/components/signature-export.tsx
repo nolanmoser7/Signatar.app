@@ -45,9 +45,11 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setProgress(40);
-      setCurrentStep("Capturing animated elements...");
+      setCurrentStep("Optimizing for email client...");
       
-      const response = await apiRequest("POST", `/api/signatures/${signatureId}/export`);
+      const response = await apiRequest("POST", `/api/signatures/${signatureId}/export`, {
+        emailClient: selectedEmailClient
+      });
 
       if (!response.ok) {
         throw new Error("Failed to export signature");
