@@ -585,6 +585,7 @@ export class SignatureExportService {
             border-radius: 16px;
             padding: 32px;
             max-width: 600px;
+            min-height: 180px;
             margin: 0 auto;
             color: white;
             position: relative;
@@ -615,17 +616,19 @@ export class SignatureExportService {
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            min-width: 150px;
+            min-width: 170px;
           }
           
           .sales-headshot {
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.3);
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
             flex-shrink: 0;
+            min-height: 140px;
+            min-width: 140px;
           }
           
           .sales-social-icons {
