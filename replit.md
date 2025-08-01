@@ -15,7 +15,7 @@ Preferred communication style: Simple, everyday language.
 - **State Management**: React hooks (local), TanStack Query (server)
 - **Routing**: Wouter
 - **Form Handling**: React Hook Form with Zod validation
-- **Core Features**: Template system, form builder, image management (upload/cropping), animation engine, live preview, HTML/GIF export.
+- **Core Features**: Template system, form builder, image management (upload/cropping), animation engine, live preview, HTML/GIF export, signature management (create/edit/delete).
 - **UI/UX Decisions**: Responsive design, vertical tab interface for workflow, toast notifications, modal dialogs, professional typography (Playfair Display), branded aesthetic (Signatar blue).
 
 ### Backend
@@ -27,7 +27,7 @@ Preferred communication style: Simple, everyday language.
 - **Key Components**:
     - **Authentication System**: Cookie-based session management, bcrypt password hashing, secure API routes.
     - **Data Persistence**: Signatures and templates stored in PostgreSQL, replacing in-memory storage.
-    - **Signature Management**: Naming, complete state saving (personal info, images, social media, animations, element positions, custom layouts), and tagging (static/dynamic).
+    - **Signature Management**: Full CRUD operations with naming, complete state saving (personal info, images, social media, animations, element positions, custom layouts), tagging (static/dynamic), and secure deletion with confirmation dialogs.
     - **Export Logic**: Comprehensive static signature export pipeline with proper image URL conversion, SVG icon rendering, and template preservation.
     - **Image Handling**: Support for both uploaded files (/api/files/) and attached assets (/attached_assets/) with automatic URL conversion for email compatibility.
 
