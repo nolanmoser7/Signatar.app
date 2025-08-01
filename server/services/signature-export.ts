@@ -1154,7 +1154,7 @@ export class SignatureExportService {
       const contentWidth = `calc(100% - 80px - ${headshotWidthPx + 24}px)`;
       
       return `
-        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 650px; width: 100%; margin: 0 auto; font-family: 'Playfair Display', 'Times New Roman', serif;">
+        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 650px; width: 100%; height: 280px; margin: 0 auto; font-family: 'Playfair Display', 'Times New Roman', serif;">
           
           <!-- Background geometric patterns - matching saved signature positioning -->
           <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none;">
@@ -1166,7 +1166,7 @@ export class SignatureExportService {
             </div>
           </div>
           
-          <div style="display: flex; position: relative; z-index: 10;">
+          <div style="display: flex; position: relative; z-index: 10; height: 100%;">
             
             <!-- Left Sidebar with Social Icons -->
             <div style="${getElementStyle('social', 'width: 80px; min-height: 100%; background: linear-gradient(180deg, #22d3ee, #2563eb); border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;')}">
