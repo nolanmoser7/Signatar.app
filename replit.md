@@ -120,6 +120,17 @@ The application follows a full-stack monorepo architecture with clear separation
   - Fine-tune controls with X/Y position sliders and scale controls
   - Reset layout button to restore default positions
 
+### Recent Changes (August 1, 2025)
+- **Signature Naming and Complete State Saving**: Enhanced signature management system
+  - Added signature name field to database schema and signature builder interface
+  - Replaced "Finished Creating!" button with signature name input field and Save button
+  - Updated save functionality to capture complete signature state including all form data
+  - Signatures now save personal info, images, social media, animations, element positions, and custom layouts
+  - Modified "My Signatures" page to display custom signature names instead of personal names
+  - Added input validation requiring signature names before saving
+  - Database schema updated with name, elementPositions, and elementAnimations columns
+  - Users can now create multiple signatures with descriptive names like "Work Email", "Personal", "Sales Template"
+
 ### Data Models
 - **Signatures**: User-created signatures with personal info, template selection, and customizations
 - **Templates**: Pre-defined signature layouts with metadata

@@ -12,6 +12,8 @@ export const signatures = pgTable("signatures", {
   images: json("images"),
   animationType: text("animation_type").notNull().default("fade-in"),
   socialMedia: json("social_media"),
+  elementPositions: json("element_positions"),
+  elementAnimations: json("element_animations"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -71,6 +73,8 @@ export const insertSignatureSchema = createInsertSchema(signatures).omit({
   socialMedia: socialMediaSchema.optional(),
   images: imagesSchema.optional(),
   animationType: z.enum(["fade-in", "pulse", "cross-dissolve"]),
+  elementPositions: z.any().optional(),
+  elementAnimations: z.any().optional(),
 });
 
 export const insertTemplateSchema = createInsertSchema(templates).omit({

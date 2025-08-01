@@ -115,10 +115,32 @@ export default function SignatureBuilder() {
         userId: user.id,
         name: signatureName.trim(),
         templateId: selectedTemplate,
-        personalInfo,
-        images,
+        personalInfo: {
+          name: personalInfo.name,
+          title: personalInfo.title,
+          company: personalInfo.company,
+          email: personalInfo.email,
+          phone: personalInfo.phone,
+          website: personalInfo.website,
+        },
+        images: {
+          headshot: images.headshot,
+          logo: images.logo,
+          background: images.background,
+          backgroundOpacity: images.backgroundOpacity,
+          headshotSize: images.headshotSize,
+          logoSize: images.logoSize,
+        },
         animationType,
-        socialMedia,
+        socialMedia: {
+          linkedin: socialMedia.linkedin,
+          twitter: socialMedia.twitter,
+          instagram: socialMedia.instagram,
+          youtube: socialMedia.youtube,
+          tiktok: socialMedia.tiktok,
+        },
+        elementPositions,
+        elementAnimations,
       };
       
       saveSignatureMutation.mutate(signatureData);
@@ -170,10 +192,32 @@ export default function SignatureBuilder() {
         userId: user.id,
         name: signatureName.trim(),
         templateId: selectedTemplate,
-        personalInfo,
-        images,
+        personalInfo: {
+          name: personalInfo.name,
+          title: personalInfo.title,
+          company: personalInfo.company,
+          email: personalInfo.email,
+          phone: personalInfo.phone,
+          website: personalInfo.website,
+        },
+        images: {
+          headshot: images.headshot,
+          logo: images.logo,
+          background: images.background,
+          backgroundOpacity: images.backgroundOpacity,
+          headshotSize: images.headshotSize,
+          logoSize: images.logoSize,
+        },
         animationType,
-        socialMedia,
+        socialMedia: {
+          linkedin: socialMedia.linkedin,
+          twitter: socialMedia.twitter,
+          instagram: socialMedia.instagram,
+          youtube: socialMedia.youtube,
+          tiktok: socialMedia.tiktok,
+        },
+        elementPositions,
+        elementAnimations,
       };
       
       saveSignatureMutation.mutate(signatureData);
