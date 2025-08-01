@@ -497,60 +497,71 @@ export class SignatureExportService {
     const gmailLogoSize = Math.round((Math.min(logoSize * 0.48, 77)) * 0.7); // Smaller logo
     
     return `
-<table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; max-width: 380px; border: 1px solid #e5e7eb;">
+<table cellpadding="0" cellspacing="0" border="0" style="background: white; overflow: hidden; max-width: 390px; height: 120px; font-family: Arial, sans-serif;">
   <tr>
-    <!-- Left sidebar with solid background -->
-    <td style="width: 40px; background-color: #0891b2; text-align: center; vertical-align: top; padding: 8px 4px;">
-      ${this.generateSimpleGmailSocialIcons(socialMedia)}
+    <!-- Left sidebar with gradient effect using table cells -->
+    <td style="width: 48px; background-color: #22d3ee; text-align: center; vertical-align: middle; height: 120px;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%;">
+        <tr><td style="background-color: #22d3ee; height: 20%; text-align: center;"></td></tr>
+        <tr><td style="background-color: #1cb4d1; height: 20%; text-align: center;">${this.getFirstSocialIcon(socialMedia)}</td></tr>
+        <tr><td style="background-color: #16a5be; height: 20%; text-align: center;">${this.getSecondSocialIcon(socialMedia)}</td></tr>
+        <tr><td style="background-color: #1196ab; height: 20%; text-align: center;">${this.getThirdSocialIcon(socialMedia)}</td></tr>
+        <tr><td style="background-color: #0891b2; height: 20%; text-align: center;"></td></tr>
+      </table>
     </td>
     
-    <!-- Main content area -->
-    <td style="padding: 12px; vertical-align: top; background-color: white;">
+    <!-- Main content area matching original proportions -->
+    <td style="padding: 12px 16px; vertical-align: top; background-color: white; width: ${238}px;">
       <!-- Company Logo -->
       ${processedImages?.logo ? `
-      <div style="margin-bottom: 8px;">
+      <div style="margin-bottom: 6px;">
         <img src="${processedImages.logo}" alt="Company Logo" style="width: ${gmailLogoSize}px; height: ${gmailLogoSize}px; display: block;" width="${gmailLogoSize}" height="${gmailLogoSize}" />
       </div>
       ` : ''}
       
       <!-- Company Name -->
       <div style="margin-bottom: 8px;">
-        <span style="font-family: Georgia, serif; font-size: 12px; font-weight: bold; color: #111827; text-transform: uppercase; letter-spacing: 1px;">${personalInfo.company || "COMPANY"}</span>
+        <span style="font-family: 'Playfair Display', Georgia, serif; font-size: 14px; font-weight: bold; color: #111827; text-transform: uppercase; letter-spacing: 1px;">${personalInfo.company || "COMPANY"}</span>
       </div>
       
       <!-- Name and Title -->
       <div style="margin-bottom: 8px;">
-        <div style="font-family: Georgia, serif; font-size: 16px; font-weight: bold; color: #111827; margin-bottom: 2px;">${personalInfo.name || "Your Name"} <span style="color: #22d3ee;">✓</span></div>
-        <div style="font-family: Georgia, serif; font-size: 11px; color: #374151; font-weight: 500;">${personalInfo.title || "Your Title"}</div>
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 18px; font-weight: bold; color: #111827; margin-bottom: 3px; line-height: 1.2;">${personalInfo.name || "Your Name"} <span style="color: #22d3ee;">✓</span></div>
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 12px; color: #374151; font-weight: 500;">${personalInfo.title || "Your Title"}</div>
       </div>
       
-      <!-- Contact Information -->
+      <!-- Contact Information with icons -->
       <table cellpadding="0" cellspacing="0" border="0">
         ${personalInfo.phone ? `
         <tr>
-          <td style="font-size: 9px; color: #6b7280; padding-right: 4px; vertical-align: top;">📞</td>
-          <td style="font-size: 9px; color: #374151; padding-bottom: 2px;"><a href="tel:${personalInfo.phone}" style="color: #374151; text-decoration: none;">${personalInfo.phone}</a></td>
+          <td style="font-size: 10px; color: #6b7280; padding-right: 6px; vertical-align: middle; width: 16px;">📞</td>
+          <td style="font-family: 'Playfair Display', Georgia, serif; font-size: 10px; color: #374151; padding-bottom: 3px;"><a href="tel:${personalInfo.phone}" style="color: #374151; text-decoration: none;">${personalInfo.phone}</a></td>
         </tr>
         ` : ''}
         ${personalInfo.email ? `
         <tr>
-          <td style="font-size: 9px; color: #6b7280; padding-right: 4px; vertical-align: top;">📧</td>
-          <td style="font-size: 9px; color: #374151; padding-bottom: 2px;"><a href="mailto:${personalInfo.email}" style="color: #374151; text-decoration: none;">${personalInfo.email}</a></td>
+          <td style="font-size: 10px; color: #6b7280; padding-right: 6px; vertical-align: middle; width: 16px;">📧</td>
+          <td style="font-family: 'Playfair Display', Georgia, serif; font-size: 10px; color: #374151; padding-bottom: 3px;"><a href="mailto:${personalInfo.email}" style="color: #374151; text-decoration: none;">${personalInfo.email}</a></td>
         </tr>
         ` : ''}
         ${personalInfo.website ? `
         <tr>
-          <td style="font-size: 9px; color: #6b7280; padding-right: 4px; vertical-align: top;">🌐</td>
-          <td style="font-size: 9px; color: #374151; padding-bottom: 2px;"><a href="${personalInfo.website}" style="color: #374151; text-decoration: none;">${personalInfo.website}</a></td>
+          <td style="font-size: 10px; color: #6b7280; padding-right: 6px; vertical-align: middle; width: 16px;">🌐</td>
+          <td style="font-family: 'Playfair Display', Georgia, serif; font-size: 10px; color: #374151; padding-bottom: 3px;"><a href="${personalInfo.website}" style="color: #374151; text-decoration: none;">${personalInfo.website}</a></td>
         </tr>
         ` : ''}
       </table>
     </td>
     
-    <!-- Right section with headshot -->
+    <!-- Right section with diagonal headshot using nested table for clip effect -->
     ${processedImages?.headshot ? `
-    <td style="width: ${gmailHeadshotSize}px; vertical-align: top; padding: 0;">
-      <img src="${processedImages.headshot}" alt="${personalInfo.name}" style="width: ${gmailHeadshotSize}px; height: ${gmailHeadshotSize}px; display: block; border: 0;" width="${gmailHeadshotSize}" height="${gmailHeadshotSize}" />
+    <td style="width: 104px; height: 120px; vertical-align: top; padding: 0; background-color: white;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: 100%;">
+        <tr>
+          <td style="width: 26px; height: 120px; background-color: white;"></td>
+          <td style="width: 78px; height: 120px; padding: 0; background-image: url(${processedImages.headshot}); background-size: cover; background-position: center;"></td>
+        </tr>
+      </table>
     </td>
     ` : ''}
   </tr>
@@ -558,28 +569,38 @@ export class SignatureExportService {
   }
 
   /**
-   * Generate simple Gmail-compatible social media icons using text symbols
+   * Get individual social media icons for gradient sidebar layout
    */
-  private generateSimpleGmailSocialIcons(socialMedia: SocialMedia | null): string {
+  private getFirstSocialIcon(socialMedia: SocialMedia | null): string {
     if (!socialMedia) return '';
-    
-    const socialLinks = [
-      { key: 'twitter', url: socialMedia.twitter, symbol: 'X', color: '#ffffff' },
-      { key: 'linkedin', url: socialMedia.linkedin, symbol: 'in', color: '#ffffff' },
-      { key: 'instagram', url: socialMedia.instagram, symbol: '📷', color: '#ffffff' },
-      { key: 'youtube', url: socialMedia.youtube, symbol: '▶', color: '#ffffff' },
-      { key: 'tiktok', url: socialMedia.tiktok, symbol: '♫', color: '#ffffff' }
-    ];
+    if (socialMedia.twitter) return `<a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 11px; font-weight: bold;" target="_blank">X</a>`;
+    if (socialMedia.linkedin) return `<a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 9px; font-weight: bold;" target="_blank">in</a>`;
+    if (socialMedia.instagram) return `<a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">📷</a>`;
+    if (socialMedia.youtube) return `<a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">▶</a>`;
+    if (socialMedia.tiktok) return `<a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">♫</a>`;
+    return '';
+  }
 
-    const validLinks = socialLinks.filter(link => link.url);
-    
-    if (validLinks.length === 0) return '';
+  private getSecondSocialIcon(socialMedia: SocialMedia | null): string {
+    if (!socialMedia) return '';
+    const icons = [];
+    if (socialMedia.twitter) icons.push(`<a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 11px; font-weight: bold;" target="_blank">X</a>`);
+    if (socialMedia.linkedin) icons.push(`<a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 9px; font-weight: bold;" target="_blank">in</a>`);
+    if (socialMedia.instagram) icons.push(`<a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">📷</a>`);
+    if (socialMedia.youtube) icons.push(`<a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">▶</a>`);
+    if (socialMedia.tiktok) icons.push(`<a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">♫</a>`);
+    return icons[1] || '';
+  }
 
-    return validLinks.map(link => `
-      <div style="margin-bottom: 6px;">
-        <a href="${link.url}" style="display: block; width: 20px; height: 20px; background-color: rgba(255,255,255,0.2); color: ${link.color}; text-decoration: none; text-align: center; line-height: 20px; font-size: 10px; font-weight: bold;" target="_blank" title="${link.key.charAt(0).toUpperCase() + link.key.slice(1)}">${link.symbol}</a>
-      </div>
-    `).join('');
+  private getThirdSocialIcon(socialMedia: SocialMedia | null): string {
+    if (!socialMedia) return '';
+    const icons = [];
+    if (socialMedia.twitter) icons.push(`<a href="${socialMedia.twitter}" style="color: white; text-decoration: none; font-size: 11px; font-weight: bold;" target="_blank">X</a>`);
+    if (socialMedia.linkedin) icons.push(`<a href="${socialMedia.linkedin}" style="color: white; text-decoration: none; font-size: 9px; font-weight: bold;" target="_blank">in</a>`);
+    if (socialMedia.instagram) icons.push(`<a href="${socialMedia.instagram}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">📷</a>`);
+    if (socialMedia.youtube) icons.push(`<a href="${socialMedia.youtube}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">▶</a>`);
+    if (socialMedia.tiktok) icons.push(`<a href="${socialMedia.tiktok}" style="color: white; text-decoration: none; font-size: 11px;" target="_blank">♫</a>`);
+    return icons[2] || '';
   }
 
   /**
