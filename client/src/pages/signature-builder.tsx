@@ -87,29 +87,87 @@ export default function SignatureBuilder() {
     queryKey: ["/api/signatures", signatureId],
     enabled: !!signatureId,
   });
+
+  // Show loading state while fetching existing signature
+  if (signatureId && isLoadingSignature) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your signature...</p>
+        </div>
+      </div>
+    );
+  }
   
   // Initialize state with existing signature data if available
   React.useEffect(() => {
     if (existingSignature) {
+      console.log("Loading existing signature:", existingSignature);
       const sig = existingSignature as Signature;
-      setSignatureName(sig.name);
-      setSelectedTemplate(sig.templateId);
-      setPersonalInfo(sig.personalInfo as PersonalInfo);
-      setImages(sig.images as Images);
-      setAnimationType(sig.animationType as AnimationType);
-      setSocialMedia(sig.socialMedia as SocialMedia || {
-        linkedin: "",
-        twitter: "",
-        instagram: "",
-        youtube: "",
-        tiktok: "",
-      });
-      if (sig.elementPositions) {
-        setElementPositions(sig.elementPositions as any);
+      
+      // Set basic info
+      setSignatureName(sig.name || "");
+      setSelectedTemplate(sig.templateId || "sales-professional");
+      
+      // Set personal info with fallbacks
+      const personalData = sig.personalInfo as any;
+      if (personalData) {
+        setPersonalInfo({
+          name: personalData.name || "",
+          title: personalData.title || "",
+          company: personalData.company || "",
+          email: personalData.email || "",
+          phone: personalData.phone || "",
+          website: personalData.website || "",
+        });
       }
+      
+      // Set images with fallbacks
+      const imageData = sig.images as any;
+      if (imageData) {
+        setImages({
+          headshot: imageData.headshot || "",
+          logo: imageData.logo || "",
+          background: imageData.background || "",
+          backgroundOpacity: imageData.backgroundOpacity || 50,
+          headshotSize: imageData.headshotSize || 110,
+          logoSize: imageData.logoSize || 160,
+        });
+      }
+      
+      // Set animation type
+      setAnimationType(sig.animationType as AnimationType || "fade-in");
+      
+      // Set social media with fallbacks
+      const socialData = sig.socialMedia as any;
+      setSocialMedia({
+        linkedin: socialData?.linkedin || "",
+        twitter: socialData?.twitter || "",
+        instagram: socialData?.instagram || "",
+        youtube: socialData?.youtube || "",
+        tiktok: socialData?.tiktok || "",
+      });
+      
+      // Set element positions if available
+      if (sig.elementPositions) {
+        const positions = sig.elementPositions as any;
+        setElementPositions({
+          logo: positions.logo || { x: 0, y: 0, scale: 1 },
+          headshot: positions.headshot || { x: 0, y: 0, scale: 1 },
+          name: positions.name || { x: 0, y: 0, scale: 1 },
+          company: positions.company || { x: 0, y: 0, scale: 1 },
+          contact: positions.contact || { x: 0, y: 0, scale: 1 },
+          social: positions.social || { x: 0, y: 0, scale: 1 }
+        });
+      }
+      
+      // Set element animations if available
       if (sig.elementAnimations) {
         setElementAnimations(sig.elementAnimations as ElementAnimations);
       }
+      
+      console.log("Signature loaded successfully with personal info:", personalData);
     }
   }, [existingSignature]);
 
@@ -558,7 +616,9 @@ export default function SignatureBuilder() {
             <Link href="/">
               <div className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
                 <img src={signatarLogo} alt="Signatar" className="w-8 h-8 object-contain" />
-                <h1 className="text-xl font-semibold text-neutral">Signatar</h1>
+                <h1 className="text-xl font-semibold text-neutral">
+                  {signatureId ? "Edit Signature" : "Signatar"}
+                </h1>
               </div>
             </Link>
           </div>
