@@ -186,12 +186,17 @@ export class MemStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   constructor() {
-    // Initialize with default templates if database is empty
-    this.initializeTemplates();
+    // Initialize with default templates if database is empty (async, no await)
+    this.initializeTemplates().catch(error => {
+      console.error("Error initializing database storage:", error);
+    });
   }
 
   private async initializeTemplates() {
     try {
+      // Test database connection first
+      await db.select().from(templates).limit(1);
+      
       const existingTemplates = await db.select().from(templates);
       if (existingTemplates.length === 0) {
         const defaultTemplatesData = [
