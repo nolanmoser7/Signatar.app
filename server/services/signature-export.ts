@@ -480,6 +480,10 @@ export class SignatureExportService {
     <title>Email Signature</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
+      /* Force font preload for better reliability */
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+    <style>
         /* Reset and base styles */
         * {
             margin: 0;
@@ -901,7 +905,7 @@ export class SignatureExportService {
       const contentWidth = `calc(100% - 80px - ${headshotWidthPx}px)`;
       
       return `
-        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 512px; margin: 0 auto; font-family: 'Playfair Display', serif;">
+        <div style="position: relative; background: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); overflow: hidden; max-width: 512px; margin: 0 auto; font-family: 'Playfair Display', 'Times New Roman', serif;">
           
           <!-- Background geometric patterns -->
           <div style="position: absolute; top: 0; right: ${headshotWidthPx + 20}px; width: calc(50% - ${Math.round(headshotWidthPx / 2)}px); height: 100%; overflow: hidden; pointer-events: none;">
