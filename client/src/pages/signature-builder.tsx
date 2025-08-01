@@ -168,6 +168,8 @@ export default function SignatureBuilder() {
       }
       
       console.log("Signature loaded successfully with personal info:", personalData);
+      console.log("Signature name set to:", sig.name);
+      console.log("Current signatureName state:", signatureName);
     }
   }, [existingSignature]);
 
@@ -889,7 +891,7 @@ export default function SignatureBuilder() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Input
-                    placeholder="Enter signature name..."
+                    placeholder={signatureId ? "Loading signature name..." : "Enter signature name..."}
                     value={signatureName}
                     onChange={(e) => setSignatureName(e.target.value)}
                     className="w-48"
@@ -904,10 +906,10 @@ export default function SignatureBuilder() {
                     size="sm" 
                     className="bg-primary text-white hover:bg-primary/90"
                     onClick={handleFinishedCreating}
-                    disabled={isLoading || saveSignatureMutation.isPending || !signatureName.trim()}
+                    disabled={isLoading || saveSignatureMutation.isPending || updateSignatureMutation.isPending || !signatureName.trim()}
                   >
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    {saveSignatureMutation.isPending ? "Saving..." : "Save"}
+                    {(saveSignatureMutation.isPending || updateSignatureMutation.isPending) ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </div>
