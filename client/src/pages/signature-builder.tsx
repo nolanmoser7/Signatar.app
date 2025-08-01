@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut, FileText, Settings } from "lucide-react";
+import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut, FileText, Settings, FileCode } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "wouter";
@@ -16,6 +16,7 @@ import AnimationSelector from "@/components/animation-selector";
 import SocialMediaForm from "@/components/social-media-form";
 import SignaturePreview from "@/components/signature-preview";
 import AuthModal from "@/components/auth-modal";
+import SignatureExport from "@/components/signature-export";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -72,6 +73,7 @@ export default function SignatureBuilder() {
   const [isElementAnimating, setIsElementAnimating] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [signatureName, setSignatureName] = useState("");
+  const [showExportModal, setShowExportModal] = useState(false);
 
   const [activeTab, setActiveTab] = useState("template");
   const [layoutMode, setLayoutMode] = useState(false);
@@ -961,6 +963,16 @@ export default function SignatureBuilder() {
                     <CheckCircle className="w-4 h-4 mr-2" />
                     {(saveSignatureMutation.isPending || updateSignatureMutation.isPending) ? "Saving..." : "Save"}
                   </Button>
+                  {signatureId && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setShowExportModal(true)}
+                    >
+                      <FileCode className="w-4 h-4 mr-2" />
+                      Export
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1025,6 +1037,14 @@ export default function SignatureBuilder() {
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
       />
+      
+      {/* Export Modal */}
+      {showExportModal && signatureId && (
+        <SignatureExport
+          signatureId={signatureId}
+          onClose={() => setShowExportModal(false)}
+        />
+      )}
     </div>
   );
 }

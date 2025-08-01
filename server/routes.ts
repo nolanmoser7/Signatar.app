@@ -6,6 +6,7 @@ import path from "path";
 import fs from "fs/promises";
 import { insertSignatureSchema } from "@shared/schema";
 import { registerAuthRoutes } from "./routes/auth";
+import { signatureExportService } from "./services/signature-export";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -167,6 +168,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.sendFile(path.resolve(filePath));
     } catch (error) {
       res.status(500).json({ message: "Failed to serve file" });
+    }
+  });
+
+  // Export signature as HTML with animated GIFs
+  app.post("/api/signatures/:id/export", async (req, res) => {
+    try {
+      const signature = await storage.getSignature(req.params.id);
+      if (!signature) {
+        return res.status(404).json({ message: "Signature not found" });
+      }
+
+      const exportResult = await signatureExportService.bakeSignatureAnimations(signature);
+      
+      res.json({
+        html: exportResult.finalHtml,
+        gifUrls: exportResult.gifUrls,
+        success: true,
+      });
+    } catch (error) {
+      console.error("Export error:", error);
+      res.status(500).json({ 
+        message: "Failed to export signature",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 

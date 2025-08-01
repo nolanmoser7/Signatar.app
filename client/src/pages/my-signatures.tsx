@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Edit, Download, Trash2, Plus, Eye, Copy } from "lucide-react";
+import { Edit, Download, Trash2, Plus, Eye, Copy, FileCode } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Signature, PersonalInfo, SocialMedia } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
+import SignatureExport from "@/components/signature-export";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +30,7 @@ export default function MySignatures() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedSignature, setSelectedSignature] = useState<string | null>(null);
+  const [exportingSignature, setExportingSignature] = useState<string | null>(null);
 
   // Fetch user signatures
   const { data: signatures = [], isLoading, error } = useQuery<Signature[]>({
@@ -243,6 +245,13 @@ export default function MySignatures() {
                         <Button
                           size="sm"
                           variant="outline"
+                          onClick={() => setExportingSignature(signature.id)}
+                        >
+                          <FileCode className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => {
                             // TODO: Implement preview functionality
                             toast({
@@ -306,6 +315,14 @@ export default function MySignatures() {
           </div>
         )}
       </main>
+      
+      {/* Export Modal */}
+      {exportingSignature && (
+        <SignatureExport
+          signatureId={exportingSignature}
+          onClose={() => setExportingSignature(null)}
+        />
+      )}
     </div>
   );
 }
