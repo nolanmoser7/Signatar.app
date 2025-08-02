@@ -37,7 +37,7 @@ export function MinimalTemplate({
   if (isMobile) {
     // Mobile version - simplified stacked layout
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-sm mx-auto relative overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-md mx-auto relative overflow-hidden">
         {/* Background Image */}
         {images.background && (
           <div 
@@ -142,7 +142,7 @@ export function MinimalTemplate({
 
   // Desktop version - exact match to the provided image
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-8 max-w-2xl mx-auto relative overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200 p-8 max-w-4xl mx-auto relative overflow-hidden">
       {/* Background Image */}
       {images.background && (
         <div 

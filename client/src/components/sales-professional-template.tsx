@@ -43,7 +43,7 @@ export default function SalesProfessionalTemplate({
   if (deviceView === "mobile") {
     // Mobile version - simplified layout
     return (
-      <div className="bg-white rounded-xl shadow-lg p-4 max-w-sm mx-auto relative overflow-hidden">
+      <div className="bg-white rounded-xl shadow-lg p-4 max-w-md mx-auto relative overflow-hidden">
         {/* Background Image */}
         {images.background && (
           <div 
@@ -131,7 +131,7 @@ export default function SalesProfessionalTemplate({
 
   // Desktop version - modern sidebar design
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-2xl mx-auto relative">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto relative">
       {/* Background Image */}
       {images.background && (
         <div 

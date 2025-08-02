@@ -38,7 +38,7 @@ function ModernTemplate({
   if (deviceView === "mobile") {
     // Mobile version - simplified layout
     return (
-      <div className="relative overflow-hidden rounded-xl max-w-sm mx-auto">
+      <div className="relative overflow-hidden rounded-xl max-w-md mx-auto">
         {/* Dark gradient background */}
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 relative">
           {/* Background pattern */}
@@ -177,7 +177,7 @@ function ModernTemplate({
 
   // Desktop version - full layout matching the design
   return (
-    <div className="relative overflow-hidden rounded-xl max-w-2xl mx-auto">
+    <div className="relative overflow-hidden rounded-xl max-w-4xl mx-auto">
       {/* Dark gradient background */}
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 relative min-h-[300px]">
         {/* Background geometric patterns */}

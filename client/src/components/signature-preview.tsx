@@ -97,7 +97,7 @@ export default function SignaturePreview({
     <Card 
       className={`bg-white rounded-xl shadow-lg p-8 relative overflow-hidden ${animationClass}`}
       style={{
-        maxWidth: deviceView === "mobile" ? "320px" : "600px",
+        maxWidth: deviceView === "mobile" ? "360px" : "800px",
         margin: "0 auto",
       }}
     >
