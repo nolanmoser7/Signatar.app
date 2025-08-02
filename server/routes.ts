@@ -245,6 +245,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Set ACL policy for contact icons (public access)
+  app.put("/api/contact-icons", async (req, res) => {
+    if (!req.body.iconUrl || !req.body.iconName) {
+      return res.status(400).json({ error: "iconUrl and iconName are required" });
+    }
+
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectPath = await objectStorageService.trySetObjectEntityAclPolicy(
+        req.body.iconUrl,
+        {
+          owner: "system", // System-owned icons
+          visibility: "public", // Public access for icons
+        },
+      );
+
+      res.status(200).json({
+        objectPath: objectPath,
+        iconName: req.body.iconName,
+      });
+    } catch (error) {
+      console.error("Error setting contact icon ACL:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

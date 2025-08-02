@@ -12,6 +12,7 @@ import { apiRequest } from "@/lib/queryClient";
 import type { Signature, PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import SignaturePreview from "@/components/signature-preview";
+import { getIconDataUrl } from "@/lib/contact-icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -121,9 +122,9 @@ function renderSignatureAsHtml(signature: Signature): string {
             
             <!-- Name and title -->
             <div style="margin-bottom: 24px;">
-              <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: bold; color: #1f2937; font-family: 'Playfair Display', serif;">
+              <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: bold; color: #1f2937; font-family: 'Playfair Display', serif; display: flex; align-items: center;">
                 ${personalInfo.name || 'Your Name'}
-                <span style="color: #22d3ee; margin-left: 8px;">✓</span>
+                <img src="${getIconDataUrl('checkmark')}" alt="Verified" style="margin-left: 8px; width: 20px; height: 20px;" />
               </h1>
               <p style="margin: 0; font-size: 20px; color: #6b7280; font-weight: 500; font-family: 'Playfair Display', serif;">
                 ${personalInfo.title || 'Your Title'}
@@ -134,19 +135,19 @@ function renderSignatureAsHtml(signature: Signature): string {
             <div style="margin-bottom: 0;">
               ${personalInfo.phone ? `
               <div style="margin-bottom: 12px; display: flex; align-items: center;">
-                <span style="margin-right: 12px; color: #6b7280;">📞</span>
+                <img src="${getIconDataUrl('phone')}" alt="Phone" style="margin-right: 12px; width: 16px; height: 16px;" />
                 <span style="font-size: 18px; color: #1f2937; font-family: 'Playfair Display', serif;">${personalInfo.phone}</span>
               </div>
               ` : ''}
               ${personalInfo.email ? `
               <div style="margin-bottom: 12px; display: flex; align-items: center;">
-                <span style="margin-right: 12px; color: #6b7280;">✉️</span>
+                <img src="${getIconDataUrl('email')}" alt="Email" style="margin-right: 12px; width: 16px; height: 16px;" />
                 <span style="font-size: 18px; color: #1f2937; font-family: 'Playfair Display', serif;">${personalInfo.email}</span>
               </div>
               ` : ''}
               ${personalInfo.website ? `
               <div style="margin-bottom: 12px; display: flex; align-items: center;">
-                <span style="margin-right: 12px; color: #6b7280;">🌐</span>
+                <img src="${getIconDataUrl('website')}" alt="Website" style="margin-right: 12px; width: 16px; height: 16px;" />
                 <span style="font-size: 18px; color: #1f2937; font-family: 'Playfair Display', serif;">${personalInfo.website}</span>
               </div>
               ` : ''}
@@ -192,9 +193,9 @@ function renderSignatureAsHtml(signature: Signature): string {
       </div>
       
       <div style="margin-bottom: 24px;">
-        ${personalInfo.email ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151;">${personalInfo.email}</div>` : ''}
-        ${personalInfo.phone ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151;">${personalInfo.phone}</div>` : ''}
-        ${personalInfo.website ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151;">${personalInfo.website}</div>` : ''}
+        ${personalInfo.email ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151; display: flex; align-items: center;"><img src="${getIconDataUrl('email')}" alt="Email" style="margin-right: 8px; width: 14px; height: 14px;" />${personalInfo.email}</div>` : ''}
+        ${personalInfo.phone ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151; display: flex; align-items: center;"><img src="${getIconDataUrl('phone')}" alt="Phone" style="margin-right: 8px; width: 14px; height: 14px;" />${personalInfo.phone}</div>` : ''}
+        ${personalInfo.website ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151; display: flex; align-items: center;"><img src="${getIconDataUrl('website')}" alt="Website" style="margin-right: 8px; width: 14px; height: 14px;" />${personalInfo.website}</div>` : ''}
       </div>
       
       ${activeSocialLinks.length > 0 ? `
@@ -227,9 +228,9 @@ function renderSignatureAsHtml(signature: Signature): string {
             <div style="font-size: 16px; font-weight: 500; color: #c7d2fe; margin-bottom: 20px;">${personalInfo.company || 'Your Company'}</div>
             
             <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; backdrop-filter: blur(10px);">
-              ${personalInfo.email ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px;">📧 ${personalInfo.email}</div>` : ''}
-              ${personalInfo.phone ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px;">📞 ${personalInfo.phone}</div>` : ''}
-              ${personalInfo.website ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px;">🌐 ${personalInfo.website}</div>` : ''}
+              ${personalInfo.email ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;"><img src="${getIconDataUrl('email')}" alt="Email" style="margin-right: 8px; width: 14px; height: 14px; filter: brightness(0) invert(1);" />${personalInfo.email}</div>` : ''}
+              ${personalInfo.phone ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;"><img src="${getIconDataUrl('phone')}" alt="Phone" style="margin-right: 8px; width: 14px; height: 14px; filter: brightness(0) invert(1);" />${personalInfo.phone}</div>` : ''}
+              ${personalInfo.website ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;"><img src="${getIconDataUrl('website')}" alt="Website" style="margin-right: 8px; width: 14px; height: 14px; filter: brightness(0) invert(1);" />${personalInfo.website}</div>` : ''}
             </div>
             
             ${activeSocialLinks.length > 0 ? `
@@ -265,9 +266,9 @@ function renderSignatureAsHtml(signature: Signature): string {
             <div style="font-size: 14px; font-weight: 500; color: #6b7280; margin-bottom: 12px;">${personalInfo.company || 'Your Company'}</div>
           </td>
         </tr>
-        ${personalInfo.email ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151;">📧 ${personalInfo.email}</span></td></tr>` : ''}
-        ${personalInfo.phone ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151;">📞 ${personalInfo.phone}</span></td></tr>` : ''}
-        ${personalInfo.website ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151;">🌐 ${personalInfo.website}</span></td></tr>` : ''}
+        ${personalInfo.email ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151; display: flex; align-items: center;"><img src="${getIconDataUrl('email')}" alt="Email" style="margin-right: 6px; width: 12px; height: 12px;" />${personalInfo.email}</span></td></tr>` : ''}
+        ${personalInfo.phone ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151; display: flex; align-items: center;"><img src="${getIconDataUrl('phone')}" alt="Phone" style="margin-right: 6px; width: 12px; height: 12px;" />${personalInfo.phone}</span></td></tr>` : ''}
+        ${personalInfo.website ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151; display: flex; align-items: center;"><img src="${getIconDataUrl('website')}" alt="Website" style="margin-right: 6px; width: 12px; height: 12px;" />${personalInfo.website}</span></td></tr>` : ''}
         ${activeSocialLinks.length > 0 ? `
         <tr>
           <td style="padding: 8px 0 0 0; margin: 0;">
