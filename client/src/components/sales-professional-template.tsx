@@ -106,20 +106,20 @@ export default function SalesProfessionalTemplate({
             <div className="space-y-2 text-sm">
               {personalInfo.phone && (
                 <div className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4" />
-                  <span>{personalInfo.phone}</span>
+                  <Phone className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-all">{personalInfo.phone}</span>
                 </div>
               )}
               {personalInfo.email && (
                 <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4" />
-                  <span>{personalInfo.email}</span>
+                  <Mail className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-all">{personalInfo.email}</span>
                 </div>
               )}
               {personalInfo.website && (
                 <div className="flex items-center space-x-2">
-                  <Globe className="w-4 h-4" />
-                  <span>{personalInfo.website}</span>
+                  <Globe className="w-4 h-4 flex-shrink-0" />
+                  <span className="break-all">{personalInfo.website}</span>
                 </div>
               )}
             </div>
@@ -206,9 +206,9 @@ export default function SalesProfessionalTemplate({
 
         {/* Main Content Area */}
         <div 
-          className="p-8"
+          className="p-8 flex-1 min-w-0"
           style={{
-            width: `calc(100% - 80px - ${(images.headshotSize || 100) * 2.56}px)`
+            maxWidth: `calc(100% - 80px - ${(images.headshotSize || 100) * 2.56}px)`
           }}
         >
           {/* Company Logo */}
@@ -281,20 +281,20 @@ export default function SalesProfessionalTemplate({
             <div className="space-y-3">
             {personalInfo.phone && (
               <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-gray-600" />
+                <Phone className="w-5 h-5 text-gray-600 flex-shrink-0" />
                 <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.phone}</span>
               </div>
             )}
             {personalInfo.email && (
               <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-gray-600" />
-                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
+                <Mail className="w-5 h-5 text-gray-600 flex-shrink-0" />
+                <span className="text-lg text-gray-900 break-all" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.email}</span>
               </div>
             )}
             {personalInfo.website && (
               <div className="flex items-center space-x-3">
-                <Globe className="w-5 h-5 text-gray-600" />
-                <span className="text-lg text-gray-900" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
+                <Globe className="w-5 h-5 text-gray-600 flex-shrink-0" />
+                <span className="text-lg text-gray-900 break-all" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo.website}</span>
               </div>
             )}
             </div>
