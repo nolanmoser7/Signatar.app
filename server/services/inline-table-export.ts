@@ -39,10 +39,10 @@ export class InlineTableExporter {
     const headshotUrl = this.getAbsoluteImageUrl(imagesTyped?.headshot);
     const logoUrl = this.getAbsoluteImageUrl(imagesTyped?.logo);
     
-    // Calculate exact dimensions based on user customizations
+    // Calculate exact dimensions based on user customizations - larger for better visibility
     const headshotSize = imagesTyped?.headshotSize || 100;
     const logoSize = imagesTyped?.logoSize || 100;
-    const headshotWidth = Math.round(120 * (headshotSize / 100));
+    const headshotWidth = Math.round(140 * (headshotSize / 100));
     const headshotHeight = Math.round(140 * (headshotSize / 100));
     const logoWidth = Math.round(80 * (logoSize / 100));
 
@@ -72,14 +72,14 @@ export class InlineTableExporter {
             padding: 24px;
             vertical-align: top;
             background: white;
-            width: ${headshotUrl ? '400px' : '550px'};
+            width: ${headshotUrl ? '380px' : '550px'};
             position: relative;
         }
         
         .image-area {
-            padding: 0;
+            padding: 16px;
             vertical-align: top;
-            width: ${headshotWidth}px;
+            width: 170px;
             background: transparent;
             position: relative;
         }
@@ -153,7 +153,7 @@ export class InlineTableExporter {
             height: ${headshotHeight}px;
             object-fit: cover;
             display: block;
-            border-radius: 0 12px 12px 0;
+            border-radius: 12px;
             border: 0;
         }
         
