@@ -20,7 +20,7 @@ The application employs a full-stack monorepo architecture, separating client an
 - **Routing**: Wouter.
 - **Form Handling**: React Hook Form with Zod validation.
 - **UI/UX Decisions**: Responsive design (mobile-first), toast notifications, modal dialogs, progress indicators. The design incorporates a professional aesthetic with specific color schemes like Signatar blue and "Playfair Display" font for enhanced visual appeal. Templates include Professional, Modern, Minimal, Creative, and Sales Professional designs, prioritizing the Sales Professional template for initial launch.
-- **Key Features**: Template system, step-by-step form builder, image management (upload, crop, position), custom animation engine (fade-in, pulse, cross-dissolve, element-specific), live preview (desktop/mobile views), HTML and animated GIF export, signature naming and complete state saving (personal info, images, social media, animations, element positions, custom layouts), advanced layout customization with drag-and-drop editor.
+- **Key Features**: Template system, step-by-step form builder, image management with persistent cloud storage, custom animation engine (fade-in, pulse, cross-dissolve, element-specific), live preview (desktop/mobile views), HTML and animated GIF export with reliable image URLs, signature naming and complete state saving (personal info, images, social media, animations, element positions, custom layouts), advanced layout customization with drag-and-drop editor.
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js.
@@ -47,7 +47,8 @@ The application employs a full-stack monorepo architecture, separating client an
 - **Drizzle ORM**: Type-safe database queries and migrations.
 
 ### File Storage
-- **Local Storage**: Uploaded images stored in `/uploads` directory with size (5MB) and type (JPEG, PNG, SVG, WebP) restrictions.
+- **Replit Object Storage**: Cloud-based file storage with persistent URLs for reliable image rendering in exported signatures.
+- **Legacy Local Storage**: Previous implementation with `/uploads` directory (deprecated in favor of object storage).
 
 ### Third-Party Libraries
 - **gif.js**: Client-side GIF generation.

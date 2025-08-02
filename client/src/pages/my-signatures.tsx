@@ -9,7 +9,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Signature, PersonalInfo, SocialMedia, Images } from "@shared/schema";
+import type { Signature, PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import SignaturePreview from "@/components/signature-preview";
 import {
@@ -278,9 +278,9 @@ function renderSignatureAsHtml(signature: Signature): string {
         </tr>` : ''}
       </table>
     </td>
-    ${images.logo ? `
+    ${logoUrl ? `
     <td style="padding: 0; margin: 0; vertical-align: top; padding-left: 20px;">
-      <img src="${images.logo}" alt="${personalInfo.company} logo" style="height: 48px; width: auto; object-fit: contain;" />
+      <img src="${logoUrl}" alt="${personalInfo.company} logo" style="height: 48px; width: auto; object-fit: contain;" />
     </td>` : ''}
   </tr>
 </table>`;
@@ -358,7 +358,7 @@ export default function MySignatures() {
       // Generate Gmail-compatible HTML using the actual signature data
       const html = renderSignatureAsHtml(signature);
       
-      // Create full HTML document for proper rendering when opened
+      // Create minimal HTML document with only the signature for easy Ctrl+A copying
       const fullHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -370,57 +370,12 @@ export default function MySignatures() {
             margin: 0;
             padding: 20px;
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-        .signature-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .instructions {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border-left: 4px solid #2196f3;
-        }
-        .signature-html {
-            border: 1px solid #ddd;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 12px;
-            white-space: pre-wrap;
-            word-break: break-all;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 20px;
+            background-color: #ffffff;
         }
     </style>
 </head>
 <body>
-    <div class="signature-container">
-        <div class="instructions">
-            <h3 style="margin: 0 0 10px 0; color: #1976d2;">📧 How to use this signature in Gmail:</h3>
-            <ol style="margin: 0; padding-left: 20px; color: #333;">
-                <li>Copy the HTML code below</li>
-                <li>Open Gmail Settings → See all settings → General → Signature</li>
-                <li>Create new signature or edit existing one</li>
-                <li>Paste the HTML code into the signature editor</li>
-                <li>Save changes</li>
-            </ol>
-        </div>
-        
-        <h2 style="color: #333; margin-bottom: 20px;">Preview:</h2>
-        ${html}
-        
-        <h3 style="color: #333; margin: 30px 0 10px 0;">HTML Code (Copy this):</h3>
-        <div class="signature-html">${html.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-    </div>
+    ${html}
 </body>
 </html>`;
       
@@ -574,7 +529,7 @@ export default function MySignatures() {
                           personalInfo={personalInfo}
                           images={signature.images as Images || {}}
                           socialMedia={signature.socialMedia as SocialMedia || {}}
-                          animationType={signature.animationType || "none"}
+                          animationType={(signature.animationType as AnimationType) || "fade-in"}
                           templateId={signature.templateId || "professional"}
                           isAnimating={false}
                           deviceView="desktop"
