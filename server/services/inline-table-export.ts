@@ -14,8 +14,8 @@ export class InlineTableExporter {
    * Main export function - converts signature data to exact replica single table HTML with inline styles
    */
   public async exportInlineTable(signature: Signature): Promise<string> {
-    // Use Gmail-optimized version for maximum compatibility while preserving design
-    const rawHtml = this.generateGmailOptimizedTable(signature);
+    // Use exact replica generator to match saved design precisely
+    const rawHtml = this.generateExactReplicaHtml(signature);
     
     // Process through juice to inline all styles
     const inlinedHtml = await this.inlineStyles(rawHtml);
@@ -258,9 +258,10 @@ export class InlineTableExporter {
     // Calculate exact dimensions based on user customizations - matching original exactly
     const headshotSizePercent = imagesTyped?.headshotSize || 100;
     const logoSizePercent = imagesTyped?.logoSize || 100;
-    const headshotWidth = Math.round(140 * (headshotSizePercent / 100));
-    const headshotHeight = Math.round(140 * (headshotSizePercent / 100));
-    const logoWidth = Math.round(80 * (logoSizePercent / 100));
+    // Use the same calculation as the template: (images.headshotSize || 100) * 2.56
+    const headshotWidth = Math.round((headshotSizePercent || 100) * 2.56);
+    const headshotHeight = 280; // Fixed height as in template
+    const logoWidth = Math.round((logoSizePercent || 100) * 0.48);
 
     // Apply element positioning transforms
     const getPositionTransform = (elementKey: string): string => {
@@ -416,10 +417,12 @@ export class InlineTableExporter {
             gap: 8px;
         }
         
-        .contact-link {
-            color: #0891b2;
+        .contact-text {
+            color: #1f2937;
             text-decoration: none;
             font-weight: normal;
+            font-size: 18px;
+            font-family: 'Playfair Display', serif;
         }
         
         .contact-icon {
@@ -517,21 +520,21 @@ export class InlineTableExporter {
                 
                 <!-- Contact Information -->
                 <div class="contact-container">
+                    ${personalInfoTyped.phone ? `
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="contact-text">${personalInfoTyped.phone}</span>
+                        </div>
+                    ` : ''}
                     ${personalInfoTyped.email ? `
                         <div class="contact-item">
                             <svg class="contact-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <polyline points="22,6 12,13 2,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <a href="mailto:${personalInfoTyped.email}" class="contact-link">${personalInfoTyped.email}</a>
-                        </div>
-                    ` : ''}
-                    ${personalInfoTyped.phone ? `
-                        <div class="contact-item">
-                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <a href="tel:${personalInfoTyped.phone}" class="contact-link">${personalInfoTyped.phone}</a>
+                            <span class="contact-text">${personalInfoTyped.email}</span>
                         </div>
                     ` : ''}
                     ${personalInfoTyped.website ? `
@@ -541,7 +544,7 @@ export class InlineTableExporter {
                                 <line x1="2" y1="12" x2="22" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="m2 12 .87 2.61a7.94 7.94 0 0 0 .46 1.02 8 8 0 0 0 8.13 4.28 8 8 0 0 0 8-8c0-2.28-.94-4.34-2.46-5.83A8 8 0 0 0 12 4a8 8 0 0 0-7.74 6c0 .32.06.64.12.96L2 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <a href="${personalInfoTyped.website}" class="contact-link" target="_blank">${personalInfoTyped.website}</a>
+                            <span class="contact-text">${personalInfoTyped.website}</span>
                         </div>
                     ` : ''}
                 </div>
@@ -567,28 +570,69 @@ export class InlineTableExporter {
   }
 
   /**
-   * Generate social media icons as table structure
+   * Generate social media icons as table structure with SVG icons matching template
    */
   private generateSocialIconsTableHtml(socialMedia: SocialMedia | null): string {
     if (!socialMedia) return '';
     
-    const socialLinks = [
-      { key: 'twitter', url: socialMedia.twitter, icon: '𝕏' },
-      { key: 'linkedin', url: socialMedia.linkedin, icon: 'in' },
-      { key: 'instagram', url: socialMedia.instagram, icon: '📷' },
-      { key: 'youtube', url: socialMedia.youtube, icon: '▶' },
-      { key: 'tiktok', url: socialMedia.tiktok, icon: '🎵' },
-    ];
-
-    const validLinks = socialLinks.filter(link => link.url);
+    const socialLinks = [];
     
-    if (validLinks.length === 0) return '';
-
-    return validLinks.map(link => `
-      <a href="${link.url}" class="social-icon-link" target="_blank" rel="noopener">
-        ${link.icon}
-      </a>
-    `).join('');
+    if (socialMedia.twitter) {
+      socialLinks.push(`
+        <a href="${socialMedia.twitter}" class="social-icon-link" target="_blank" rel="noopener">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="currentColor"/>
+          </svg>
+        </a>
+      `);
+    }
+    
+    if (socialMedia.linkedin) {
+      socialLinks.push(`
+        <a href="${socialMedia.linkedin}" class="social-icon-link" target="_blank" rel="noopener">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" fill="currentColor"/>
+            <rect x="2" y="9" width="4" height="12" fill="currentColor"/>
+            <circle cx="4" cy="4" r="2" fill="currentColor"/>
+          </svg>
+        </a>
+      `);
+    }
+    
+    if (socialMedia.instagram) {
+      socialLinks.push(`
+        <a href="${socialMedia.instagram}" class="social-icon-link" target="_blank" rel="noopener">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="m16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="currentColor" stroke-width="2"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </a>
+      `);
+    }
+    
+    if (socialMedia.youtube) {
+      socialLinks.push(`
+        <a href="${socialMedia.youtube}" class="social-icon-link" target="_blank" rel="noopener">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" fill="currentColor"/>
+            <polygon points="9.75,15.02 15.5,11.75 9.75,8.48" fill="white"/>
+          </svg>
+        </a>
+      `);
+    }
+    
+    if (socialMedia.tiktok) {
+      socialLinks.push(`
+        <a href="${socialMedia.tiktok}" class="social-icon-link" target="_blank" rel="noopener">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-2.909 2.909 2.896 2.896 0 0 1-2.909-2.909 2.896 2.896 0 0 1 2.909-2.909c.301 0 .591.041.861.118V9.47a6.336 6.336 0 0 0-.861-.058 6.364 6.364 0 0 0-6.364 6.364 6.364 6.364 0 0 0 6.364 6.364 6.364 6.364 0 0 0 6.364-6.364V7.598a8.225 8.225 0 0 0 4.76 1.507V5.66c0 .179-.036.356-.085.525z"/>
+          </svg>
+        </a>
+      `);
+    }
+    
+    return socialLinks.join('');
   }
 
   /**
