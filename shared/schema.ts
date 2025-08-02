@@ -72,7 +72,7 @@ export const insertSignatureSchema = createInsertSchema(signatures).omit({
   personalInfo: personalInfoSchema,
   socialMedia: socialMediaSchema.optional(),
   images: imagesSchema.optional(),
-  animationType: z.enum(["fade-in", "pulse", "cross-dissolve"]),
+  animationType: z.enum(["none", "fade-in", "pulse", "cross-dissolve"]),
   elementPositions: z.any().optional(),
   elementAnimations: z.any().optional(),
 });
