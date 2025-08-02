@@ -7,6 +7,7 @@ import fs from "fs/promises";
 import { insertSignatureSchema } from "@shared/schema";
 import { registerAuthRoutes } from "./routes/auth";
 import { signatureExportService } from "./services/signature-export";
+import { mjmlSignatureExporter } from "./services/mjml-signature-export";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -157,7 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/files/:filename", async (req, res) => {
     try {
       const filePath = path.join("uploads", req.params.filename);
-      
+
       // Check if file exists
       try {
         await fs.access(filePath);
@@ -175,7 +176,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/attached_assets/:filename", async (req, res) => {
     try {
       const filePath = path.join("attached_assets", req.params.filename);
-      
+
       // Check if file exists
       try {
         await fs.access(filePath);
@@ -201,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const emailClient = req.body?.emailClient || 'gmail';
 
       const exportResult = await signatureExportService.exportSignature(signature, emailClient);
-      
+
       res.json({
         html: exportResult.finalHtml,
         gifUrls: exportResult.gifUrls,
@@ -235,6 +236,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+    // Export signature as MJML
+    app.post("/api/signatures/:id/export-mjml", async (req, res) => {
+      try {
+        const signature = await storage.getSignature(req.params.id);
+        if (!signature) {
+          return res.status(404).json({ message: "Signature not found" });
+        }
+  
+        const mjmlResult = await mjmlSignatureExporter.exportSignatureToMJML(signature);
+  
+        res.json({
+          mjml: mjmlResult,
+          success: true,
+        });
+      } catch (error) {
+        console.error("MJML Export error:", error);
+        res.status(500).json({
+          message: "Failed to export signature as MJML",
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    });
 
   const httpServer = createServer(app);
   return httpServer;

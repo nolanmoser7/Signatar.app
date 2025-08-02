@@ -31,6 +31,7 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
     { value: "gmail", label: "Gmail", description: "Google Gmail web and mobile app" },
     { value: "outlook", label: "Outlook", description: "Microsoft Outlook (desktop and web)" },
     { value: "apple-mail", label: "Apple Mail", description: "macOS and iOS Mail app" },
+    { value: "mjml", label: "MJML (Recommended)", description: "Best compatibility across all email clients" },
   ];
 
   const exportSignature = async () => {
@@ -47,7 +48,11 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
       setProgress(40);
       setCurrentStep("Optimizing for email client...");
       
-      const response = await apiRequest("POST", `/api/signatures/${signatureId}/export`, {
+      const exportEndpoint = selectedEmailClient === 'mjml' 
+        ? `/api/signatures/${signatureId}/export-mjml`
+        : `/api/signatures/${signatureId}/export`;
+      
+      const response = await apiRequest("POST", exportEndpoint, {
         emailClient: selectedEmailClient
       });
 
