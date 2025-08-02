@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Edit, Download, Trash2, Plus, Eye, Copy, FileCode } from "lucide-react";
+import { Edit, Download, Trash2, Plus, Eye, Copy } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,8 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Signature, PersonalInfo, SocialMedia } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
-import SignatureExport from "@/components/signature-export";
-import { InlineTableExport } from "@/components/inline-table-export";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,7 +22,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function MySignatures() {
   const [, navigate] = useLocation();
@@ -32,7 +29,6 @@ export default function MySignatures() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedSignature, setSelectedSignature] = useState<string | null>(null);
-  const [exportingSignature, setExportingSignature] = useState<string | null>(null);
 
   // Fetch user signatures
   const { data: signatures = [], isLoading, error } = useQuery<Signature[]>({
@@ -214,17 +210,9 @@ export default function MySignatures() {
                           {personalInfo.name} • {personalInfo.title} at {personalInfo.company}
                         </CardDescription>
                       </div>
-                      <div className="flex flex-col gap-1 ml-2">
-                        <Badge variant="secondary">
-                          {templateName}
-                        </Badge>
-                        <Badge 
-                          variant={signature.tag === 'dynamic' ? 'default' : 'outline'}
-                          className={signature.tag === 'dynamic' ? 'bg-purple-100 text-purple-800 hover:bg-purple-200' : 'text-gray-600'}
-                        >
-                          {signature.tag === 'dynamic' ? '🎬 Dynamic' : '📄 Static'}
-                        </Badge>
-                      </div>
+                      <Badge variant="secondary" className="ml-2">
+                        {templateName}
+                      </Badge>
                     </div>
                   </CardHeader>
 
@@ -245,117 +233,63 @@ export default function MySignatures() {
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between">
                       <div className="flex space-x-2">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => copySignatureHtml(signature)}
-                              >
-                                <Copy className="w-4 h-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Copy signature HTML</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setExportingSignature(signature.id)}
-                              >
-                                <FileCode className="w-4 h-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Export signature</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => {
-                                  // TODO: Implement preview functionality
-                                  toast({
-                                    title: "Preview",
-                                    description: "Preview functionality coming soon!",
-                                  });
-                                }}
-                              >
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Preview signature</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => copySignatureHtml(signature)}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            // TODO: Implement preview functionality
+                            toast({
+                              title: "Preview",
+                              description: "Preview functionality coming soon!",
+                            });
+                          }}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
                       </div>
                       
                       <div className="flex space-x-2">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div>
-                                <Link href={`/builder?signature=${signature.id}`}>
-                                  <Button size="sm" variant="outline">
-                                    <Edit className="w-4 h-4" />
-                                  </Button>
-                                </Link>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Edit signature</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <Link href={`/builder?signature=${signature.id}`}>
+                          <Button size="sm" variant="outline">
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                        </Link>
                         
-                        <TooltipProvider>
-                          <Tooltip>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-red-600 hover:text-red-700"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete Signature</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to delete "{signature.name}"? This action cannot be undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => deleteSignatureMutation.mutate(signature.id)}
-                                    className="bg-red-600 hover:bg-red-700"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                            <TooltipContent>
-                              <p>Delete signature</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Signature</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete "{personalInfo.name}"? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deleteSignatureMutation.mutate(signature.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </div>
 
@@ -372,14 +306,6 @@ export default function MySignatures() {
           </div>
         )}
       </main>
-      
-      {/* Export Modal */}
-      {exportingSignature && (
-        <SignatureExport
-          signatureId={exportingSignature}
-          onClose={() => setExportingSignature(null)}
-        />
-      )}
     </div>
   );
 }

@@ -6,9 +6,6 @@ import path from "path";
 import fs from "fs/promises";
 import { insertSignatureSchema } from "@shared/schema";
 import { registerAuthRoutes } from "./routes/auth";
-import { signatureExportService } from "./services/signature-export";
-import { mjmlSignatureExporter } from "./services/mjml-signature-export";
-import { gmailExportService } from "./services/gmail-export";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -159,7 +156,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/files/:filename", async (req, res) => {
     try {
       const filePath = path.join("uploads", req.params.filename);
-
+      
       // Check if file exists
       try {
         await fs.access(filePath);
@@ -170,130 +167,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.sendFile(path.resolve(filePath));
     } catch (error) {
       res.status(500).json({ message: "Failed to serve file" });
-    }
-  });
-
-  // Serve attached assets
-  app.get("/attached_assets/:filename", async (req, res) => {
-    try {
-      const filePath = path.join("attached_assets", req.params.filename);
-
-      // Check if file exists
-      try {
-        await fs.access(filePath);
-      } catch {
-        return res.status(404).json({ message: "Attached asset not found" });
-      }
-
-      res.sendFile(path.resolve(filePath));
-    } catch (error) {
-      res.status(500).json({ message: "Failed to serve attached asset" });
-    }
-  });
-
-  // Export signature as HTML with animated GIFs
-  app.post("/api/signatures/:id/export", async (req, res) => {
-    try {
-      const signature = await storage.getSignature(req.params.id);
-      if (!signature) {
-        return res.status(404).json({ message: "Signature not found" });
-      }
-
-      // Get email client from request body (defaults to gmail)
-      const emailClient = req.body?.emailClient || 'gmail';
-
-      const exportResult = await signatureExportService.exportSignature(signature, emailClient);
-
-      res.json({
-        html: exportResult.finalHtml,
-        gifUrls: exportResult.gifUrls,
-        success: true,
-        emailClient: emailClient,
-      });
-    } catch (error) {
-      console.error("Export error:", error);
-      res.status(500).json({ 
-        message: "Failed to export signature",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
-  // Export signature using inline table format for maximum email client compatibility
-  app.post("/api/signatures/:id/export-inline", async (req, res) => {
-    try {
-      const signature = await storage.getSignature(req.params.id);
-      if (!signature) {
-        return res.status(404).json({ message: "Signature not found" });
-      }
-
-      const result = await signatureExportService.exportInlineTableSignature(signature);
-      res.json(result);
-    } catch (error) {
-      console.error("Inline table export failed:", error);
-      res.status(500).json({ 
-        message: "Failed to export inline table signature",
-        error: error instanceof Error ? error.message : "Unknown error"
-      });
-    }
-  });
-
-    // Export signature as MJML (using stored template)
-    app.post("/api/signatures/:id/export-mjml", async (req, res) => {
-      try {
-        const signature = await storage.getSignature(req.params.id);
-        if (!signature) {
-          return res.status(404).json({ message: "Signature not found" });
-        }
-  
-        // Use stored MJML if available, otherwise generate new
-        let mjmlResult;
-        if (signature.mjmlTemplate && signature.mjmlHtml) {
-          mjmlResult = {
-            html: signature.mjmlHtml,
-            mjml: signature.mjmlTemplate,
-            validation: { valid: true, issues: [] },
-            success: true,
-            format: 'mjml'
-          };
-        } else {
-          // Fallback: generate MJML if not stored
-          mjmlResult = await mjmlSignatureExporter.exportMJMLSignature(signature);
-        }
-  
-        res.json({
-          ...mjmlResult,
-          success: true,
-        });
-      } catch (error) {
-        console.error("MJML Export error:", error);
-        res.status(500).json({
-          message: "Failed to export signature as MJML",
-          error: error instanceof Error ? error.message : "Unknown error",
-        });
-      }
-    });
-
-  // Export signature for Gmail (using stored MJML)
-  app.post("/api/signatures/:id/export-gmail", async (req, res) => {
-    try {
-      const signature = await storage.getSignature(req.params.id);
-      if (!signature) {
-        return res.status(404).json({ message: "Signature not found" });
-      }
-
-      const gmailResult = await gmailExportService.exportForGmail(signature);
-
-      res.json({
-        ...gmailResult,
-        success: true,
-      });
-    } catch (error) {
-      console.error("Gmail Export error:", error);
-      res.status(500).json({
-        message: "Failed to export signature for Gmail",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
     }
   });
 

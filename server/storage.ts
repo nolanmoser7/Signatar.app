@@ -2,19 +2,6 @@ import { type Signature, type InsertSignature, type Template, type InsertTemplat
 import { randomUUID } from "crypto";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { mjmlSignatureExporter } from "./services/mjml-signature-export";
-
-// Helper function to determine signature tag based on animations
-function determineSignatureTag(elementAnimations: any): 'static' | 'dynamic' {
-  if (!elementAnimations) return 'static';
-
-  // Check if any element has animations other than 'none'
-  const hasAnimations = Object.values(elementAnimations).some(
-    (animation: any) => animation && animation !== 'none'
-  );
-
-  return hasAnimations ? 'dynamic' : 'static';
-}
 
 export interface IStorage {
   // Signature operations
@@ -23,12 +10,12 @@ export interface IStorage {
   createSignature(signature: InsertSignature): Promise<Signature>;
   updateSignature(id: string, signature: Partial<InsertSignature>): Promise<Signature | undefined>;
   deleteSignature(id: string): Promise<boolean>;
-
+  
   // Template operations
   getTemplate(id: string): Promise<Template | undefined>;
   getAllTemplates(): Promise<Template[]>;
   createTemplate(template: InsertTemplate): Promise<Template>;
-
+  
   // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
@@ -45,7 +32,7 @@ export class MemStorage implements IStorage {
     this.signatures = new Map();
     this.templates = new Map();
     this.users = new Map();
-
+    
     // Initialize with default templates
     this.initializeTemplates();
   }
@@ -107,14 +94,6 @@ export class MemStorage implements IStorage {
   async createSignature(insertSignature: InsertSignature): Promise<Signature> {
     const id = randomUUID();
     const now = new Date();
-
-    // Generate MJML template for the signature
-    const tempSignature = { ...insertSignature, id, createdAt: now, updatedAt: now } as Signature;
-    
-    // Mock MJML conversion for MemStorage since it's in-memory
-    const mjmlTemplate = `<mjml><mj-body><mj-section><mj-column>${JSON.stringify(tempSignature)}</mj-column></mj-section></mj-body></mjml>`;
-    const mjmlHtml = `<div>${JSON.stringify(tempSignature)}</div>`;
-
     const signature: Signature = {
       ...insertSignature,
       id,
@@ -125,8 +104,6 @@ export class MemStorage implements IStorage {
       elementAnimations: insertSignature.elementAnimations || null,
       createdAt: now,
       updatedAt: now,
-      mjmlTemplate: mjmlTemplate,
-      mjmlHtml: mjmlHtml
     };
     this.signatures.set(id, signature);
     return signature;
@@ -135,7 +112,7 @@ export class MemStorage implements IStorage {
   async updateSignature(id: string, updateData: Partial<InsertSignature>): Promise<Signature | undefined> {
     const signature = this.signatures.get(id);
     if (!signature) return undefined;
-
+    
     const updatedSignature: Signature = {
       ...signature,
       ...updateData,
@@ -198,7 +175,7 @@ export class MemStorage implements IStorage {
   async updateUser(id: string, updateData: Partial<InsertUser>): Promise<User | undefined> {
     const user = this.users.get(id);
     if (!user) return undefined;
-
+    
     const updatedUser: User = {
       ...user,
       ...updateData,
@@ -221,7 +198,7 @@ export class DatabaseStorage implements IStorage {
     try {
       // Test database connection first
       await db.select().from(templates).limit(1);
-
+      
       const existingTemplates = await db.select().from(templates);
       if (existingTemplates.length === 0) {
         const defaultTemplatesData = [
@@ -280,50 +257,27 @@ export class DatabaseStorage implements IStorage {
 
   async createSignature(insertSignature: InsertSignature): Promise<Signature> {
     const id = randomUUID();
-
-    // Automatically determine tag based on animations
-    const tag = determineSignatureTag(insertSignature.elementAnimations);
-
-    // Generate MJML template for the signature
-    const tempSignature = { ...insertSignature, tag } as Signature;
-    const mjmlResult = await mjmlSignatureExporter.exportMJMLSignature(tempSignature);
-
-    // Store the MJML template along with the original data
-    const signatureWithMjml = {
+    const signatureData = {
       ...insertSignature,
       id,
       userId: insertSignature.userId || null,
-      tag,
       images: insertSignature.images || null,
       socialMedia: insertSignature.socialMedia || null,
       elementPositions: insertSignature.elementPositions || null,
       elementAnimations: insertSignature.elementAnimations || null,
-      mjmlTemplate: mjmlResult.mjml,
-      mjmlHtml: mjmlResult.html
     };
-
+    
     const [signature] = await db
       .insert(signatures)
-      .values(signatureWithMjml)
+      .values(signatureData)
       .returning();
     return signature;
   }
 
   async updateSignature(id: string, updateData: Partial<InsertSignature>): Promise<Signature | undefined> {
-    // If animations are being updated, recalculate the tag
-    const updateDataWithTag = { ...updateData };
-    if (updateData.elementAnimations !== undefined) {
-      updateDataWithTag.tag = determineSignatureTag(updateData.elementAnimations);
-    }
-
-    // Handle original and styled images if provided
-    if (updateData.images) {
-      updateDataWithTag.images = updateData.images;
-    }
-
     const [signature] = await db
       .update(signatures)
-      .set({ ...updateDataWithTag, updatedAt: new Date() })
+      .set({ ...updateData, updatedAt: new Date() })
       .where(eq(signatures.id, id))
       .returning();
     return signature || undefined;
@@ -352,7 +306,7 @@ export class DatabaseStorage implements IStorage {
       previewUrl: insertTemplate.previewUrl || null,
       isActive: insertTemplate.isActive || null,
     };
-
+    
     const [template] = await db
       .insert(templates)
       .values(templateData)
@@ -376,7 +330,7 @@ export class DatabaseStorage implements IStorage {
       ...insertUser,
       id,
     };
-
+    
     const [user] = await db
       .insert(users)
       .values(userData)

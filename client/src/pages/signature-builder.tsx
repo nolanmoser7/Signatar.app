@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut, FileText, Settings, FileCode } from "lucide-react";
+import { Save, Download, Dock, Smartphone, Play, CheckCircle, User, LogOut, FileText, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "wouter";
@@ -16,7 +16,6 @@ import AnimationSelector from "@/components/animation-selector";
 import SocialMediaForm from "@/components/social-media-form";
 import SignaturePreview from "@/components/signature-preview";
 import AuthModal from "@/components/auth-modal";
-import SignatureExport from "@/components/signature-export";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -73,7 +72,6 @@ export default function SignatureBuilder() {
   const [isElementAnimating, setIsElementAnimating] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [signatureName, setSignatureName] = useState("");
-  const [showExportModal, setShowExportModal] = useState(false);
 
   const [activeTab, setActiveTab] = useState("template");
   const [layoutMode, setLayoutMode] = useState(false);
@@ -227,13 +225,6 @@ export default function SignatureBuilder() {
     setTimeout(() => setIsElementAnimating(false), 3000);
   };
 
-  // Function to get image styles based on size settings
-  const getImageStyles = (size: number) => ({
-    width: `${size}px`,
-    height: `${size}px`,
-    objectFit: 'cover' as const,
-  });
-
   const handleFinishedCreating = () => {
     if (!isAuthenticated && !isLoading) {
       // User is not signed in, show auth modal
@@ -254,29 +245,6 @@ export default function SignatureBuilder() {
         return;
       }
       
-      // Save original images directly
-      const originalImages = {
-        logo: images.logo,
-        headshot: images.headshot,
-        background: images.background,
-      };
-
-      // Create styled versions of images with applied styles
-      const styledImages = {
-        logo: {
-          url: images.logo,
-          styles: getImageStyles(images.logoSize),
-        },
-        headshot: {
-          url: images.headshot,
-          styles: getImageStyles(images.headshotSize),
-        },
-        background: images.background ? {
-          url: images.background,
-          opacity: images.backgroundOpacity,
-        } : null,
-      };
-      
       const signatureData: InsertSignature = {
         userId: user.id,
         name: signatureName.trim(),
@@ -296,8 +264,6 @@ export default function SignatureBuilder() {
           backgroundOpacity: images.backgroundOpacity,
           headshotSize: images.headshotSize,
           logoSize: images.logoSize,
-          originalImages: originalImages,
-          styledImages: styledImages,
         },
         animationType,
         socialMedia: {
@@ -383,29 +349,6 @@ export default function SignatureBuilder() {
         return;
       }
       
-      // Save original images directly
-      const originalImages = {
-        logo: images.logo,
-        headshot: images.headshot,
-        background: images.background,
-      };
-
-      // Create styled versions of images with applied styles
-      const styledImages = {
-        logo: {
-          url: images.logo,
-          styles: getImageStyles(images.logoSize),
-        },
-        headshot: {
-          url: images.headshot,
-          styles: getImageStyles(images.headshotSize),
-        },
-        background: images.background ? {
-          url: images.background,
-          opacity: images.backgroundOpacity,
-        } : null,
-      };
-      
       const signatureData: InsertSignature = {
         userId: user.id,
         name: signatureName.trim(),
@@ -425,8 +368,6 @@ export default function SignatureBuilder() {
           backgroundOpacity: images.backgroundOpacity,
           headshotSize: images.headshotSize,
           logoSize: images.logoSize,
-          originalImages: originalImages,
-          styledImages: styledImages,
         },
         animationType,
         socialMedia: {
@@ -1020,16 +961,6 @@ export default function SignatureBuilder() {
                     <CheckCircle className="w-4 h-4 mr-2" />
                     {(saveSignatureMutation.isPending || updateSignatureMutation.isPending) ? "Saving..." : "Save"}
                   </Button>
-                  {signatureId && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setShowExportModal(true)}
-                    >
-                      <FileCode className="w-4 h-4 mr-2" />
-                      Export
-                    </Button>
-                  )}
                 </div>
               </div>
             </div>
@@ -1094,14 +1025,6 @@ export default function SignatureBuilder() {
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
       />
-      
-      {/* Export Modal */}
-      {showExportModal && signatureId && (
-        <SignatureExport
-          signatureId={signatureId}
-          onClose={() => setShowExportModal(false)}
-        />
-      )}
     </div>
   );
 }
