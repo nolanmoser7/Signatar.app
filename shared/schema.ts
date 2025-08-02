@@ -62,22 +62,6 @@ export const imagesSchema = z.object({
   backgroundOpacity: z.number().min(0).max(100).default(20),
   headshotSize: z.number().min(50).max(200).default(100),
   logoSize: z.number().min(50).max(200).default(100),
-  // Store styled versions for exact export replication
-  styledHeadshot: z.object({
-    url: z.string(),
-    width: z.number(),
-    height: z.number(),
-    borderRadius: z.string().optional(),
-    objectFit: z.string().optional(),
-    styles: z.record(z.string()).optional(),
-  }).optional(),
-  styledLogo: z.object({
-    url: z.string(),
-    width: z.number(),
-    height: z.number(),
-    opacity: z.number().optional(),
-    styles: z.record(z.string()).optional(),
-  }).optional(),
 });
 
 export const insertSignatureSchema = createInsertSchema(signatures).omit({
