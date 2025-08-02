@@ -8,6 +8,7 @@ import { insertSignatureSchema } from "@shared/schema";
 import { registerAuthRoutes } from "./routes/auth";
 import { signatureExportService } from "./services/signature-export";
 import { mjmlSignatureExporter } from "./services/mjml-signature-export";
+import { gmailExportService } from "./services/gmail-export";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -237,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-    // Export signature as MJML
+    // Export signature as MJML (using stored template)
     app.post("/api/signatures/:id/export-mjml", async (req, res) => {
       try {
         const signature = await storage.getSignature(req.params.id);
@@ -245,7 +246,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ message: "Signature not found" });
         }
   
-        const mjmlResult = await mjmlSignatureExporter.exportMJMLSignature(signature);
+        // Use stored MJML if available, otherwise generate new
+        let mjmlResult;
+        if (signature.mjmlTemplate && signature.mjmlHtml) {
+          mjmlResult = {
+            html: signature.mjmlHtml,
+            mjml: signature.mjmlTemplate,
+            validation: { valid: true, issues: [] },
+            success: true,
+            format: 'mjml'
+          };
+        } else {
+          // Fallback: generate MJML if not stored
+          mjmlResult = await mjmlSignatureExporter.exportMJMLSignature(signature);
+        }
   
         res.json({
           ...mjmlResult,
@@ -259,6 +273,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
     });
+
+  // Export signature for Gmail (using stored MJML)
+  app.post("/api/signatures/:id/export-gmail", async (req, res) => {
+    try {
+      const signature = await storage.getSignature(req.params.id);
+      if (!signature) {
+        return res.status(404).json({ message: "Signature not found" });
+      }
+
+      const gmailResult = await gmailExportService.exportForGmail(signature);
+
+      res.json({
+        ...gmailResult,
+        success: true,
+      });
+    } catch (error) {
+      console.error("Gmail Export error:", error);
+      res.status(500).json({
+        message: "Failed to export signature for Gmail",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

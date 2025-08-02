@@ -15,6 +15,8 @@ export const signatures = pgTable("signatures", {
   elementPositions: json("element_positions"),
   elementAnimations: json("element_animations"),
   tag: text("tag").notNull().default("static"), // 'static' or 'dynamic'
+  mjmlTemplate: text("mjml_template"), // Stored MJML template
+  mjmlHtml: text("mjml_html"), // Pre-rendered HTML from MJML
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

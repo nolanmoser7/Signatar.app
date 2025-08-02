@@ -51,9 +51,14 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
       setProgress(40);
       setCurrentStep("Optimizing for email client...");
       
-      const exportEndpoint = selectedEmailClient === 'mjml' 
-        ? `/api/signatures/${signatureId}/export-mjml`
-        : `/api/signatures/${signatureId}/export`;
+      let exportEndpoint;
+      if (selectedEmailClient === 'mjml') {
+        exportEndpoint = `/api/signatures/${signatureId}/export-mjml`;
+      } else if (selectedEmailClient === 'gmail') {
+        exportEndpoint = `/api/signatures/${signatureId}/export-gmail`;
+      } else {
+        exportEndpoint = `/api/signatures/${signatureId}/export`;
+      }
       
       const response = await apiRequest("POST", exportEndpoint, {
         emailClient: selectedEmailClient
