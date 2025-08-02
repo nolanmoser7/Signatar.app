@@ -298,6 +298,11 @@ export class DatabaseStorage implements IStorage {
       updateDataWithTag.tag = determineSignatureTag(updateData.elementAnimations);
     }
     
+    // Handle original and styled images if provided
+    if (updateData.images) {
+      updateDataWithTag.images = updateData.images;
+    }
+    
     const [signature] = await db
       .update(signatures)
       .set({ ...updateDataWithTag, updatedAt: new Date() })
