@@ -24,6 +24,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Generate Gmail-compatible HTML signature
 function generateGmailCompatibleHtml(personalInfo: PersonalInfo, socialMedia: SocialMedia, images: Images): string {
@@ -78,6 +87,8 @@ export default function MySignatures() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedSignature, setSelectedSignature] = useState<string | null>(null);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [exportingSignature, setExportingSignature] = useState<Signature | null>(null);
 
   // Fetch user signatures
   const { data: signatures = [], isLoading, error } = useQuery<Signature[]>({
@@ -107,6 +118,12 @@ export default function MySignatures() {
     },
   });
 
+  // Open export dialog
+  const openExportDialog = (signature: Signature) => {
+    setExportingSignature(signature);
+    setExportDialogOpen(true);
+  };
+
   // Export signature as Gmail-compatible HTML
   const exportSignatureHtml = async (signature: Signature) => {
     try {
@@ -128,6 +145,40 @@ export default function MySignatures() {
       toast({
         title: "Error",
         description: "Failed to export signature HTML.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Download signature as HTML file
+  const downloadSignatureHtml = (signature: Signature) => {
+    try {
+      const personalInfo = signature.personalInfo as PersonalInfo;
+      const socialMedia = signature.socialMedia as SocialMedia;
+      const images = signature.images as Images;
+      
+      // Generate Gmail-compatible HTML (single table with inline CSS)
+      const html = generateGmailCompatibleHtml(personalInfo, socialMedia, images);
+      
+      // Create download link
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${signature.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_signature.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Success",
+        description: "Signature HTML file downloaded successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to download signature HTML.",
         variant: "destructive",
       });
     }
@@ -279,21 +330,6 @@ export default function MySignatures() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => exportSignatureHtml(signature)}
-                            >
-                              <Download className="w-4 h-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Export for Gmail</p>
-                          </TooltipContent>
-                        </Tooltip>
-                        
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant="outline"
                               onClick={() => {
                                 // TODO: Implement preview functionality
                                 toast({
@@ -309,6 +345,18 @@ export default function MySignatures() {
                             <p>Preview signature</p>
                           </TooltipContent>
                         </Tooltip>
+                      </div>
+
+                      {/* Centered Export Button */}
+                      <div className="flex-1 flex justify-center">
+                        <Button
+                          size="sm"
+                          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6"
+                          onClick={() => openExportDialog(signature)}
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Export Signature
+                        </Button>
                       </div>
                       
                       <div className="flex space-x-2">
@@ -376,6 +424,73 @@ export default function MySignatures() {
           </TooltipProvider>
         )}
       </main>
+
+      {/* Export Dialog */}
+      <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <img src={signatarLogo} alt="Signatar" className="w-6 h-6" />
+              <span>Export Signature</span>
+            </DialogTitle>
+            <DialogDescription>
+              Download your professionally crafted email signature as HTML ready for Gmail, Outlook, and other email clients.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {exportingSignature && (
+            <div className="space-y-4">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 mb-2">Signature: {exportingSignature.name}</h4>
+                <div className="text-sm text-gray-600">
+                  <p>Name: {(exportingSignature.personalInfo as PersonalInfo).name}</p>
+                  <p>Company: {(exportingSignature.personalInfo as PersonalInfo).company}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                  onClick={() => {
+                    downloadSignatureHtml(exportingSignature);
+                    setExportDialogOpen(false);
+                  }}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download HTML File
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => {
+                    exportSignatureHtml(exportingSignature);
+                    setExportDialogOpen(false);
+                  }}
+                >
+                  <Copy className="w-4 h-4 mr-2" />
+                  Copy HTML to Clipboard
+                </Button>
+              </div>
+              
+              <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
+                <p className="font-medium text-blue-900 mb-1">💡 Usage Tips:</p>
+                <ul className="space-y-1 text-blue-800">
+                  <li>• Download the HTML file for easy importing</li>
+                  <li>• Copy to clipboard for quick pasting into email settings</li>
+                  <li>• Compatible with Gmail, Outlook, Apple Mail, and more</li>
+                </ul>
+              </div>
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setExportDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
