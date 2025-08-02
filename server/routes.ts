@@ -245,10 +245,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ message: "Signature not found" });
         }
   
-        const mjmlResult = await mjmlSignatureExporter.exportSignatureToMJML(signature);
+        const mjmlResult = await mjmlSignatureExporter.exportMJMLSignature(signature);
   
         res.json({
-          mjml: mjmlResult,
+          ...mjmlResult,
           success: true,
         });
       } catch (error) {
