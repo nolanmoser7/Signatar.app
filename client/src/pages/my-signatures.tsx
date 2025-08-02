@@ -202,6 +202,10 @@ export default function MySignatures() {
               const personalInfo = signature.personalInfo as PersonalInfo;
               const templateName = signature.templateId?.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase()) || "Custom";
               
+              // Determine if signature is static or dynamic based on animations
+              const hasAnimations = signature.animationType && signature.animationType !== "none";
+              const animationTag = hasAnimations ? "Dynamic" : "Static";
+              
               return (
                 <Card key={signature.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
@@ -212,9 +216,17 @@ export default function MySignatures() {
                           {personalInfo.name} • {personalInfo.title} at {personalInfo.company}
                         </CardDescription>
                       </div>
-                      <Badge variant="secondary" className="ml-2">
-                        {templateName}
-                      </Badge>
+                      <div className="flex flex-col items-end space-y-1 ml-2">
+                        <Badge variant="secondary">
+                          {templateName}
+                        </Badge>
+                        <Badge 
+                          variant={hasAnimations ? "default" : "outline"}
+                          className={hasAnimations ? "bg-green-100 text-green-800 hover:bg-green-200" : ""}
+                        >
+                          {animationTag}
+                        </Badge>
+                      </div>
                     </div>
                   </CardHeader>
 
@@ -328,7 +340,7 @@ export default function MySignatures() {
                     <Separator className="my-4" />
                     <div className="flex items-center justify-between text-sm text-gray-500">
                       <span>Created {new Date(signature.createdAt!).toLocaleDateString()}</span>
-                      <span>{signature.animationType}</span>
+                      <span>{animationTag} • {signature.animationType || 'none'}</span>
                     </div>
                   </CardContent>
                 </Card>
