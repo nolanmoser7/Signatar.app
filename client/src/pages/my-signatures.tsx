@@ -161,7 +161,7 @@ export default function MySignatures() {
           </Card>
         ) : (
           <TooltipProvider>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2">
               {signatures.map((signature) => {
               const personalInfo = signature.personalInfo as PersonalInfo;
               const templateName = signature.templateId?.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase()) || "Custom";
@@ -197,8 +197,8 @@ export default function MySignatures() {
 
                   <CardContent>
                     {/* Actual Signature Preview */}
-                    <div className="bg-gray-50 rounded-lg p-2 mb-4 overflow-hidden">
-                      <div className="scale-50 origin-top-left transform" style={{ width: "200%", height: "200px" }}>
+                    <div className="bg-gray-50 rounded-lg p-3 mb-4 overflow-hidden">
+                      <div className="scale-75 origin-top-left transform" style={{ width: "133%", height: "150px" }}>
                         <SignaturePreview
                           personalInfo={personalInfo}
                           images={signature.images as Images || {}}
