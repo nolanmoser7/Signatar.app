@@ -202,11 +202,9 @@ export default function MySignatures() {
               const personalInfo = signature.personalInfo as PersonalInfo;
               const templateName = signature.templateId?.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase()) || "Custom";
               
-              // Determine if signature is static or dynamic based on animations
+              // Determine if signature is static or dynamic based on element animations
               const elementAnimations = signature.elementAnimations as any;
-              const hasMainAnimation = signature.animationType && signature.animationType !== "none";
-              const hasElementAnimations = elementAnimations && Object.values(elementAnimations).some((anim: any) => anim !== "none");
-              const hasAnimations = hasMainAnimation || hasElementAnimations;
+              const hasAnimations = elementAnimations && Object.values(elementAnimations).some((anim: any) => anim !== "none");
               const animationTag = hasAnimations ? "Dynamic" : "Static";
               
               return (
