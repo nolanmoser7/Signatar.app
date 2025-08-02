@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function MySignatures() {
   const [, navigate] = useLocation();
@@ -195,8 +196,9 @@ export default function MySignatures() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {signatures.map((signature) => {
+          <TooltipProvider>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {signatures.map((signature) => {
               const personalInfo = signature.personalInfo as PersonalInfo;
               const templateName = signature.templateId?.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase()) || "Custom";
               
@@ -233,44 +235,73 @@ export default function MySignatures() {
                     {/* Action Buttons */}
                     <div className="flex items-center justify-between">
                       <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => copySignatureHtml(signature)}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            // TODO: Implement preview functionality
-                            toast({
-                              title: "Preview",
-                              description: "Preview functionality coming soon!",
-                            });
-                          }}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => copySignatureHtml(signature)}
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Copy HTML</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                // TODO: Implement preview functionality
+                                toast({
+                                  title: "Preview",
+                                  description: "Preview functionality coming soon!",
+                                });
+                              }}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Preview signature</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                       
                       <div className="flex space-x-2">
                         <Link href={`/builder?signature=${signature.id}`}>
-                          <Button size="sm" variant="outline">
-                            <Edit className="w-4 h-4" />
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Edit signature</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </Link>
                         
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete signature</p>
+                              </TooltipContent>
+                            </Tooltip>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
@@ -302,8 +333,9 @@ export default function MySignatures() {
                   </CardContent>
                 </Card>
               );
-            })}
-          </div>
+              })}
+            </div>
+          </TooltipProvider>
         )}
       </main>
     </div>
