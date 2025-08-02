@@ -14,14 +14,17 @@ export class GmailExportService {
   }> {
     try {
       // Use stored MJML HTML as starting point
-      let html = signature.mjmlHtml;
+      const mjmlHtml = signature.mjmlHtml;
       
-      if (!html) {
+      if (!mjmlHtml) {
         throw new Error('No MJML HTML found for signature');
       }
       
+      let html = mjmlHtml;
+      
       // Inline all CSS for Gmail compatibility
       html = await inlineCss(html, {
+        url: ' ',
         removeStyleTags: true,
         removeLinkTags: true,
         preserveMediaQueries: false,
