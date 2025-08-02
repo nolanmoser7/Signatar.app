@@ -340,7 +340,9 @@ export default function MySignatures() {
                     <Separator className="my-4" />
                     <div className="flex items-center justify-between text-sm text-gray-500">
                       <span>Created {new Date(signature.createdAt!).toLocaleDateString()}</span>
-                      <span>{animationTag} • {signature.animationType || 'none'}</span>
+                      <span className="capitalize">
+                        {animationTag} • {(signature.animationType || 'none').replace('-', ' ')}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
