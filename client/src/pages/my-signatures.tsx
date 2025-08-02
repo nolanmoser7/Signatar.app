@@ -34,8 +34,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-// Generate Gmail-compatible HTML signature based on template
-function generateGmailCompatibleHtml(personalInfo: PersonalInfo, socialMedia: SocialMedia, images: Images, templateId: string): string {
+// Generate Gmail-compatible HTML signature that renders the exact signature the user created
+function renderSignatureAsHtml(signature: Signature): string {
+  const personalInfo = signature.personalInfo as PersonalInfo;
+  const socialMedia = signature.socialMedia as SocialMedia;
+  const images = signature.images as Images;
+  const templateId = signature.templateId || 'professional';
+
   const socialIcons = [
     { key: "linkedin", url: socialMedia.linkedin, text: "LinkedIn", color: "#0077B5" },
     { key: "twitter", url: socialMedia.twitter, text: "Twitter", color: "#1DA1F2" },
@@ -46,12 +51,12 @@ function generateGmailCompatibleHtml(personalInfo: PersonalInfo, socialMedia: So
 
   const activeSocialLinks = socialIcons.filter(social => socialMedia[social.key as keyof SocialMedia]);
 
-  // Generate template-specific HTML
+  // Generate template-specific HTML that matches the actual rendered signature
   switch (templateId) {
     case "sales-professional":
-      return `<table cellpadding="0" cellspacing="0" style="max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; border: none;">
+      return `<table cellpadding="0" cellspacing="0" style="max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden;">
   <tr>
-    <td style="padding: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px;">
+    <td style="padding: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
       <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
         <tr>
           <td style="vertical-align: top; padding-right: 20px;">
@@ -139,14 +144,14 @@ function generateGmailCompatibleHtml(personalInfo: PersonalInfo, socialMedia: So
             ${images.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.3);" />` : ''}
           </td>
           <td style="vertical-align: top; flex: 1;">
-            <div style="font-size: 28px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(90deg, #ffffff, #e0e7ff); -webkit-background-clip: text; background-clip: text; color: transparent;">${personalInfo.name || 'Your Name'}</div>
+            <div style="font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">${personalInfo.name || 'Your Name'}</div>
             <div style="font-size: 18px; font-weight: 600; color: #a5b4fc; margin-bottom: 4px;">${personalInfo.title || 'Your Title'}</div>
             <div style="font-size: 16px; font-weight: 500; color: #c7d2fe; margin-bottom: 20px;">${personalInfo.company || 'Your Company'}</div>
             
             <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; backdrop-filter: blur(10px);">
-              ${personalInfo.email ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;">📧 ${personalInfo.email}</div>` : ''}
-              ${personalInfo.phone ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;">📞 ${personalInfo.phone}</div>` : ''}
-              ${personalInfo.website ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;">🌐 ${personalInfo.website}</div>` : ''}
+              ${personalInfo.email ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px;">📧 ${personalInfo.email}</div>` : ''}
+              ${personalInfo.phone ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px;">📞 ${personalInfo.phone}</div>` : ''}
+              ${personalInfo.website ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px;">🌐 ${personalInfo.website}</div>` : ''}
             </div>
             
             ${activeSocialLinks.length > 0 ? `
@@ -250,12 +255,8 @@ export default function MySignatures() {
   // Export signature as Gmail-compatible HTML
   const exportSignatureHtml = async (signature: Signature) => {
     try {
-      const personalInfo = signature.personalInfo as PersonalInfo;
-      const socialMedia = signature.socialMedia as SocialMedia;
-      const images = signature.images as Images;
-      
-      // Generate Gmail-compatible HTML (single table with inline CSS) based on template
-      const html = generateGmailCompatibleHtml(personalInfo, socialMedia, images, signature.templateId || 'professional');
+      // Generate Gmail-compatible HTML using the actual signature data
+      const html = renderSignatureAsHtml(signature);
       
       // Copy to clipboard
       await navigator.clipboard.writeText(html);
@@ -276,15 +277,77 @@ export default function MySignatures() {
   // Download signature as HTML file
   const downloadSignatureHtml = (signature: Signature) => {
     try {
-      const personalInfo = signature.personalInfo as PersonalInfo;
-      const socialMedia = signature.socialMedia as SocialMedia;
-      const images = signature.images as Images;
+      // Generate Gmail-compatible HTML using the actual signature data
+      const html = renderSignatureAsHtml(signature);
       
-      // Generate Gmail-compatible HTML (single table with inline CSS) based on template
-      const html = generateGmailCompatibleHtml(personalInfo, socialMedia, images, signature.templateId || 'professional');
+      // Create full HTML document for proper rendering when opened
+      const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${signature.name} - Email Signature</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .signature-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .signature-html {
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="signature-container">
+        <div class="instructions">
+            <h3 style="margin: 0 0 10px 0; color: #1976d2;">📧 How to use this signature in Gmail:</h3>
+            <ol style="margin: 0; padding-left: 20px; color: #333;">
+                <li>Copy the HTML code below</li>
+                <li>Open Gmail Settings → See all settings → General → Signature</li>
+                <li>Create new signature or edit existing one</li>
+                <li>Paste the HTML code into the signature editor</li>
+                <li>Save changes</li>
+            </ol>
+        </div>
+        
+        <h2 style="color: #333; margin-bottom: 20px;">Preview:</h2>
+        ${html}
+        
+        <h3 style="color: #333; margin: 30px 0 10px 0;">HTML Code (Copy this):</h3>
+        <div class="signature-html">${html.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+    </div>
+</body>
+</html>`;
       
       // Create download link
-      const blob = new Blob([html], { type: 'text/html' });
+      const blob = new Blob([fullHtml], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
