@@ -75,11 +75,18 @@ export class SignatureExportService {
     // Check if signature has any actual animations
     const hasAnimations = this.hasActiveAnimations(signature);
     
+    console.log('🔍 Export signature debug:');
+    console.log('- Has animations:', hasAnimations);
+    console.log('- Signature tag:', signature.tag);
+    console.log('- Will use static export:', !hasAnimations || signature.tag === 'static');
+    
     if (!hasAnimations || signature.tag === 'static') {
       // Simple export for static signatures with email client optimization
+      console.log('📝 Calling exportStaticSignature...');
       return await this.exportStaticSignature(signature, emailClient);
     } else {
       // Complex export with GIF baking for dynamic signatures
+      console.log('🎬 Calling bakeSignatureAnimations...');
       return await this.bakeSignatureAnimations(signature, emailClient);
     }
   }
@@ -127,19 +134,29 @@ export class SignatureExportService {
 
   /**
    * Export function for static signatures (no animations)
+   * Now uses single table with inline CSS format for maximum email client compatibility
    */
   async exportStaticSignature(signature: Signature, emailClient: string = 'gmail'): Promise<ExportResult> {
     try {
-      // Generate clean HTML without any animation classes or scripts
-      const staticHtml = await this.generateStaticSignatureHtml(signature, emailClient);
+      console.log('🔄 Exporting static signature using single table format...');
+      
+      // Use the new inline table exporter for static signatures
+      const inlineHtml = await this.inlineTableExporter.exportInlineTable(signature);
+      
+      console.log('✅ Static signature exported with inline table format');
+      console.log('📊 Output size:', inlineHtml.length, 'characters (optimized for email clients)');
       
       return {
-        finalHtml: staticHtml,
+        finalHtml: inlineHtml,
         gifUrls: {}, // No GIFs needed for static signatures
       };
     } catch (error) {
-      console.error('❌ Error exporting static signature:', error);
-      throw new Error('Failed to export static signature');
+      console.error('❌ Error exporting static signature with inline table:', error);
+      console.error('❌ Error details:', error instanceof Error ? error.message : 'Unknown error');
+      console.error('❌ Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+      
+      // For now, let's throw the error to see what's wrong instead of falling back
+      throw new Error('Failed to export static signature with inline table: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
 
