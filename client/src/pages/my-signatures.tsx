@@ -25,6 +25,53 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+// Generate Gmail-compatible HTML signature
+function generateGmailCompatibleHtml(personalInfo: PersonalInfo, socialMedia: SocialMedia, images: Images): string {
+  const socialIcons = [
+    { key: "linkedin", url: socialMedia.linkedin, icon: "🔗", color: "#0077B5" },
+    { key: "twitter", url: socialMedia.twitter, icon: "🐦", color: "#1DA1F2" },
+    { key: "instagram", url: socialMedia.instagram, icon: "📷", color: "#E4405F" },
+    { key: "youtube", url: socialMedia.youtube, icon: "▶️", color: "#FF0000" },
+    { key: "tiktok", url: socialMedia.tiktok, icon: "🎵", color: "#000000" },
+  ];
+
+  const activeSocialLinks = socialIcons.filter(social => socialMedia[social.key as keyof SocialMedia]);
+
+  return `<table cellpadding="0" cellspacing="0" style="border: none; margin: 0; padding: 0; font-family: Arial, sans-serif;">
+  <tr>
+    <td style="padding: 0; margin: 0; vertical-align: top;">
+      ${images.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-right: 20px; border: 2px solid #e5e7eb;" />` : ''}
+    </td>
+    <td style="padding: 0; margin: 0; vertical-align: top;">
+      <table cellpadding="0" cellspacing="0" style="border: none; margin: 0; padding: 0;">
+        <tr>
+          <td style="padding: 0; margin: 0;">
+            <div style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 4px;">${personalInfo.name || 'Your Name'}</div>
+            <div style="font-size: 14px; font-weight: 600; color: #3b82f6; margin-bottom: 2px;">${personalInfo.title || 'Your Title'}</div>
+            <div style="font-size: 14px; font-weight: 500; color: #6b7280; margin-bottom: 12px;">${personalInfo.company || 'Your Company'}</div>
+          </td>
+        </tr>
+        ${personalInfo.email ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151;">📧 ${personalInfo.email}</span></td></tr>` : ''}
+        ${personalInfo.phone ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151;">📞 ${personalInfo.phone}</span></td></tr>` : ''}
+        ${personalInfo.website ? `<tr><td style="padding: 0; margin: 0; padding-bottom: 4px;"><span style="font-size: 13px; color: #374151;">🌐 ${personalInfo.website}</span></td></tr>` : ''}
+        ${activeSocialLinks.length > 0 ? `
+        <tr>
+          <td style="padding: 8px 0 0 0; margin: 0;">
+            ${activeSocialLinks.map(social => 
+              `<a href="${socialMedia[social.key as keyof SocialMedia]}" target="_blank" style="text-decoration: none; margin-right: 8px; display: inline-block; background-color: ${social.color}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${social.icon}</a>`
+            ).join('')}
+          </td>
+        </tr>` : ''}
+      </table>
+    </td>
+    ${images.logo ? `
+    <td style="padding: 0; margin: 0; vertical-align: top; padding-left: 20px;">
+      <img src="${images.logo}" alt="${personalInfo.company} logo" style="height: 48px; width: auto; object-fit: contain;" />
+    </td>` : ''}
+  </tr>
+</table>`;
+}
+
 export default function MySignatures() {
   const [, navigate] = useLocation();
   const { user, isAuthenticated } = useAuth();
@@ -60,18 +107,27 @@ export default function MySignatures() {
     },
   });
 
-  // Copy signature HTML to clipboard
-  const copySignatureHtml = async (signature: Signature) => {
+  // Export signature as Gmail-compatible HTML
+  const exportSignatureHtml = async (signature: Signature) => {
     try {
-      // For now, show a message that export functionality is coming
+      const personalInfo = signature.personalInfo as PersonalInfo;
+      const socialMedia = signature.socialMedia as SocialMedia;
+      const images = signature.images as Images;
+      
+      // Generate Gmail-compatible HTML (single table with inline CSS)
+      const html = generateGmailCompatibleHtml(personalInfo, socialMedia, images);
+      
+      // Copy to clipboard
+      await navigator.clipboard.writeText(html);
+      
       toast({
-        title: "Export Coming Soon",
-        description: "MJML export functionality will be available soon.",
+        title: "Success",
+        description: "Signature HTML copied to clipboard! Paste it into Gmail's signature settings.",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to copy signature HTML.",
+        description: "Failed to export signature HTML.",
         variant: "destructive",
       });
     }
@@ -223,13 +279,13 @@ export default function MySignatures() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => copySignatureHtml(signature)}
+                              onClick={() => exportSignatureHtml(signature)}
                             >
-                              <Copy className="w-4 h-4" />
+                              <Download className="w-4 h-4" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>Copy HTML</p>
+                            <p>Export for Gmail</p>
                           </TooltipContent>
                         </Tooltip>
                         
