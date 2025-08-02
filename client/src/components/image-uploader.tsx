@@ -8,7 +8,9 @@ import { UserCircle, Building, Image, Upload, X, Crop } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { ImageCropper } from "@/components/image-cropper";
+import { ObjectUploader } from "@/components/ObjectUploader";
 import type { Images } from "@shared/schema";
+import type { UploadResult } from "@uppy/core";
 
 interface ImageUploaderProps {
   images: Images;
@@ -22,9 +24,6 @@ interface UploadResponse {
 }
 
 export default function ImageUploader({ images, onImagesChange }: ImageUploaderProps) {
-  const headshotRef = useRef<HTMLInputElement>(null);
-  const logoRef = useRef<HTMLInputElement>(null);
-  const backgroundRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
   const [cropperState, setCropperState] = useState<{
@@ -39,57 +38,55 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
     title: ''
   });
 
-  const uploadMutation = useMutation({
-    mutationFn: async (file: File): Promise<UploadResponse> => {
-      const formData = new FormData();
-      formData.append("image", file);
+  const [currentUploadType, setCurrentUploadType] = useState<keyof Images | null>(null);
+
+  const getUploadParameters = async () => {
+    const response = await apiRequest("POST", "/api/objects/upload");
+    const data = await response.json();
+    return {
+      method: "PUT" as const,
+      url: data.uploadURL,
+    };
+  };
+
+  const handleUploadComplete = async (
+    result: UploadResult<Record<string, unknown>, Record<string, unknown>>,
+    type: keyof Images
+  ) => {
+    if (result.successful && result.successful.length > 0) {
+      const uploadedFile = result.successful[0];
+      const uploadURL = uploadedFile.uploadURL;
       
-      const response = await apiRequest("POST", "/api/upload", formData);
-      return response.json();
-    },
-    onError: (error) => {
-      toast({
-        title: "Upload Failed",
-        description: error.message || "Failed to upload image",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleFileUpload = async (file: File, type: keyof Images) => {
-    try {
-      const result = await uploadMutation.mutateAsync(file);
-      onImagesChange({
-        ...images,
-        [type]: result.url,
-      });
-      toast({
-        title: "Upload Successful",
-        description: `${type} image uploaded successfully`,
-      });
-    } catch (error) {
-      // Error is handled by mutation onError
+      if (uploadURL) {
+        try {
+          // Update image URL in storage and get normalized path
+          const response = await apiRequest("PUT", "/api/objects/images", {
+            imageURL: uploadURL,
+          });
+          const data = await response.json();
+          
+          onImagesChange({
+            ...images,
+            [type]: data.objectPath,
+          });
+          
+          toast({
+            title: "Upload Successful",
+            description: `${type} image uploaded to cloud storage`,
+          });
+        } catch (error) {
+          console.error("Error processing upload:", error);
+          toast({
+            title: "Upload Processing Failed",
+            description: "Image uploaded but processing failed",
+            variant: "destructive",
+          });
+        }
+      }
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: keyof Images) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileUpload(file, type);
-    }
-  };
 
-  const handleDrop = (e: React.DragEvent, type: keyof Images) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFileUpload(file, type);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
 
   const removeImage = (type: keyof Images) => {
     onImagesChange({
@@ -137,14 +134,12 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
     icon: Icon, 
     title, 
     description,
-    inputRef,
-    maxSize = "2MB"
+    maxSize = "10MB"
   }: {
     type: keyof Images;
     icon: any;
     title: string;
     description: string;
-    inputRef: React.RefObject<HTMLInputElement>;
     maxSize?: string;
   }) => {
     const hasImage = !!images[type] && typeof images[type] === 'string';
@@ -157,75 +152,69 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
         
         {hasImage ? (
           <Card className="p-4 border-2 border-gray-200">
-            <div className="relative">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <img
-                    src={images[type] as string}
-                    alt={title}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                  <div>
-                    <p className="text-sm font-medium">Image uploaded</p>
-                    <p className="text-xs text-gray-500">Click to replace</p>
-                  </div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-3">
+                <img
+                  src={images[type] as string}
+                  alt={title}
+                  className="w-12 h-12 object-cover rounded"
+                />
+                <div>
+                  <p className="text-sm font-medium">Image uploaded to cloud</p>
+                  <p className="text-xs text-gray-500">Persistent storage</p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeImage(type);
-                  }}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
               </div>
-              
-              {/* Click-to-replace overlay - only on the image info area */}
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleFileSelect(e, type)}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                style={{ height: '60px' }} // Only cover the image info area
-              />
-            </div>
-            
-            {/* Action buttons for headshot and logo */}
-            {(type === 'headshot' || type === 'logo') && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openCropper(type as 'headshot' | 'logo');
-                }}
-                className="w-full relative z-20"
+                onClick={() => removeImage(type)}
               >
-                <Crop className="w-4 h-4 mr-2" />
-                Crop & Position
+                <X className="w-4 h-4" />
               </Button>
-            )}
+            </div>
+            
+            <div className="space-y-2">
+              <ObjectUploader
+                maxNumberOfFiles={1}
+                maxFileSize={10485760} // 10MB
+                onGetUploadParameters={getUploadParameters}
+                onComplete={(result) => handleUploadComplete(result, type)}
+                buttonClassName="w-full"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Replace Image
+              </ObjectUploader>
+              
+              {/* Action buttons for headshot and logo */}
+              {(type === 'headshot' || type === 'logo') && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCropper(type as 'headshot' | 'logo')}
+                  className="w-full"
+                >
+                  <Crop className="w-4 h-4 mr-2" />
+                  Crop & Position
+                </Button>
+              )}
+            </div>
           </Card>
         ) : (
-          <Card
-            className="border-2 border-dashed border-gray-300 p-4 text-center hover:border-primary transition-colors cursor-pointer"
-            onDrop={(e) => handleDrop(e, type)}
-            onDragOver={handleDragOver}
-            onClick={() => inputRef.current?.click()}
-          >
+          <Card className="border-2 border-dashed border-gray-300 p-4 text-center">
             <Icon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">{description}</p>
-            <p className="text-xs text-gray-500 mt-1">PNG, JPG up to {maxSize}</p>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileSelect(e, type)}
-              className="hidden"
-            />
+            <p className="text-sm text-gray-600 mb-3">{description}</p>
+            <p className="text-xs text-gray-500 mb-4">PNG, JPG up to {maxSize}</p>
+            
+            <ObjectUploader
+              maxNumberOfFiles={1}
+              maxFileSize={10485760} // 10MB
+              onGetUploadParameters={getUploadParameters}
+              onComplete={(result) => handleUploadComplete(result, type)}
+              buttonClassName="bg-primary text-white hover:bg-primary/90"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Upload to Cloud Storage
+            </ObjectUploader>
           </Card>
         )}
       </div>
@@ -240,8 +229,7 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           type="headshot"
           icon={UserCircle}
           title="Headshot Photo"
-          description="Drop image here or click to browse"
-          inputRef={headshotRef}
+          description="Upload your professional headshot"
         />
         
         {images.headshot && (
@@ -272,9 +260,8 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           type="logo"
           icon={Building}
           title="Company Logo"
-          description="Drop logo here or click to browse"
-          inputRef={logoRef}
-          maxSize="1MB"
+          description="Upload your company logo"
+          maxSize="5MB"
         />
         
         {images.logo && (
@@ -305,9 +292,8 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
           type="background"
           icon={Image}
           title="Background (Optional)"
-          description="Drop background here or click to browse"
-          inputRef={backgroundRef}
-          maxSize="5MB"
+          description="Upload a background image"
+          maxSize="10MB"
         />
         
         {images.background && (
@@ -335,11 +321,7 @@ export default function ImageUploader({ images, onImagesChange }: ImageUploaderP
         )}
       </div>
       
-      {uploadMutation.isPending && (
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">Uploading...</p>
-        </div>
-      )}
+
       
       <ImageCropper
         isOpen={cropperState.isOpen}

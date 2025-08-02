@@ -34,12 +34,41 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+// Convert object storage paths to full URLs for email compatibility
+function getImageUrl(imagePath: string | undefined): string | undefined {
+  if (!imagePath) return undefined;
+  
+  // If it's already a full URL, return as-is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it starts with /objects/, it's an object storage path - convert to full URL
+  if (imagePath.startsWith('/objects/')) {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}${imagePath}`;
+  }
+  
+  // If it starts with /api/files/, it's a local file - convert to full URL
+  if (imagePath.startsWith('/api/files/')) {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}${imagePath}`;
+  }
+  
+  return imagePath;
+}
+
 // Generate Gmail-compatible HTML signature that renders the exact signature the user created
 function renderSignatureAsHtml(signature: Signature): string {
   const personalInfo = signature.personalInfo as PersonalInfo;
   const socialMedia = signature.socialMedia as SocialMedia;
   const images = signature.images as Images;
   const templateId = signature.templateId || 'professional';
+  
+  // Convert image paths to full URLs for email compatibility
+  const headshotUrl = getImageUrl(images.headshot);
+  const logoUrl = getImageUrl(images.logo);
+  const backgroundUrl = getImageUrl(images.background);
 
   const socialIcons = [
     { key: "linkedin", url: socialMedia.linkedin, text: "LinkedIn", color: "#0077B5" },
@@ -79,9 +108,9 @@ function renderSignatureAsHtml(signature: Signature): string {
           <!-- Main content area -->
           <td style="padding: 32px; vertical-align: top; position: relative;">
             <!-- Company logo at top -->
-            ${images.logo ? `
+            ${logoUrl ? `
             <div style="margin-bottom: 16px;">
-              <img src="${images.logo}" alt="Logo" style="height: 48px; width: auto; object-fit: contain;" />
+              <img src="${logoUrl}" alt="Logo" style="height: 48px; width: auto; object-fit: contain;" />
             </div>
             ` : ''}
             
@@ -125,10 +154,10 @@ function renderSignatureAsHtml(signature: Signature): string {
           </td>
           
           <!-- Right side portrait area -->
-          ${images.headshot ? `
+          ${headshotUrl ? `
           <td style="width: 256px; height: 280px; position: relative; padding: 0; vertical-align: top;">
             <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
-              <img src="${images.headshot}" alt="${personalInfo.name} portrait" style="width: 100%; height: 100%; object-fit: cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
+              <img src="${headshotUrl}" alt="${personalInfo.name} portrait" style="width: 100%; height: 100%; object-fit: cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
               <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, rgba(34, 211, 238, 0.2), rgba(31, 41, 55, 0.2)); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);"></div>
             </div>
           </td>
@@ -145,7 +174,7 @@ function renderSignatureAsHtml(signature: Signature): string {
     <td style="vertical-align: top; width: 60%;">
       <div style="display: flex; align-items: center; margin-bottom: 24px;">
         <div style="width: 48px; height: 48px; margin-right: 12px; position: relative;">
-          ${images.logo ? `<img src="${images.logo}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain;">` : `
+          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain;">` : `
             <div style="width: 32px; height: 32px; background: #7C3AED; transform: rotate(45deg); border-radius: 4px; position: relative;">
               <div style="width: 12px; height: 12px; background: #FFFFFF; position: absolute; top: 10px; left: 10px; transform: rotate(-45deg);"></div>
             </div>
@@ -176,9 +205,9 @@ function renderSignatureAsHtml(signature: Signature): string {
       </div>` : ''}
     </td>
     
-    ${images.headshot ? `
+    ${headshotUrl ? `
     <td style="vertical-align: top; width: 40%; text-align: right;">
-      <img src="${images.headshot}" alt="${personalInfo.name}" style="width: 180px; height: 240px; object-fit: cover; border-radius: 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);" />
+      <img src="${headshotUrl}" alt="${personalInfo.name}" style="width: 180px; height: 240px; object-fit: cover; border-radius: 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);" />
     </td>` : ''}
   </tr>
 </table>`;
@@ -190,7 +219,7 @@ function renderSignatureAsHtml(signature: Signature): string {
       <table cellpadding="0" cellspacing="0" style="width: 100%;">
         <tr>
           <td style="vertical-align: top; padding-right: 24px;">
-            ${images.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.3);" />` : ''}
+            ${headshotUrl ? `<img src="${headshotUrl}" alt="${personalInfo.name}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.3);" />` : ''}
           </td>
           <td style="vertical-align: top; flex: 1;">
             <div style="font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">${personalInfo.name || 'Your Name'}</div>
@@ -210,9 +239,9 @@ function renderSignatureAsHtml(signature: Signature): string {
               ).join('')}
             </div>` : ''}
           </td>
-          ${images.logo ? `
+          ${logoUrl ? `
           <td style="vertical-align: top; padding-left: 24px;">
-            <img src="${images.logo}" alt="${personalInfo.company} logo" style="height: 80px; width: auto; object-fit: contain; filter: brightness(0) invert(1) opacity(0.9);" />
+            <img src="${logoUrl}" alt="${personalInfo.company} logo" style="height: 80px; width: auto; object-fit: contain; filter: brightness(0) invert(1) opacity(0.9);" />
           </td>` : ''}
         </tr>
       </table>
@@ -225,7 +254,7 @@ function renderSignatureAsHtml(signature: Signature): string {
       return `<table cellpadding="0" cellspacing="0" style="border: none; margin: 0; padding: 0; font-family: Arial, sans-serif; max-width: 600px;">
   <tr>
     <td style="padding: 0; margin: 0; vertical-align: top;">
-      ${images.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-right: 20px; border: 2px solid #e5e7eb;" />` : ''}
+      ${headshotUrl ? `<img src="${headshotUrl}" alt="${personalInfo.name}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-right: 20px; border: 2px solid #e5e7eb;" />` : ''}
     </td>
     <td style="padding: 0; margin: 0; vertical-align: top;">
       <table cellpadding="0" cellspacing="0" style="border: none; margin: 0; padding: 0;">
