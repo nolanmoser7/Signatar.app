@@ -9,8 +9,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Signature, PersonalInfo, SocialMedia } from "@shared/schema";
+import type { Signature, PersonalInfo, SocialMedia, Images } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
+import SignaturePreview from "@/components/signature-preview";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,11 +63,10 @@ export default function MySignatures() {
   // Copy signature HTML to clipboard
   const copySignatureHtml = async (signature: Signature) => {
     try {
-      const html = generateSignatureHtml(signature);
-      await navigator.clipboard.writeText(html);
+      // For now, show a message that export functionality is coming
       toast({
-        title: "Copied!",
-        description: "Signature HTML copied to clipboard.",
+        title: "Export Coming Soon",
+        description: "MJML export functionality will be available soon.",
       });
     } catch (error) {
       toast({
@@ -75,42 +75,6 @@ export default function MySignatures() {
         variant: "destructive",
       });
     }
-  };
-
-  // Generate HTML for signature (simplified version)
-  const generateSignatureHtml = (signature: Signature): string => {
-    const personalInfo = signature.personalInfo as PersonalInfo;
-    const socialMedia = signature.socialMedia as SocialMedia;
-    const images = signature.images as any;
-
-    return `
-    <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px;">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="padding-right: 20px; vertical-align: top;">
-            ${images?.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #e5e7eb;" />` : ''}
-          </td>
-          <td style="vertical-align: top;">
-            <h3 style="margin: 0 0 4px 0; font-size: 18px; font-weight: bold; color: #1f2937;">${personalInfo.name}</h3>
-            <p style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: #6366f1;">${personalInfo.title}</p>
-            <p style="margin: 0 0 16px 0; font-size: 14px; font-weight: 500; color: #6b7280;">${personalInfo.company}</p>
-            <div style="font-size: 13px; line-height: 1.6;">
-              ${personalInfo.email ? `<div style="margin-bottom: 4px;"><span style="color: #6366f1;">✉</span> ${personalInfo.email}</div>` : ''}
-              ${personalInfo.phone ? `<div style="margin-bottom: 4px;"><span style="color: #6366f1;">📞</span> ${personalInfo.phone}</div>` : ''}
-              ${personalInfo.website ? `<div style="margin-bottom: 4px;"><span style="color: #6366f1;">🌐</span> ${personalInfo.website}</div>` : ''}
-            </div>
-            <div style="margin-top: 16px;">
-              ${socialMedia?.linkedin ? `<a href="${socialMedia.linkedin}" style="display: inline-block; margin-right: 8px; width: 32px; height: 32px; background-color: #0077b5; border-radius: 50%; text-align: center; line-height: 32px; color: white; text-decoration: none;">in</a>` : ''}
-              ${socialMedia?.twitter ? `<a href="${socialMedia.twitter}" style="display: inline-block; margin-right: 8px; width: 32px; height: 32px; background-color: #1da1f2; border-radius: 50%; text-align: center; line-height: 32px; color: white; text-decoration: none;">tw</a>` : ''}
-              ${socialMedia?.instagram ? `<a href="${socialMedia.instagram}" style="display: inline-block; margin-right: 8px; width: 32px; height: 32px; background-color: #e4405f; border-radius: 50%; text-align: center; line-height: 32px; color: white; text-decoration: none;">ig</a>` : ''}
-            </div>
-          </td>
-          <td style="padding-left: 20px; vertical-align: top;">
-            ${images?.logo ? `<img src="${images.logo}" alt="${personalInfo.company} logo" style="height: 48px; width: auto; object-fit: contain;" />` : ''}
-          </td>
-        </tr>
-      </table>
-    </div>`;
   };
 
   // Redirect if not authenticated
@@ -232,16 +196,22 @@ export default function MySignatures() {
                   </CardHeader>
 
                   <CardContent>
-                    {/* Mini Preview */}
-                    <div className="bg-gray-50 rounded-lg p-4 mb-4 overflow-hidden">
-                      <div className="text-xs text-gray-600 scale-75 origin-top-left transform">
-                        <div className="font-semibold">{personalInfo.name}</div>
-                        <div className="text-blue-600">{personalInfo.title}</div>
-                        <div className="text-gray-500">{personalInfo.company}</div>
-                        <div className="mt-1 space-y-1">
-                          {personalInfo.email && <div>✉ {personalInfo.email}</div>}
-                          {personalInfo.phone && <div>📞 {personalInfo.phone}</div>}
-                        </div>
+                    {/* Actual Signature Preview */}
+                    <div className="bg-gray-50 rounded-lg p-2 mb-4 overflow-hidden">
+                      <div className="scale-50 origin-top-left transform" style={{ width: "200%", height: "200px" }}>
+                        <SignaturePreview
+                          personalInfo={personalInfo}
+                          images={signature.images as Images || {}}
+                          socialMedia={signature.socialMedia as SocialMedia || {}}
+                          animationType={signature.animationType || "none"}
+                          templateId={signature.templateId || "professional"}
+                          isAnimating={false}
+                          deviceView="desktop"
+                          layoutMode={false}
+                          elementPositions={signature.elementPositions as any || {}}
+                          elementAnimations={signature.elementAnimations as any || { headshot: "none", logo: "none", socialIcons: "none" }}
+                          isElementAnimating={false}
+                        />
                       </div>
                     </div>
 
