@@ -15,8 +15,11 @@ interface SignatureExportProps {
 
 interface ExportResult {
   html: string;
-  gifUrls: { [elementId: string]: string };
+  gifUrls?: { [elementId: string]: string };
   success: boolean;
+  mjml?: string;
+  validation?: { valid: boolean; issues: string[] };
+  format?: string;
 }
 
 export default function SignatureExport({ signatureId, onClose }: SignatureExportProps) {
@@ -71,9 +74,12 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
       setCurrentStep("Export complete!");
       setExportResult(result);
       
+      const isMjmlExport = result.format === 'mjml';
+      const exportType = isMjmlExport ? 'MJML template' : 'optimized HTML';
+      
       toast({
         title: "Export Complete!",
-        description: "Your signature has been exported with animated GIFs.",
+        description: `Your signature has been exported as ${exportType}.`,
       });
     } catch (error) {
       console.error("Export error:", error);
@@ -118,7 +124,7 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
   };
 
   const copyGifUrls = async () => {
-    if (!exportResult) return;
+    if (!exportResult || !exportResult.gifUrls) return;
 
     const urls = Object.values(exportResult.gifUrls).join('\n');
     try {
@@ -230,11 +236,11 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
                   <span className="text-gray-600 ml-2">Ready for download</span>
                 </div>
                 
-                {Object.keys(exportResult.gifUrls).length > 0 && (
+                {exportResult.gifUrls && Object.keys(exportResult.gifUrls).length > 0 && (
                   <div>
                     <span className="font-medium">Generated GIFs:</span>
                     <div className="mt-2 space-y-1">
-                      {Object.entries(exportResult.gifUrls).map(([elementId, url]) => (
+                      {exportResult.gifUrls && Object.entries(exportResult.gifUrls).map(([elementId, url]) => (
                         <div key={elementId} className="flex items-center justify-between bg-white rounded p-2">
                           <span className="text-xs font-mono">
                             {elementId.replace('-element', '')}: {url}
@@ -257,7 +263,7 @@ export default function SignatureExport({ signatureId, onClose }: SignatureExpor
                 <Copy className="w-4 h-4 mr-2" />
                 Copy HTML
               </Button>
-              {Object.keys(exportResult.gifUrls).length > 0 && (
+              {exportResult.gifUrls && Object.keys(exportResult.gifUrls).length > 0 && (
                 <Button variant="outline" onClick={copyGifUrls} className="md:col-span-2">
                   <Copy className="w-4 h-4 mr-2" />
                   Copy GIF URLs
