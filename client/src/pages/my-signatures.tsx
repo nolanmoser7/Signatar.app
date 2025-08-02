@@ -54,36 +54,85 @@ function renderSignatureAsHtml(signature: Signature): string {
   // Generate template-specific HTML that matches the actual rendered signature
   switch (templateId) {
     case "sales-professional":
-      return `<table cellpadding="0" cellspacing="0" style="max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; border: none; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden;">
+      return `<table cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif; max-width: 600px; border: none; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
   <tr>
-    <td style="padding: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <td style="padding: 0; margin: 0;">
       <table cellpadding="0" cellspacing="0" style="width: 100%; border: none;">
         <tr>
-          <td style="vertical-align: top; padding-right: 20px;">
-            ${images.headshot ? `<img src="${images.headshot}" alt="${personalInfo.name}" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />` : ''}
+          <!-- Left sidebar with social icons -->
+          <td style="width: 80px; background: linear-gradient(to bottom, #22d3ee, #2563eb); padding: 30px 0; text-align: center; vertical-align: middle;">
+            ${activeSocialLinks.length > 0 ? `
+            <table cellpadding="0" cellspacing="0" style="width: 100%;">
+              ${activeSocialLinks.map(social => `
+              <tr>
+                <td style="padding: 10px 0; text-align: center;">
+                  <a href="${socialMedia[social.key as keyof SocialMedia]}" target="_blank" style="color: white; text-decoration: none; font-size: 24px;">
+                    ${social.key === 'linkedin' ? '💼' : social.key === 'twitter' ? '🐦' : social.key === 'instagram' ? '📷' : social.key === 'youtube' ? '📺' : '🎵'}
+                  </a>
+                </td>
+              </tr>
+              `).join('')}
+            </table>
+            ` : ''}
           </td>
-          <td style="vertical-align: top; flex: 1;">
-            <div style="color: #ffffff; font-size: 24px; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">${personalInfo.name || 'Your Name'}</div>
-            <div style="color: #f0f0f0; font-size: 16px; font-weight: 600; margin-bottom: 2px;">${personalInfo.title || 'Your Title'}</div>
-            <div style="color: #e0e0e0; font-size: 14px; font-weight: 500; margin-bottom: 16px;">${personalInfo.company || 'Your Company'}</div>
+          
+          <!-- Main content area -->
+          <td style="padding: 32px; vertical-align: top; position: relative;">
+            <!-- Company logo at top -->
+            ${images.logo ? `
+            <div style="margin-bottom: 16px;">
+              <img src="${images.logo}" alt="Logo" style="height: 48px; width: auto; object-fit: contain;" />
+            </div>
+            ` : ''}
             
-            <div style="border-top: 1px solid rgba(255,255,255,0.3); padding-top: 16px;">
-              ${personalInfo.email ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;">✉️ ${personalInfo.email}</div>` : ''}
-              ${personalInfo.phone ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;">📞 ${personalInfo.phone}</div>` : ''}
-              ${personalInfo.website ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;">🌐 ${personalInfo.website}</div>` : ''}
+            <!-- Company name -->
+            <div style="margin-bottom: 24px;">
+              <h2 style="margin: 0; font-size: 24px; font-weight: bold; color: #1f2937; letter-spacing: 2px; font-family: 'Playfair Display', serif;">${(personalInfo.company || 'COMPANY').toUpperCase()}</h2>
             </div>
             
-            ${activeSocialLinks.length > 0 ? `
-            <div style="margin-top: 16px;">
-              ${activeSocialLinks.map(social => 
-                `<a href="${socialMedia[social.key as keyof SocialMedia]}" target="_blank" style="display: inline-block; margin-right: 12px; background-color: rgba(255,255,255,0.2); color: #ffffff; padding: 8px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; backdrop-filter: blur(10px);">${social.text}</a>`
-              ).join('')}
-            </div>` : ''}
+            <!-- Name and title -->
+            <div style="margin-bottom: 24px;">
+              <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: bold; color: #1f2937; font-family: 'Playfair Display', serif;">
+                ${personalInfo.name || 'Your Name'}
+                <span style="color: #22d3ee; margin-left: 8px;">✓</span>
+              </h1>
+              <p style="margin: 0; font-size: 20px; color: #6b7280; font-weight: 500; font-family: 'Playfair Display', serif;">
+                ${personalInfo.title || 'Your Title'}
+              </p>
+            </div>
+            
+            <!-- Contact information -->
+            <div style="margin-bottom: 0;">
+              ${personalInfo.phone ? `
+              <div style="margin-bottom: 12px; display: flex; align-items: center;">
+                <span style="margin-right: 12px; color: #6b7280;">📞</span>
+                <span style="font-size: 18px; color: #1f2937; font-family: 'Playfair Display', serif;">${personalInfo.phone}</span>
+              </div>
+              ` : ''}
+              ${personalInfo.email ? `
+              <div style="margin-bottom: 12px; display: flex; align-items: center;">
+                <span style="margin-right: 12px; color: #6b7280;">✉️</span>
+                <span style="font-size: 18px; color: #1f2937; font-family: 'Playfair Display', serif;">${personalInfo.email}</span>
+              </div>
+              ` : ''}
+              ${personalInfo.website ? `
+              <div style="margin-bottom: 12px; display: flex; align-items: center;">
+                <span style="margin-right: 12px; color: #6b7280;">🌐</span>
+                <span style="font-size: 18px; color: #1f2937; font-family: 'Playfair Display', serif;">${personalInfo.website}</span>
+              </div>
+              ` : ''}
+            </div>
           </td>
-          ${images.logo ? `
-          <td style="vertical-align: top; padding-left: 20px;">
-            <img src="${images.logo}" alt="${personalInfo.company} logo" style="height: 60px; width: auto; object-fit: contain; filter: brightness(0) invert(1);" />
-          </td>` : ''}
+          
+          <!-- Right side portrait area -->
+          ${images.headshot ? `
+          <td style="width: 256px; height: 280px; position: relative; padding: 0; vertical-align: top;">
+            <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+              <img src="${images.headshot}" alt="${personalInfo.name} portrait" style="width: 100%; height: 100%; object-fit: cover; clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);" />
+              <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, rgba(34, 211, 238, 0.2), rgba(31, 41, 55, 0.2)); clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 0% 100%);"></div>
+            </div>
+          </td>
+          ` : ''}
         </tr>
       </table>
     </td>
