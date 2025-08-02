@@ -227,6 +227,42 @@ export default function SignatureBuilder() {
     setTimeout(() => setIsElementAnimating(false), 3000);
   };
 
+  // Helper function to generate styled image data for export replication
+  const generateStyledImagesData = () => ({
+    headshot: images.headshot,
+    logo: images.logo,
+    background: images.background,
+    backgroundOpacity: images.backgroundOpacity,
+    headshotSize: images.headshotSize,
+    logoSize: images.logoSize,
+    // Save styled versions for exact export replication
+    styledHeadshot: images.headshot ? {
+      url: images.headshot,
+      width: Math.round(140 * (images.headshotSize / 100)),
+      height: Math.round(140 * (images.headshotSize / 100)),
+      borderRadius: "12px",
+      objectFit: "cover",
+      styles: {
+        borderRadius: "12px",
+        objectFit: "cover",
+        display: "block",
+        border: "0"
+      }
+    } : undefined,
+    styledLogo: images.logo ? {
+      url: images.logo,
+      width: Math.round(80 * (images.logoSize / 100)),
+      height: Math.round(80 * (images.logoSize / 100)),
+      opacity: 0.8,
+      styles: {
+        display: "block",
+        margin: "12px 0 0 0",
+        border: "0",
+        opacity: "0.8"
+      }
+    } : undefined,
+  });
+
   const handleFinishedCreating = () => {
     if (!isAuthenticated && !isLoading) {
       // User is not signed in, show auth modal
@@ -241,14 +277,7 @@ export default function SignatureBuilder() {
       if (!signatureName.trim()) {
         toast({
           title: "Name Required",
-          description: "Please enter a name for your signature.",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      const signatureData: InsertSignature = {
-        userId: user.id,
+        images: generateStyledImagesData(),
         name: signatureName.trim(),
         templateId: selectedTemplate,
         personalInfo: {
@@ -345,17 +374,10 @@ export default function SignatureBuilder() {
       if (!signatureName.trim()) {
         toast({
           title: "Name Required",
-          description: "Please enter a name for your signature.",
+        images: generateStyledImagesData(),
           variant: "destructive",
         });
         return;
-      }
-      
-      const signatureData: InsertSignature = {
-        userId: user.id,
-        name: signatureName.trim(),
-        templateId: selectedTemplate,
-        personalInfo: {
           name: personalInfo.name,
           title: personalInfo.title,
           company: personalInfo.company,
