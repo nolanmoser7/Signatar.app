@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Edit, Download, Trash2, Plus, Eye, Copy } from "lucide-react";
+import { Edit, Download, Trash2, Plus, Eye, Copy, FileText } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -582,15 +582,24 @@ export default function MySignatures() {
                         </Tooltip>
                       </div>
 
-                      {/* Centered Export Button */}
-                      <div className="flex-1 flex justify-center">
+                      {/* Centered Export Buttons */}
+                      <div className="flex-1 flex justify-center space-x-2">
                         <Button
                           size="sm"
-                          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-6"
+                          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-4"
                           onClick={() => openExportDialog(signature)}
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Export Signature
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-blue-600 text-blue-600 hover:bg-blue-50 font-medium px-4"
+                          onClick={() => exportSignatureHtml(signature)}
+                        >
+                          <FileText className="w-4 h-4 mr-2" />
+                          Export HTML
                         </Button>
                       </div>
                       
