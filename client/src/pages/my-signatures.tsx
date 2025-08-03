@@ -25,6 +25,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import GifGenerator from "@/components/gif-generator";
 
 
 
@@ -33,6 +41,8 @@ export default function MySignatures() {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [exportingSignature, setExportingSignature] = useState<Signature | null>(null);
 
 
   // Fetch user signatures
@@ -63,10 +73,11 @@ export default function MySignatures() {
     },
   });
 
-
-
-
-
+  // Open export dialog
+  const openExportDialog = (signature: Signature) => {
+    setExportingSignature(signature);
+    setExportDialogOpen(true);
+  };
 
   // Redirect if not authenticated
   if (!isAuthenticated) {
@@ -236,15 +247,10 @@ export default function MySignatures() {
                         <Button
                           size="sm"
                           className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium px-4"
-                          onClick={() => {
-                            toast({
-                              title: "Export Feature",
-                              description: "GIF export functionality coming soon!",
-                            });
-                          }}
+                          onClick={() => openExportDialog(signature)}
                         >
                           <Download className="w-4 h-4 mr-2" />
-                          Export GIF
+                          Export Signature
                         </Button>
                       </div>
                       
@@ -314,7 +320,31 @@ export default function MySignatures() {
         )}
       </main>
 
-
+      {/* Export Dialog */}
+      <Dialog open={exportDialogOpen} onOpenChange={setExportDialogOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <img src={signatarLogo} alt="Signatar" className="w-6 h-6" />
+              <span>Export Signature</span>
+            </DialogTitle>
+            <DialogDescription>
+              Generate an animated GIF of your signature for use in email clients that support dynamic content.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {exportingSignature && (
+            <GifGenerator
+              personalInfo={exportingSignature.personalInfo as PersonalInfo}
+              images={exportingSignature.images as Images || {}}
+              socialMedia={exportingSignature.socialMedia as SocialMedia || {}}
+              animationType={(exportingSignature.animationType as AnimationType) || "fade-in"}
+              templateId={exportingSignature.templateId || "professional"}
+              onClose={() => setExportDialogOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
