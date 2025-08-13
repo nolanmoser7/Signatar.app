@@ -80,28 +80,33 @@ export default function GifGenerator({
       setCurrentStep("Initializing GIF encoder...");
       setProgress(10);
 
-      // Initialize gif.js with error handling
+      // Initialize gif.js with local worker script fallback
       let gif;
       try {
         gif = new window.GIF({
-          workers: 2,
+          workers: 1, // Reduce workers to avoid potential issues
           quality: 10,
           width: canvas.width,
           height: canvas.height,
-          workerScript: "https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js",
+          // Remove external worker script dependency
         });
+        
+        console.log("GIF encoder initialized successfully");
       } catch (error) {
+        console.error("GIF initialization error:", error);
         throw new Error("Failed to initialize GIF encoder. Please try again.");
       }
 
       setCurrentStep("Loading images...");
       setProgress(20);
 
-      // Load images with better error handling
+      // Load only actual image URLs, skip non-image properties
       const loadedImages: { [key: string]: HTMLImageElement } = {};
+      const imageKeys = ["headshot", "logo"]; // Only load actual image URLs
       
-      for (const [key, url] of Object.entries(images)) {
-        if (url) {
+      for (const key of imageKeys) {
+        const url = images[key];
+        if (url && typeof url === "string") {
           try {
             const img = new Image();
             // Remove CORS for same-origin images
@@ -155,8 +160,19 @@ export default function GifGenerator({
       setCurrentStep("Generating GIF file...");
       setProgress(80);
 
+      // Add timeout for GIF generation
+      const timeout = setTimeout(() => {
+        setIsGenerating(false);
+        toast({
+          title: "Generation Timeout",
+          description: "GIF generation took too long and was cancelled",
+          variant: "destructive",
+        });
+      }, 30000); // 30 second timeout
+
       // Render GIF with error handling
       gif.on("finished", (blob: Blob) => {
+        clearTimeout(timeout);
         try {
           const url = URL.createObjectURL(blob);
           setGeneratedGifUrl(url);
@@ -186,6 +202,7 @@ export default function GifGenerator({
 
       // Add error handler for gif rendering
       gif.on("abort", () => {
+        clearTimeout(timeout);
         setIsGenerating(false);
         toast({
           title: "Generation Cancelled",
@@ -196,7 +213,9 @@ export default function GifGenerator({
 
       try {
         gif.render();
+        console.log("GIF rendering started");
       } catch (renderError) {
+        clearTimeout(timeout);
         console.error("GIF render error:", renderError);
         throw new Error("Failed to start GIF rendering");
       }
