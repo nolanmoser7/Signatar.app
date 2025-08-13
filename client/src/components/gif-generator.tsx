@@ -80,31 +80,53 @@ export default function GifGenerator({
       setCurrentStep("Initializing GIF encoder...");
       setProgress(10);
 
-      // Initialize gif.js
-      const gif = new window.GIF({
-        workers: 2,
-        quality: 10,
-        width: canvas.width,
-        height: canvas.height,
-        workerScript: "https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js",
-      });
+      // Initialize gif.js with error handling
+      let gif;
+      try {
+        gif = new window.GIF({
+          workers: 2,
+          quality: 10,
+          width: canvas.width,
+          height: canvas.height,
+          workerScript: "https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js",
+        });
+      } catch (error) {
+        throw new Error("Failed to initialize GIF encoder. Please try again.");
+      }
 
       setCurrentStep("Loading images...");
       setProgress(20);
 
-      // Load images
+      // Load images with better error handling
       const loadedImages: { [key: string]: HTMLImageElement } = {};
       
       for (const [key, url] of Object.entries(images)) {
         if (url) {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = url;
-          });
-          loadedImages[key] = img;
+          try {
+            const img = new Image();
+            // Remove CORS for same-origin images
+            if (url.startsWith(window.location.origin) || url.startsWith('/')) {
+              // Same origin - no need for CORS
+            } else {
+              img.crossOrigin = "anonymous";
+            }
+            
+            await new Promise((resolve, reject) => {
+              img.onload = () => {
+                console.log(`Successfully loaded image: ${key} from ${url}`);
+                resolve(img);
+              };
+              img.onerror = (error) => {
+                console.error(`Failed to load image ${key} from ${url}:`, error);
+                reject(new Error(`Failed to load image: ${key}`));
+              };
+              img.src = url;
+            });
+            loadedImages[key] = img;
+          } catch (error) {
+            console.warn(`Skipping image ${key} due to load error:`, error);
+            // Continue without this image rather than failing entirely
+          }
         }
       }
 
@@ -133,21 +155,51 @@ export default function GifGenerator({
       setCurrentStep("Generating GIF file...");
       setProgress(80);
 
-      // Render GIF
+      // Render GIF with error handling
       gif.on("finished", (blob: Blob) => {
-        const url = URL.createObjectURL(blob);
-        setGeneratedGifUrl(url);
-        setProgress(100);
-        setCurrentStep("Complete!");
+        try {
+          const url = URL.createObjectURL(blob);
+          setGeneratedGifUrl(url);
+          setProgress(100);
+          setCurrentStep("Complete!");
+          setIsGenerating(false);
+          
+          toast({
+            title: "GIF Generated!",
+            description: "Your animated signature is ready to download.",
+          });
+        } catch (error) {
+          console.error("Error creating GIF URL:", error);
+          setIsGenerating(false);
+          toast({
+            title: "Generation Failed",
+            description: "Failed to create downloadable GIF",
+            variant: "destructive",
+          });
+        }
+      });
+
+      gif.on("progress", (progress: number) => {
+        setProgress(80 + (progress * 20));
+        setCurrentStep(`Encoding GIF... ${Math.round(progress * 100)}%`);
+      });
+
+      // Add error handler for gif rendering
+      gif.on("abort", () => {
         setIsGenerating(false);
-        
         toast({
-          title: "GIF Generated!",
-          description: "Your animated signature is ready to download.",
+          title: "Generation Cancelled",
+          description: "GIF generation was cancelled",
+          variant: "destructive",
         });
       });
 
-      gif.render();
+      try {
+        gif.render();
+      } catch (renderError) {
+        console.error("GIF render error:", renderError);
+        throw new Error("Failed to start GIF rendering");
+      }
 
     } catch (error) {
       console.error("GIF generation error:", error);
