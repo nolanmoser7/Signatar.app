@@ -814,7 +814,6 @@ export default function GifGenerator({
         }
       }
     }
-  };
 
   const downloadGif = () => {
     if (generatedGifUrl) {

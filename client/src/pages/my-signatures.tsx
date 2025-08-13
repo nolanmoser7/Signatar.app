@@ -3,16 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Edit, Download, Trash2, Plus, Eye, Copy, FileText } from "lucide-react";
+import { Edit, Download, Trash2, Plus, Eye, Copy, FileText, Wand2 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Signature, PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
+import type { Signature, PersonalInfo, SocialMedia, Images, AnimationType, ElementAnimations } from "@shared/schema";
 import signatarLogo from "@assets/signatar-logo-new.png";
 import SignaturePreview from "@/components/signature-preview";
 import { getIconUrlsForExport } from "@/lib/icon-storage";
+import GifGenerator from "@/components/gif-generator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -569,15 +570,15 @@ export default function MySignatures() {
                               size="sm"
                               variant="outline"
                               onClick={() => {
-                                setSelectedSignature(signature);
+                                setSelectedSignature(signature.id);
                                 setShowGifGenerator(true);
                               }}
                             >
-                              <Eye className="w-4 h-4" />
+                              <Wand2 className="w-4 h-4" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>Generate GIF</p>
+                            <p>Generate Animated GIF</p>
                           </TooltipContent>
                         </Tooltip>
                       </div>
@@ -737,62 +738,22 @@ export default function MySignatures() {
       </Dialog>
 
       {/* GIF Generator Modal */}
-      {showGifGenerator && selectedSignature && (
-        <GifGenerator
-          personalInfo={selectedSignature.personalInfo}
-          images={selectedSignature.images}
-          socialMedia={selectedSignature.socialMedia}
-          elementAnimations={selectedSignature.elementAnimations}
-          templateId={selectedSignature.templateId}
-          onClose={() => setShowGifGenerator(false)}
-        />
-      )}
+      {showGifGenerator && selectedSignature && (() => {
+        const signature = signatures.find(s => s.id === selectedSignature);
+        if (!signature) return null;
+        
+        return (
+          <GifGenerator
+            personalInfo={signature.personalInfo as PersonalInfo}
+            images={signature.images as Images}
+            socialMedia={signature.socialMedia as SocialMedia}
+            elementAnimations={signature.elementAnimations as ElementAnimations}
+            templateId={signature.templateId}
+            onClose={() => setShowGifGenerator(false)}
+          />
+        );
+      })()}
     </div>
   );
 }
 
-// Placeholder for GifGenerator component - replace with actual implementation
-function GifGenerator({ personalInfo, images, socialMedia, elementAnimations, templateId, onClose }: any) {
-  return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Generate Signature GIF</DialogTitle>
-          <DialogDescription>
-            Create an animated GIF of your signature.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex items-center justify-center min-h-[300px] bg-gray-100 rounded-lg">
-          <p className="text-gray-500">GIF generation feature is under development.</p>
-          {/* This is where the actual GIF generation logic and preview would go */}
-          {/* For now, we'll just display a placeholder */}
-          <div className="scale-75 origin-top-left transform" style={{ width: "133%", height: "150px" }}>
-            <SignaturePreview
-              personalInfo={personalInfo}
-              images={images || {}}
-              socialMedia={socialMedia || {}}
-              animationType={"none"} // GIF generation might use its own animation logic
-              templateId={templateId || "professional"}
-              isAnimating={true} // Indicate that preview should be animated
-              deviceView="desktop"
-              layoutMode={false}
-              elementAnimations={elementAnimations}
-              isElementAnimating={true}
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Close
-          </Button>
-          <Button onClick={() => {
-            alert("GIF generation is not yet implemented.");
-            onClose();
-          }}>
-            Generate GIF
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
