@@ -1,0 +1,16 @@
+You’re working in the `Signatar.app` project. At the moment the GIF export uses a single `animationType` (fade-in, pulse, etc.) and completely ignores the element‑specific animations defined in `elementAnimations`. This is outdated—the export should animate each element (logo, headshot, social icons) according to its own setting and remove the global animation entirely.
+
+Tasks:
+1. Open `client/src/components/gif-generator.tsx`.
+2. Change the `GifGeneratorProps` interface so it accepts `elementAnimations: ElementAnimations` instead of a single `animationType`.
+3. Inside `GifGenerator`, default `elementAnimations` to `{ headshot: "none", logo: "none", socialIcons: "none" }` if it’s undefined.
+4. In the `renderSignatureFrame` function (currently around line 220), remove all logic that uses `animationType` to animate the entire canvas.
+5. For each element in the “sales-professional” template:
+   - **Logo:** Look up `elementAnimations.logo`. If it is `"fade-in"` set the logo’s opacity to `progress` (0–1). If it is `"zoom-in"` start the logo at 50 % size and scale it up to full size as `progress` goes from 0 to 1. Otherwise keep it opaque and unscaled.
+   - **Headshot:** Same: use `elementAnimations.headshot` to set the opacity or scale when drawing the headshot image.
+   - **Social Icons:** Use `elementAnimations.socialIcons` to set the group opacity (fade-in) or fall back to no animation. A zoom effect can simply be treated as fade for now.
+   Apply these parameters by saving the canvas context (`ctx.save()`), setting `ctx.globalAlpha` and/or performing a `ctx.scale()` transform around the element’s centre, drawing the image/text, and then restoring the context.
+6. Delete or ignore `animationType`, as all animations are now controlled per element.
+7. If other templates (e.g. “minimal”) should support per‑element animations, apply the same pattern to their drawing routines.
+
+After these changes, running the GIF generator should produce exports where each element animates according to its assigned effect, and the global animation field is no longer used.
