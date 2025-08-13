@@ -38,24 +38,24 @@ import {
 // Convert object storage paths to full URLs for email compatibility
 function getImageUrl(imagePath: string | undefined): string | undefined {
   if (!imagePath) return undefined;
-  
+
   // If it's already a full URL, return as-is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath;
   }
-  
+
   // If it starts with /objects/, it's an object storage path - convert to full URL
   if (imagePath.startsWith('/objects/')) {
     const baseUrl = window.location.origin;
     return `${baseUrl}${imagePath}`;
   }
-  
+
   // If it starts with /api/files/, it's a local file - convert to full URL
   if (imagePath.startsWith('/api/files/')) {
     const baseUrl = window.location.origin;
     return `${baseUrl}${imagePath}`;
   }
-  
+
   return imagePath;
 }
 
@@ -65,10 +65,10 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
   const socialMedia = signature.socialMedia as SocialMedia;
   const images = signature.images as Images;
   const templateId = signature.templateId || 'professional';
-  
+
   // Get persistent icon URLs from object storage
   const iconUrls = await getIconUrlsForExport();
-  
+
   // Convert image paths to full URLs for email compatibility
   const headshotUrl = getImageUrl(images.headshot);
   const logoUrl = getImageUrl(images.logo);
@@ -108,7 +108,7 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
             </table>
             ` : ''}
           </td>
-          
+
           <!-- Main content area -->
           <td style="padding: 32px; vertical-align: top; position: relative;">
             <!-- Company logo at top -->
@@ -117,12 +117,12 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
               <img src="${logoUrl}" alt="Logo" style="height: 48px; width: auto; object-fit: contain;" />
             </div>
             ` : ''}
-            
+
             <!-- Company name -->
             <div style="margin-bottom: 24px;">
               <h2 style="margin: 0; font-size: 24px; font-weight: bold; color: #1f2937; letter-spacing: 2px; font-family: 'Playfair Display', serif;">${(personalInfo.company || 'COMPANY').toUpperCase()}</h2>
             </div>
-            
+
             <!-- Name and title -->
             <div style="margin-bottom: 24px;">
               <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: bold; color: #1f2937; font-family: 'Playfair Display', serif; display: flex; align-items: center;">
@@ -133,7 +133,7 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
                 ${personalInfo.title || 'Your Title'}
               </p>
             </div>
-            
+
             <!-- Contact information -->
             <div style="margin-bottom: 0;">
               ${personalInfo.phone ? `
@@ -156,7 +156,7 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
               ` : ''}
             </div>
           </td>
-          
+
           <!-- Right side portrait area -->
           ${headshotUrl ? `
           <td style="width: 256px; height: 280px; position: relative; padding: 0; vertical-align: top;">
@@ -189,18 +189,18 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
           ${personalInfo.company ? '' : '<div style="font-size: 14px; color: #6b7280; letter-spacing: 4px; margin-top: -4px;">SOLUTIONS</div>'}
         </div>
       </div>
-      
+
       <div style="margin-bottom: 24px;">
         <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: bold; color: #1f2937;">${personalInfo.name || 'Your Name'}</h1>
         <div style="font-size: 18px; color: #6b7280; margin-bottom: 4px;">${personalInfo.title || 'Your Title'}</div>
       </div>
-      
+
       <div style="margin-bottom: 24px;">
         ${personalInfo.email ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151; display: flex; align-items: center;"><img src="${iconUrls.contact.email}" alt="Email" style="margin-right: 8px; width: 14px; height: 14px;" />${personalInfo.email}</div>` : ''}
         ${personalInfo.phone ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151; display: flex; align-items: center;"><img src="${iconUrls.contact.phone}" alt="Phone" style="margin-right: 8px; width: 14px; height: 14px;" />${personalInfo.phone}</div>` : ''}
         ${personalInfo.website ? `<div style="margin-bottom: 8px; font-size: 16px; color: #374151; display: flex; align-items: center;"><img src="${iconUrls.contact.website}" alt="Website" style="margin-right: 8px; width: 14px; height: 14px;" />${personalInfo.website}</div>` : ''}
       </div>
-      
+
       ${activeSocialLinks.length > 0 ? `
       <div>
         ${activeSocialLinks.map(social => 
@@ -208,7 +208,7 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
         ).join('')}
       </div>` : ''}
     </td>
-    
+
     ${headshotUrl ? `
     <td style="vertical-align: top; width: 40%; text-align: right;">
       <img src="${headshotUrl}" alt="${personalInfo.name}" style="width: 180px; height: 240px; object-fit: cover; border-radius: 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);" />
@@ -229,13 +229,13 @@ async function renderSignatureAsHtml(signature: Signature): Promise<string> {
             <div style="font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">${personalInfo.name || 'Your Name'}</div>
             <div style="font-size: 18px; font-weight: 600; color: #a5b4fc; margin-bottom: 4px;">${personalInfo.title || 'Your Title'}</div>
             <div style="font-size: 16px; font-weight: 500; color: #c7d2fe; margin-bottom: 20px;">${personalInfo.company || 'Your Company'}</div>
-            
+
             <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; backdrop-filter: blur(10px);">
               ${personalInfo.email ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;"><img src="${iconUrls.contact.email}" alt="Email" style="margin-right: 8px; width: 14px; height: 14px; filter: brightness(0) invert(1);" />${personalInfo.email}</div>` : ''}
               ${personalInfo.phone ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;"><img src="${iconUrls.contact.phone}" alt="Phone" style="margin-right: 8px; width: 14px; height: 14px; filter: brightness(0) invert(1);" />${personalInfo.phone}</div>` : ''}
               ${personalInfo.website ? `<div style="color: #ffffff; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center;"><img src="${iconUrls.contact.website}" alt="Website" style="margin-right: 8px; width: 14px; height: 14px; filter: brightness(0) invert(1);" />${personalInfo.website}</div>` : ''}
             </div>
-            
+
             ${activeSocialLinks.length > 0 ? `
             <div style="margin-top: 20px;">
               ${activeSocialLinks.map(social => 
@@ -299,6 +299,7 @@ export default function MySignatures() {
   const [selectedSignature, setSelectedSignature] = useState<string | null>(null);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportingSignature, setExportingSignature] = useState<Signature | null>(null);
+  const [showGifGenerator, setShowGifGenerator] = useState(false); // State to control GIF generator visibility
 
   // Fetch user signatures
   const { data: signatures = [], isLoading, error } = useQuery<Signature[]>({
@@ -339,10 +340,10 @@ export default function MySignatures() {
     try {
       // Generate Gmail-compatible HTML using the actual signature data with persistent icons
       const html = await renderSignatureAsHtml(signature);
-      
+
       // Copy to clipboard
       await navigator.clipboard.writeText(html);
-      
+
       toast({
         title: "Success",
         description: "Signature HTML copied to clipboard! Paste it into Gmail's signature settings.",
@@ -361,7 +362,7 @@ export default function MySignatures() {
     try {
       // Generate Gmail-compatible HTML using the actual signature data with persistent icons
       const html = await renderSignatureAsHtml(signature);
-      
+
       // Create minimal HTML document with only the signature for easy Ctrl+A copying
       const fullHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -382,7 +383,7 @@ export default function MySignatures() {
     ${html}
 </body>
 </html>`;
-      
+
       // Create download link
       const blob = new Blob([fullHtml], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
@@ -393,7 +394,7 @@ export default function MySignatures() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
+
       toast({
         title: "Success",
         description: "Signature HTML file downloaded successfully!",
@@ -495,12 +496,12 @@ export default function MySignatures() {
               {signatures.map((signature) => {
               const personalInfo = signature.personalInfo as PersonalInfo;
               const templateName = signature.templateId?.replace("-", " ").replace(/\b\w/g, l => l.toUpperCase()) || "Custom";
-              
+
               // Determine if signature is static or dynamic based on element animations
               const elementAnimations = signature.elementAnimations as any;
               const hasAnimations = elementAnimations && Object.values(elementAnimations).some((anim: any) => anim !== "none");
               const animationTag = hasAnimations ? "Dynamic" : "Static";
-              
+
               return (
                 <Card key={signature.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
@@ -554,18 +555,15 @@ export default function MySignatures() {
                               size="sm"
                               variant="outline"
                               onClick={() => {
-                                // TODO: Implement preview functionality
-                                toast({
-                                  title: "Preview",
-                                  description: "Preview functionality coming soon!",
-                                });
+                                setSelectedSignature(signature);
+                                setShowGifGenerator(true);
                               }}
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>Preview signature</p>
+                            <p>Generate GIF</p>
                           </TooltipContent>
                         </Tooltip>
                       </div>
@@ -590,7 +588,7 @@ export default function MySignatures() {
                           Export HTML
                         </Button>
                       </div>
-                      
+
                       <div className="flex space-x-2">
                         <Link href={`/builder?signature=${signature.id}`}>
                           <Tooltip>
@@ -604,7 +602,7 @@ export default function MySignatures() {
                             </TooltipContent>
                           </Tooltip>
                         </Link>
-                        
+
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Tooltip>
@@ -669,7 +667,7 @@ export default function MySignatures() {
               Download your professionally crafted email signature as HTML ready for Gmail, Outlook, and other email clients.
             </DialogDescription>
           </DialogHeader>
-          
+
           {exportingSignature && (
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-lg p-4">
@@ -679,7 +677,7 @@ export default function MySignatures() {
                   <p>Company: {(exportingSignature.personalInfo as PersonalInfo).company}</p>
                 </div>
               </div>
-              
+
               <div className="space-y-3">
                 <Button 
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
@@ -691,7 +689,7 @@ export default function MySignatures() {
                   <Download className="w-4 h-4 mr-2" />
                   Download HTML File
                 </Button>
-                
+
                 <Button 
                   variant="outline" 
                   className="w-full"
@@ -704,7 +702,7 @@ export default function MySignatures() {
                   Copy HTML to Clipboard
                 </Button>
               </div>
-              
+
               <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
                 <p className="font-medium text-blue-900 mb-1">💡 Usage Tips:</p>
                 <ul className="space-y-1 text-blue-800">
@@ -715,7 +713,7 @@ export default function MySignatures() {
               </div>
             </div>
           )}
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setExportDialogOpen(false)}>
               Close
@@ -723,6 +721,64 @@ export default function MySignatures() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* GIF Generator Modal */}
+      {showGifGenerator && selectedSignature && (
+        <GifGenerator
+          personalInfo={selectedSignature.personalInfo}
+          images={selectedSignature.images}
+          socialMedia={selectedSignature.socialMedia}
+          elementAnimations={selectedSignature.elementAnimations}
+          templateId={selectedSignature.templateId}
+          onClose={() => setShowGifGenerator(false)}
+        />
+      )}
     </div>
+  );
+}
+
+// Placeholder for GifGenerator component - replace with actual implementation
+function GifGenerator({ personalInfo, images, socialMedia, elementAnimations, templateId, onClose }: any) {
+  return (
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-3xl">
+        <DialogHeader>
+          <DialogTitle>Generate Signature GIF</DialogTitle>
+          <DialogDescription>
+            Create an animated GIF of your signature.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center justify-center min-h-[300px] bg-gray-100 rounded-lg">
+          <p className="text-gray-500">GIF generation feature is under development.</p>
+          {/* This is where the actual GIF generation logic and preview would go */}
+          {/* For now, we'll just display a placeholder */}
+          <div className="scale-75 origin-top-left transform" style={{ width: "133%", height: "150px" }}>
+            <SignaturePreview
+              personalInfo={personalInfo}
+              images={images || {}}
+              socialMedia={socialMedia || {}}
+              animationType={"none"} // GIF generation might use its own animation logic
+              templateId={templateId || "professional"}
+              isAnimating={true} // Indicate that preview should be animated
+              deviceView="desktop"
+              layoutMode={false}
+              elementAnimations={elementAnimations}
+              isElementAnimating={true}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            Close
+          </Button>
+          <Button onClick={() => {
+            alert("GIF generation is not yet implemented.");
+            onClose();
+          }}>
+            Generate GIF
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

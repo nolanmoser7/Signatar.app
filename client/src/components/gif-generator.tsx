@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { X, Download, Copy, Wand2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { renderFadeInFrame, renderPulseFrame, renderCrossDissolveFrame } from "@/lib/animations";
-import type { PersonalInfo, SocialMedia, Images, AnimationType } from "@shared/schema";
+import type { PersonalInfo, SocialMedia, Images, ElementAnimations } from "@shared/schema";
 
 // Import gif.js (assuming it's available via CDN or npm)
 declare global {
@@ -18,7 +18,7 @@ interface GifGeneratorProps {
   personalInfo: PersonalInfo;
   images: Images;
   socialMedia: SocialMedia;
-  animationType: AnimationType;
+  elementAnimations?: ElementAnimations;
   templateId: string;
   onClose: () => void;
 }
@@ -27,7 +27,7 @@ export default function GifGenerator({
   personalInfo,
   images,
   socialMedia,
-  animationType,
+  elementAnimations = { headshot: "none", logo: "none", socialIcons: "none" },
   templateId,
   onClose,
 }: GifGeneratorProps) {
@@ -165,239 +165,238 @@ export default function GifGenerator({
     progress: number,
     loadedImages: { [key: string]: HTMLImageElement }
   ) => {
-    const renderSignature = (ctx: CanvasRenderingContext2D, opacity: number, scale = 1) => {
-      ctx.save();
-      
-      // Don't apply global opacity and scale for sales professional template
-      if (templateId !== "sales-professional") {
-        ctx.globalAlpha = opacity;
-        
-        // Apply scale transformation
-        if (scale !== 1) {
-          const centerX = ctx.canvas.width / 2;
-          const centerY = ctx.canvas.height / 2;
-          ctx.translate(centerX, centerY);
-          ctx.scale(scale, scale);
-          ctx.translate(-centerX, -centerY);
-        }
+    // Clear canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    // Helper function to get animation values for an element
+    const getAnimationValues = (animationType: string) => {
+      let opacity = 1;
+      let scale = 1;
+
+      if (animationType === "fade-in") {
+        opacity = progress;
+      } else if (animationType === "zoom-in") {
+        scale = 0.5 + (0.5 * progress);
+        opacity = progress;
       }
 
-      if (templateId === "sales-professional") {
-        // Sales Professional template - modern design
+      return { opacity, scale };
+    };
+
+    if (templateId === "sales-professional") {
+      // Sales Professional template - modern design
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+      // Add shadow
+      ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 4;
+      
+      // Main container with rounded corners
+      ctx.fillStyle = "#ffffff";
+      ctx.roundRect(20, 30, ctx.canvas.width - 40, 240, 12);
+      ctx.fill();
+      
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+
+      // Left sidebar - always visible (no animation for sidebar itself)
+      ctx.fillStyle = "#4ECDC4";
+      ctx.fillRect(20, 30, 80, 240);
+      
+      // Round left corners
+      ctx.clearRect(20, 30, 12, 12);
+      ctx.clearRect(20, 258, 12, 12);
+      ctx.beginPath();
+      ctx.arc(32, 42, 12, Math.PI, 1.5 * Math.PI);
+      ctx.arc(32, 258, 12, 0.5 * Math.PI, Math.PI);
+      ctx.fill();
+
+      // Social icons in sidebar with animation
+      const socialAnimationValues = getAnimationValues(elementAnimations.socialIcons);
+      ctx.save();
+      ctx.globalAlpha = socialAnimationValues.opacity;
+      
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "16px Arial, sans-serif";
+      let socialY = 60;
+      if (socialMedia.twitter) {
+        ctx.fillText("❌", 45, socialY);
+        socialY += 24;
+      }
+      if (socialMedia.linkedin) {
+        ctx.fillText("💼", 45, socialY);
+        socialY += 24;
+      }
+      if (socialMedia.instagram) {
+        ctx.fillText("📷", 45, socialY);
+        socialY += 24;
+      }
+      if (socialMedia.youtube) {
+        ctx.fillText("📺", 45, socialY);
+        socialY += 24;
+      }
+      if (socialMedia.tiktok) {
+        ctx.fillText("🎵", 45, socialY);
+        socialY += 24;
+      }
+      // Default YouTube icon at bottom if no YouTube link
+      if (!socialMedia.youtube) {
+        ctx.fillText("📺", 45, 250);
+      }
+      ctx.restore();
+
+      // Company branding section with logo animation
+      const contentX = 120;
+      const logoAnimationValues = getAnimationValues(elementAnimations.logo);
+      
+      ctx.save();
+      ctx.globalAlpha = logoAnimationValues.opacity;
+      
+      // Apply scale transformation for logo
+      if (logoAnimationValues.scale !== 1) {
+        const logoX = contentX + 24;
+        const logoY = 74;
+        ctx.translate(logoX, logoY);
+        ctx.scale(logoAnimationValues.scale, logoAnimationValues.scale);
+        ctx.translate(-logoX, -logoY);
+      }
+      
+      // Company logo background
+      ctx.fillStyle = "#4ECDC4";
+      ctx.fillRect(contentX, 50, 48, 48);
+      ctx.roundRect(contentX, 50, 48, 48, 8);
+      ctx.fill();
+      
+      // Logo or initial
+      if (loadedImages.logo) {
+        ctx.drawImage(loadedImages.logo, contentX + 8, 58, 32, 32);
+      } else {
         ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.font = "bold 18px Helvetica, Arial, sans-serif";
+        ctx.fillText("J", contentX + 20, 80);
+      }
+      ctx.restore();
 
-        // Add shadow
-        ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetY = 4;
-        
-        // Main container with rounded corners
-        ctx.fillStyle = "#ffffff";
-        ctx.roundRect(20, 30, ctx.canvas.width - 40, 240, 12);
-        ctx.fill();
-        
-        ctx.shadowColor = "transparent";
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
+      // Company name
+      ctx.fillStyle = "#333333";
+      ctx.font = "bold 24px Helvetica, Arial, sans-serif";
+      const companyName = (personalInfo.company || "COMPANY").toUpperCase();
+      ctx.fillText(companyName, contentX + 60, 75);
+      
+      // "GRAPHICS" subtitle
+      ctx.fillStyle = "#777777";
+      ctx.font = "12px Helvetica, Arial, sans-serif";
+      ctx.fillText("GRAPHICS", contentX + 60, 90);
 
-        // Left sidebar with animation
-        ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
-          ctx.translate(60, 150);
-          ctx.scale(pulseScale, pulseScale);
-          ctx.translate(-60, -150);
-        }
-        
-        ctx.fillStyle = "#4ECDC4";
-        ctx.fillRect(20, 30, 80, 240);
-        
-        // Round left corners
-        ctx.clearRect(20, 30, 12, 12);
-        ctx.clearRect(20, 258, 12, 12);
-        ctx.beginPath();
-        ctx.arc(32, 42, 12, Math.PI, 1.5 * Math.PI);
-        ctx.arc(32, 258, 12, 0.5 * Math.PI, Math.PI);
-        ctx.fill();
+      // Name with checkmark
+      ctx.fillStyle = "#333333";
+      ctx.font = "bold 32px Helvetica, Arial, sans-serif";
+      const nameText = personalInfo.name || "Your Name";
+      ctx.fillText(nameText, contentX, 130);
+      
+      // Checkmark
+      ctx.fillStyle = "#4ECDC4";
+      const nameWidth = ctx.measureText(nameText).width;
+      ctx.fillText("✓", contentX + nameWidth + 8, 130);
 
-        // Social icons in sidebar
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "16px Arial, sans-serif";
-        let socialY = 60;
-        if (socialMedia.twitter) {
-          ctx.fillText("❌", 45, socialY);
-          socialY += 24;
-        }
-        if (socialMedia.linkedin) {
-          ctx.fillText("💼", 45, socialY);
-          socialY += 24;
-        }
-        if (socialMedia.instagram) {
-          ctx.fillText("📷", 45, socialY);
-          socialY += 24;
-        }
-        if (socialMedia.youtube) {
-          ctx.fillText("📺", 45, socialY);
-          socialY += 24;
-        }
-        if (socialMedia.tiktok) {
-          ctx.fillText("🎵", 45, socialY);
-          socialY += 24;
-        }
-        // Default YouTube icon at bottom if no YouTube link
-        if (!socialMedia.youtube) {
-          ctx.fillText("📺", 45, 250);
-        }
-        ctx.restore();
+      // Title
+      ctx.fillStyle = "#666666";
+      ctx.font = "20px Helvetica, Arial, sans-serif";
+      ctx.fillText(personalInfo.title || "Your Title", contentX, 155);
 
-        // Company branding section with animation
-        const contentX = 120;
+      // Contact information
+      ctx.fillStyle = "#333333";
+      ctx.font = "16px Helvetica, Arial, sans-serif";
+      let contactY = 185;
+
+      if (personalInfo.phone) {
+        ctx.fillText(`📞 ${personalInfo.phone}`, contentX, contactY);
+        contactY += 24;
+      }
+
+      if (personalInfo.email) {
+        ctx.fillText(`✉️ ${personalInfo.email}`, contentX, contactY);
+        contactY += 24;
+      }
+
+      if (personalInfo.website) {
+        ctx.fillText(`🌐 ${personalInfo.website}`, contentX, contactY);
+      }
+
+      // Portrait section with clipping and animation
+      const portraitX = ctx.canvas.width - 240;
+      const portraitY = 30;
+      const portraitWidth = 220;
+      const portraitHeight = 240;
+      const headshotAnimationValues = getAnimationValues(elementAnimations.headshot);
+
+      // Create clipping path for angled portrait
+      ctx.save();
+      ctx.globalAlpha = headshotAnimationValues.opacity;
+      
+      // Apply scale transformation for headshot
+      if (headshotAnimationValues.scale !== 1) {
+        const centerX = portraitX + portraitWidth/2;
+        const centerY = portraitY + portraitHeight/2;
+        ctx.translate(centerX, centerY);
+        ctx.scale(headshotAnimationValues.scale, headshotAnimationValues.scale);
+        ctx.translate(-centerX, -centerY);
+      }
+      
+      ctx.beginPath();
+      ctx.moveTo(portraitX + portraitWidth * 0.25, portraitY);
+      ctx.lineTo(portraitX + portraitWidth, portraitY);
+      ctx.lineTo(portraitX + portraitWidth, portraitY + portraitHeight);
+      ctx.lineTo(portraitX, portraitY + portraitHeight);
+      ctx.closePath();
+      ctx.clip();
+
+      if (loadedImages.headshot) {
+        ctx.drawImage(loadedImages.headshot, portraitX, portraitY, portraitWidth, portraitHeight);
         
-        ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
-          ctx.translate(contentX + 24, 74);
-          ctx.scale(pulseScale, pulseScale);
-          ctx.translate(-(contentX + 24), -74);
-        }
-        
-        // Company logo background
-        ctx.fillStyle = "#4ECDC4";
-        ctx.fillRect(contentX, 50, 48, 48);
-        ctx.roundRect(contentX, 50, 48, 48, 8);
-        ctx.fill();
-        
-        // Logo or initial
-        if (loadedImages.logo) {
-          ctx.drawImage(loadedImages.logo, contentX + 8, 58, 32, 32);
-        } else {
-          ctx.fillStyle = "#ffffff";
-          ctx.font = "bold 18px Helvetica, Arial, sans-serif";
-          ctx.fillText("J", contentX + 20, 80);
-        }
-        ctx.restore();
+        // Overlay gradient
+        const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitWidth, portraitY + portraitHeight);
+        gradient.addColorStop(0, "rgba(78, 205, 196, 0.2)");
+        gradient.addColorStop(1, "rgba(107, 114, 128, 0.2)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(portraitX, portraitY, portraitWidth, portraitHeight);
+      } else {
+        // Default background
+        const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitWidth, portraitY + portraitHeight);
+        gradient.addColorStop(0, "#E5E7EB");
+        gradient.addColorStop(1, "#9CA3AF");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(portraitX, portraitY, portraitWidth, portraitHeight);
+      }
+      
+      ctx.restore();
 
-        // Company name
-        ctx.fillStyle = "#333333";
-        ctx.font = "bold 24px Helvetica, Arial, sans-serif";
-        const companyName = (personalInfo.company || "COMPANY").toUpperCase();
-        ctx.fillText(companyName, contentX + 60, 75);
-        
-        // "GRAPHICS" subtitle
-        ctx.fillStyle = "#777777";
-        ctx.font = "12px Helvetica, Arial, sans-serif";
-        ctx.fillText("GRAPHICS", contentX + 60, 90);
-
-        // Name with checkmark
-        ctx.fillStyle = "#333333";
-        ctx.font = "bold 32px Helvetica, Arial, sans-serif";
-        const nameText = personalInfo.name || "Your Name";
-        ctx.fillText(nameText, contentX, 130);
-        
-        // Checkmark
-        ctx.fillStyle = "#4ECDC4";
-        const nameWidth = ctx.measureText(nameText).width;
-        ctx.fillText("✓", contentX + nameWidth + 8, 130);
-
-        // Title
-        ctx.fillStyle = "#666666";
-        ctx.font = "20px Helvetica, Arial, sans-serif";
-        ctx.fillText(personalInfo.title || "Your Title", contentX, 155);
-
-        // Contact information
-        ctx.fillStyle = "#333333";
-        ctx.font = "16px Helvetica, Arial, sans-serif";
-        let contactY = 185;
-
-        if (personalInfo.phone) {
-          ctx.fillText(`📞 ${personalInfo.phone}`, contentX, contactY);
-          contactY += 24;
-        }
-
-        if (personalInfo.email) {
-          ctx.fillText(`✉️ ${personalInfo.email}`, contentX, contactY);
-          contactY += 24;
-        }
-
-        if (personalInfo.website) {
-          ctx.fillText(`🌐 ${personalInfo.website}`, contentX, contactY);
-        }
-
-        // Portrait section with clipping and animation
-        const portraitX = ctx.canvas.width - 240;
-        const portraitY = 30;
-        const portraitWidth = 220;
-        const portraitHeight = 240;
-
-        // Create clipping path for angled portrait
-        ctx.save();
-        
-        // Apply animation to portrait
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.05 * Math.sin(progress * Math.PI * 4);
-          ctx.translate(portraitX + portraitWidth/2, portraitY + portraitHeight/2);
-          ctx.scale(pulseScale, pulseScale);
-          ctx.translate(-(portraitX + portraitWidth/2), -(portraitY + portraitHeight/2));
-        }
-        
-        ctx.beginPath();
-        ctx.moveTo(portraitX + portraitWidth * 0.25, portraitY);
-        ctx.lineTo(portraitX + portraitWidth, portraitY);
-        ctx.lineTo(portraitX + portraitWidth, portraitY + portraitHeight);
-        ctx.lineTo(portraitX, portraitY + portraitHeight);
-        ctx.closePath();
-        ctx.clip();
-
-        if (loadedImages.headshot) {
-          ctx.drawImage(loadedImages.headshot, portraitX, portraitY, portraitWidth, portraitHeight);
-          
-          // Overlay gradient
-          const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitWidth, portraitY + portraitHeight);
-          gradient.addColorStop(0, "rgba(78, 205, 196, 0.2)");
-          gradient.addColorStop(1, "rgba(107, 114, 128, 0.2)");
-          ctx.fillStyle = gradient;
-          ctx.fillRect(portraitX, portraitY, portraitWidth, portraitHeight);
-        } else {
-          // Default background
-          const gradient = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitWidth, portraitY + portraitHeight);
-          gradient.addColorStop(0, "#E5E7EB");
-          gradient.addColorStop(1, "#9CA3AF");
-          ctx.fillStyle = gradient;
-          ctx.fillRect(portraitX, portraitY, portraitWidth, portraitHeight);
-        }
-        
-        ctx.restore();
-
-        // Geometric decorations
-        ctx.save();
-        ctx.globalAlpha = 0.3;
-        
-        // Teal square
-        ctx.fillStyle = "#4ECDC4";
-        ctx.translate(portraitX + 80, portraitY + 64);
-        ctx.rotate(Math.PI / 4);
-        ctx.fillRect(-64, -64, 128, 128);
-        ctx.restore();
-        
-        ctx.save();
-        ctx.globalAlpha = 0.4;
-        
-        // Gray square
-        ctx.fillStyle = "#6B7280";
-        ctx.translate(portraitX + 160, portraitY + 128);
-        ctx.rotate(-Math.PI / 15);
-        ctx.fillRect(-48, -48, 96, 96);
-        ctx.restore();
+      // Geometric decorations
+      ctx.save();
+      ctx.globalAlpha = 0.3;
+      
+      // Teal square
+      ctx.fillStyle = "#4ECDC4";
+      ctx.translate(portraitX + 80, portraitY + 64);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillRect(-64, -64, 128, 128);
+      ctx.restore();
+      
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      
+      // Gray square
+      ctx.fillStyle = "#6B7280";
+      ctx.translate(portraitX + 160, portraitY + 128);
+      ctx.rotate(-Math.PI / 15);
+      ctx.fillRect(-48, -48, 96, 96);
+      ctx.restore();
 
       } else if (templateId === "minimal") {
-        // Minimal template rendering
+        // Minimal template rendering with element animations
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         
@@ -408,16 +407,16 @@ export default function GifGenerator({
         
         const contentX = 60;
         const contentY = 80;
+        const logoAnimationValues = getAnimationValues(elementAnimations.logo);
         
         // Company logo with animation
         ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+        ctx.globalAlpha = logoAnimationValues.opacity;
+        
+        if (logoAnimationValues.scale !== 1) {
           ctx.translate(contentX + 24, contentY);
-          ctx.scale(pulseScale, pulseScale);
-          ctx.translate(-(contentX + 24), contentY);
+          ctx.scale(logoAnimationValues.scale, logoAnimationValues.scale);
+          ctx.translate(-(contentX + 24), -contentY);
         }
         
         // Apex logo recreation
@@ -470,14 +469,14 @@ export default function GifGenerator({
         const portraitX = ctx.canvas.width - 200;
         const portraitY = contentY + 20;
         const portraitSize = 140;
+        const headshotAnimationValues = getAnimationValues(elementAnimations.headshot);
         
         ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.05 * Math.sin(progress * Math.PI * 4);
+        ctx.globalAlpha = headshotAnimationValues.opacity;
+        
+        if (headshotAnimationValues.scale !== 1) {
           ctx.translate(portraitX + portraitSize/2, portraitY + portraitSize/2);
-          ctx.scale(pulseScale, pulseScale);
+          ctx.scale(headshotAnimationValues.scale, headshotAnimationValues.scale);
           ctx.translate(-(portraitX + portraitSize/2), -(portraitY + portraitSize/2));
         }
         
@@ -519,16 +518,10 @@ export default function GifGenerator({
         // Social media icons with animation
         const socialY = portraitY + portraitSize + 30;
         const socialStartX = portraitX - 20;
+        const socialAnimationValues = getAnimationValues(elementAnimations.socialIcons);
         
         ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
-          ctx.translate(socialStartX + 100, socialY);
-          ctx.scale(pulseScale, pulseScale);
-          ctx.translate(-(socialStartX + 100), -socialY);
-        }
+        ctx.globalAlpha = socialAnimationValues.opacity;
         
         let socialX = socialStartX;
         const socialIcons = [
@@ -561,7 +554,7 @@ export default function GifGenerator({
         ctx.restore();
 
       } else if (templateId === "modern") {
-        // Modern template - dark futuristic design
+        // Modern template - dark futuristic design with element animations
         
         // Dark gradient background
         const backgroundGradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -593,14 +586,14 @@ export default function GifGenerator({
         // Company logo with animation
         const logoX = 50;
         const logoY = 60;
+        const logoAnimationValues = getAnimationValues(elementAnimations.logo);
         
         ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
+        ctx.globalAlpha = logoAnimationValues.opacity;
+        
+        if (logoAnimationValues.scale !== 1) {
           ctx.translate(logoX + 20, logoY);
-          ctx.scale(pulseScale, pulseScale);
+          ctx.scale(logoAnimationValues.scale, logoAnimationValues.scale);
           ctx.translate(-(logoX + 20), -logoY);
         }
         
@@ -657,16 +650,10 @@ export default function GifGenerator({
         
         // Social media icons with animation
         const socialY = contactY + 20;
+        const socialAnimationValues = getAnimationValues(elementAnimations.socialIcons);
         
         ctx.save();
-        if (animationType === "fade-in") {
-          ctx.globalAlpha = opacity;
-        } else if (animationType === "pulse") {
-          const pulseScale = 1 + 0.1 * Math.sin(progress * Math.PI * 4);
-          ctx.translate(logoX + 50, socialY);
-          ctx.scale(pulseScale, pulseScale);
-          ctx.translate(-(logoX + 50), -socialY);
-        }
+        ctx.globalAlpha = socialAnimationValues.opacity;
         
         let socialX = logoX;
         ctx.fillStyle = "#00bcd4";
@@ -691,14 +678,14 @@ export default function GifGenerator({
           const portraitX = ctx.canvas.width - 180;
           const portraitY = 60;
           const portraitSize = 140;
+          const headshotAnimationValues = getAnimationValues(elementAnimations.headshot);
           
           ctx.save();
-          if (animationType === "fade-in") {
-            ctx.globalAlpha = opacity;
-          } else if (animationType === "pulse") {
-            const pulseScale = 1 + 0.05 * Math.sin(progress * Math.PI * 4);
+          ctx.globalAlpha = headshotAnimationValues.opacity;
+          
+          if (headshotAnimationValues.scale !== 1) {
             ctx.translate(portraitX + portraitSize/2, portraitY + portraitSize/2);
-            ctx.scale(pulseScale, pulseScale);
+            ctx.scale(headshotAnimationValues.scale, headshotAnimationValues.scale);
             ctx.translate(-(portraitX + portraitSize/2), -(portraitY + portraitSize/2));
           }
           
@@ -727,23 +714,32 @@ export default function GifGenerator({
         }
 
       } else {
-        // Default template rendering
+        // Default template rendering with element animations
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         // Background image if available
         if (loadedImages.background) {
-          ctx.globalAlpha = opacity * 0.1;
+          ctx.globalAlpha = 0.1;
           ctx.drawImage(loadedImages.background, 0, 0, ctx.canvas.width, ctx.canvas.height);
-          ctx.globalAlpha = opacity;
+          ctx.globalAlpha = 1;
         }
 
         const startX = 50;
         const startY = 80;
+        const headshotAnimationValues = getAnimationValues(elementAnimations.headshot);
 
-        // Headshot
+        // Headshot with animation
         if (loadedImages.headshot) {
           ctx.save();
+          ctx.globalAlpha = headshotAnimationValues.opacity;
+          
+          if (headshotAnimationValues.scale !== 1) {
+            ctx.translate(startX + 40, startY);
+            ctx.scale(headshotAnimationValues.scale, headshotAnimationValues.scale);
+            ctx.translate(-(startX + 40), -startY);
+          }
+          
           ctx.beginPath();
           ctx.arc(startX + 40, startY, 40, 0, 2 * Math.PI);
           ctx.clip();
@@ -790,10 +786,23 @@ export default function GifGenerator({
           ctx.fillText(`🌐 ${personalInfo.website}`, startX + 120, contactY);
         }
 
-        // Company logo
+        // Company logo with animation
         if (loadedImages.logo) {
           const logoWidth = 80;
           const logoHeight = 48;
+          const logoAnimationValues = getAnimationValues(elementAnimations.logo);
+          
+          ctx.save();
+          ctx.globalAlpha = logoAnimationValues.opacity;
+          
+          if (logoAnimationValues.scale !== 1) {
+            const logoX = ctx.canvas.width - logoWidth - 50;
+            const logoY = startY - 20;
+            ctx.translate(logoX + logoWidth/2, logoY + logoHeight/2);
+            ctx.scale(logoAnimationValues.scale, logoAnimationValues.scale);
+            ctx.translate(-(logoX + logoWidth/2), -(logoY + logoHeight/2));
+          }
+          
           ctx.drawImage(
             loadedImages.logo,
             ctx.canvas.width - logoWidth - 50,
@@ -801,25 +810,9 @@ export default function GifGenerator({
             logoWidth,
             logoHeight
           );
+          ctx.restore();
         }
       }
-
-      ctx.restore();
-    };
-
-    // Apply animation-specific rendering
-    switch (animationType) {
-      case "fade-in":
-        renderFadeInFrame(ctx, progress, renderSignature);
-        break;
-      case "pulse":
-        renderPulseFrame(ctx, progress, renderSignature);
-        break;
-      case "cross-dissolve":
-        renderCrossDissolveFrame(ctx, progress, renderSignature);
-        break;
-      default:
-        renderSignature(ctx, 1);
     }
   };
 
@@ -869,7 +862,7 @@ export default function GifGenerator({
                 </div>
                 <h4 className="text-lg font-semibold text-neutral mb-2">Ready to Generate</h4>
                 <p className="text-gray-600 mb-6">
-                  Create an animated GIF version of your email signature with {animationType.replace("-", " ")} animation.
+                  Create an animated GIF version of your email signature with per-element animations.
                 </p>
                 <Button onClick={generateGif} className="w-full">
                   <Wand2 className="w-4 h-4 mr-2" />
