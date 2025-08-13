@@ -35,7 +35,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-// Convert object storage paths to full URLs for email compatibility
+// Convert image paths to full URLs for email compatibility
 function getImageUrl(imagePath: string | undefined): string | undefined {
   if (!imagePath) return undefined;
 
@@ -54,6 +54,20 @@ function getImageUrl(imagePath: string | undefined): string | undefined {
   if (imagePath.startsWith('/api/files/')) {
     const baseUrl = window.location.origin;
     return `${baseUrl}${imagePath}`;
+  }
+
+  // If it's an attached asset (/@fs/...), serve it through the attached assets endpoint
+  if (imagePath.startsWith('/@fs/home/runner/workspace/attached_assets/')) {
+    const fileName = imagePath.split('/').pop();
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/api/attached-assets/${fileName}`;
+  }
+
+  // If it's just an attached asset filename, serve it through the attached assets endpoint
+  if (imagePath.includes('attached_assets/')) {
+    const fileName = imagePath.split('/').pop();
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/api/attached-assets/${fileName}`;
   }
 
   return imagePath;

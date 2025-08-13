@@ -174,6 +174,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve attached assets with full URLs for export compatibility
+  app.get("/api/attached-assets/:filename", async (req, res) => {
+    try {
+      const fileName = req.params.filename;
+      const filePath = path.join("attached_assets", fileName);
+      
+      // Check if file exists
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ message: "Attached asset not found" });
+      }
+
+      // Set proper content type based on file extension
+      const ext = path.extname(fileName).toLowerCase();
+      const contentTypeMap: Record<string, string> = {
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.svg': 'image/svg+xml',
+        '.webp': 'image/webp',
+        '.gif': 'image/gif'
+      };
+
+      const contentType = contentTypeMap[ext] || 'application/octet-stream';
+
+      // Set proper headers for email compatibility
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'public, max-age=31536000');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+
+      res.sendFile(path.resolve(filePath));
+    } catch (error) {
+      res.status(500).json({ message: "Failed to serve attached asset" });
+    }
+  });
+
   // Object storage routes for persistent image storage
   
   // Serve public assets from object storage
